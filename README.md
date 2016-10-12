@@ -1,5 +1,5 @@
 # calendar
-Team calendars is a tool to tack team working time and manage other events using calendars.
+Team calendars is a tool to track team working time and manage other events using calendars.
 
 ## Development guide
 
