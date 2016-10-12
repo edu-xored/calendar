@@ -50,3 +50,10 @@ Team calendars is a web service to track team working time and manage other even
 * [sass](http://sass-lang.com/)
 * [React](https://facebook.github.io/react/)
 * [webpack](https://webpack.github.io/)
+
+### Source Code Editors
+
+You could use one of the following free editors. 
+
+* [Visual Studio Code](https://code.visualstudio.com)
+* [Atom](https://atom.io/)
