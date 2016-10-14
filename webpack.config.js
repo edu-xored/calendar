@@ -24,7 +24,6 @@ const plugins = [
   */
   new ForkCheckerPlugin(),
 
-  // TODO extract common chunk
   /*
    * Plugin: CommonsChunkPlugin
    * Description: Shares common code between the pages.
@@ -33,9 +32,9 @@ const plugins = [
    * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
    * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
    */
-  // new webpack.optimize.CommonsChunkPlugin({
-  //   name: ['polyfills', 'vendor'].reverse()
-  // }),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: ['hmr', 'polyfills', 'vendor']
+  }),
 
   new webpack.HotModuleReplacementPlugin(),
 
@@ -116,7 +115,7 @@ const loaders = [
 
 module.exports = {
   devtool: 'source-map',
-  entry: [
+  entry: {
     // TODO try to use webpackHotDevClient
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
@@ -129,16 +128,14 @@ module.exports = {
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
     // require.resolve('react-dev-utils/webpackHotDevClient'),
-
-    'webpack-hot-middleware/client',
-
-    // TODO include polyfills
-    // We ship a few polyfills by default:
-    // require.resolve('./polyfills'),
-
+    hmr: 'webpack-hot-middleware/client',
+    // isomorphic polyfills
+    polyfills: './polyfills',
+    // vendor dependencies
+    vendor: './vendor.browser.js',
     // app entry point
-    './src/client/index.tsx'
-  ],
+    app: './src/client/index.tsx'
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.less']
   },
@@ -147,8 +144,31 @@ module.exports = {
   },
   plugins: plugins, // eslint-disable-line
   output: {
-    path: path.join(__dirname, 'static'),
-    filename: 'bundle.js',
-    publicPath: '/static/',
+    path: path.join(__dirname, 'dist'),
+
+    /**
+     * Specifies the name of each output file on disk.
+     * IMPORTANT: You must not specify an absolute path here!
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-filename
+     */
+    filename: '[name].bundle.js',
+
+    /**
+     * The filename of the SourceMaps for the JavaScript files.
+     * They are inside the output.path directory.
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
+     */
+    sourceMapFilename: '[name].map',
+
+    /** The filename of non-entry chunks as relative path
+     * inside the output.path directory.
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
+     */
+    chunkFilename: '[id].chunk.js',
+
+    publicPath: '/dist/',
   }
 };
