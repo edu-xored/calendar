@@ -1,3 +1,4 @@
+require('ts-node/register');
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
@@ -48,7 +49,7 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(hotMiddleware(compiler));
 }
 
-// TODO REST API integration point
+app.use('/api', require('./src/server/users.ts').default);
 
 app.use(express.static(ROOT_DIR));
 

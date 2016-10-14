@@ -1,4 +1,4 @@
-interface Entity {
+export interface Entity {
   id: string;
   created_at?: Date;
   created_by?: string;
@@ -6,25 +6,25 @@ interface Entity {
   updated_by?: string;
 }
 
-interface User extends Entity {
+export interface User extends Entity {
   name: string;
   login: string;
 }
 
-interface UserGroup extends Entity {
+export interface Team extends Entity {
   name: string;
 }
 
-interface UserGroupMember extends Entity {
+export interface TeamMember extends Entity {
   groupId: string;
   userId: string;
 }
 
-interface Organization extends Entity {
+export interface Organization extends Entity {
   name: string;
 }
 
-interface Event extends Entity {
+export interface Event extends Entity {
   // type: string;
   comment: string;
   // TODO combine into single range and store as PG tsrange
@@ -32,12 +32,12 @@ interface Event extends Entity {
   end: Date;
 }
 
-interface Calendar extends Entity {
+export interface Calendar extends Entity {
   name: string;
   type: string;
 }
 
-interface CalendarEvent extends Entity {
+export interface CalendarEvent extends Entity {
   calendarId: string;
   eventId: string;
 }

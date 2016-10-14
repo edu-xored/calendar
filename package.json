@@ -32,6 +32,7 @@
     "@types/lodash": "^4.14.37",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.45",
+    "@types/promise": "^7.1.30",
     "@types/react": "^0.14.41",
     "@types/react-dom": "^0.14.18",
     "@types/react-router": "^2.0.38",
