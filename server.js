@@ -36,15 +36,17 @@ function logErrors(err, req, res, next) {
 }
 app.use(logErrors);
 
-const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
-app.use(devMiddleware(compiler, {
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath,
-  stats: 'errors-only',
-}));
+if (process.env.NODE_ENV !== 'production') {
+  const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
+  app.use(devMiddleware(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath,
+    stats: 'errors-only',
+  }));
 
-const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
-app.use(hotMiddleware(compiler));
+  const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
+  app.use(hotMiddleware(compiler));
+}
 
 // TODO REST API integration point
 
