@@ -1,3 +1,5 @@
+[![Stories in Ready](https://badge.waffle.io/edu-xored/calendar.svg?label=ready&title=Ready)](http://waffle.io/edu-xored/calendar)
+
 # calendar
 Team calendars is a web service to track team working time and manage other events using calendars.
 
