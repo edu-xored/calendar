@@ -1,4 +1,3 @@
-require('ts-node/register');
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
@@ -9,6 +8,8 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
+
+import usersAPI from './src/server/users';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -49,7 +50,11 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(hotMiddleware(compiler));
 }
 
-app.use('/api', require('./src/server/users.ts').default);
+// REST API routes
+
+app.use('/api', usersAPI);
+
+// static assets
 
 app.use(express.static(ROOT_DIR));
 
@@ -64,6 +69,8 @@ app.use((err, req, res, next) => { // eslint-disable-line
     res.status(500).send('bad code path');
   }
 });
+
+// TODO detect port like in create-react-app
 
 app.listen(PORT, '0.0.0.0', (err) => {
   if (err) {
