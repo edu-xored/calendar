@@ -2,7 +2,7 @@ const _ = require('lodash');
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 // TODO production config
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -13,36 +13,47 @@ const PROD = NODE_ENV === 'production';
 const cssLoader = 'css?sourceMap&modules&importLoaders=1&localIdentName=[local]';
 const sassLoader = `${cssLoader}!postcss!sass?sourceMap`;
 
-const uglifyOptions = {
-	sourceMap: true,
-	compressor: {
-		warnings: false,
-		dead_code: true,
-	},
-	output: {
-		// preamble: banner,
-		comments: 'all',
-	},
-	beautify: true,
-	mangle: false,
-};
+// TODO uglify plugin for production
 
 const plugins = [
-  new ExtractTextPlugin('styles.css', { allChunks: true }),
+  /*
+  * Plugin: ForkCheckerPlugin
+  * Description: Do type checking in a separate process, so webpack don't need to wait.
+  *
+  * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
+  */
+  new ForkCheckerPlugin(),
+
+  // TODO extract common chunk
+  /*
+   * Plugin: CommonsChunkPlugin
+   * Description: Shares common code between the pages.
+   * It identifies common modules and put them into a commons chunk.
+   *
+   * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
+   * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
+   */
+  // new webpack.optimize.CommonsChunkPlugin({
+  //   name: ['polyfills', 'vendor'].reverse()
+  // }),
+
   new webpack.HotModuleReplacementPlugin(),
+
   new webpack.NoErrorsPlugin(),
+
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(NODE_ENV),
     },
   }),
+
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
   }),
+
   PROD ? new webpack.optimize.OccurenceOrderPlugin() : null,
-  PROD ? new webpack.optimize.UglifyJsPlugin(uglifyOptions) : null,
 ].filter(_.identity);
 
 const loaders = [
@@ -52,11 +63,34 @@ const loaders = [
   },
   {
     test: /\.tsx?$/,
-    loader: 'ts-loader',
+    loader: 'awesome-typescript-loader',
   },
   {
-    test: /\.(scss|css)$/,
-    loader: ExtractTextPlugin.extract('style', sassLoader),
+    test: /\.scss$/,
+    loaders: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: { importLoaders: 1 }
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          plugins: function () {
+            return [
+              autoprefixer({
+                browsers: [
+                  '>1%',
+                  'last 4 versions',
+                  'Firefox ESR',
+                  'not ie < 9', // React doesn't support IE8 anyway
+                ]
+              })
+            ];
+          }
+        }
+      }
+    ]
   },
   // "file" loader makes sure those assets get served by WebpackDevServer.
   // When you `import` an asset, you get its (virtual) filename.
@@ -105,28 +139,16 @@ module.exports = {
     // app entry point
     './src/client/index.tsx'
   ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.less']
+  },
+  module: {
+    loaders: loaders, // eslint-disable-line
+  },
+  plugins: plugins, // eslint-disable-line
   output: {
     path: path.join(__dirname, 'static'),
     filename: 'bundle.js',
     publicPath: '/static/',
-  },
-  plugins: plugins, // eslint-disable-line
-  module: {
-    loaders: loaders, // eslint-disable-line
-  },
-  resolve: {
-    extensions: ['', '.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.less'],
-  },
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9', // React doesn't support IE8 anyway
-        ]
-      }),
-    ];
-  },
+  }
 };
