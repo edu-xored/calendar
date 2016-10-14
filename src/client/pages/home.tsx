@@ -23,9 +23,6 @@ export default class HomePage extends React.Component<{}, PageState> {
 
   render() {
     const { user } = this.state;
-    if (user) {
-      return <div>Hey, {user.name}</div>
-    }
-    return <div>User is not fetched yet!</div>;
+    return <div>Hey, {user.name}!</div>
   }
 }
