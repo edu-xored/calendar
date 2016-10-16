@@ -33,7 +33,7 @@ Team calendars is a web service to track team working time and manage other even
 * Calendar links for sharing
 * Import calendars/events from Google Calendar
 * Import from Attlasian Confluence Calendars
-* Export to CSV, iCalendar document formats 
+* Export to CSV, iCalendar document formats
 
 ## Development guide
 
@@ -42,7 +42,18 @@ Team calendars is a web service to track team working time and manage other even
 * install [nodejs](https://nodejs.org/en/), we will use latest 6.7 version
 * `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler   
 * in project directory run `npm install`
-* `npm start` should start development web server
+* `npm run dev` should start development web server
+
+### Development scripts
+
+Scripts below could be run in project root directory.
+
+* `npm run install-tools` - install dev tools
+* `npm run dev` - start development web server
+* `npm run build` - build artifacts to run production web server
+* `npm start` - start production web server
+* `npm run lint` - inspect code with linter(s)
+* `npm test` - run automated unit/integration tests
 
 ### Tools
 
