@@ -4,8 +4,9 @@
   "description": "Helps to track your team working time with calendars",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cross-env ./node_modules/.bin/typings install",
-    "start": "ts-node server.ts",
+    "install-tools": "npm i -g typescript tslint mocha cross-env",
+    "dev": "cross-env NODE_ENV=development ts-node server.ts",
+    "start": "cross-env NODE_ENV=production ts-node server.ts",
     "lint": "tslint 'src/**/*.ts*'",
     "test": "ts-node node_modules/mocha/bin/_mocha --timeout 10000 -- test/*.ts"
   },
