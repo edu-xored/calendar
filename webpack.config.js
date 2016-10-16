@@ -3,19 +3,19 @@ const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // TODO production config
 const NODE_ENV = process.env.NODE_ENV || 'development';
-// const DEBUG = NODE_ENV === 'development';
 const PROD = NODE_ENV === 'production';
 
-// TODO allow to customize css loader
-const cssLoader = 'css?sourceMap&modules&importLoaders=1&localIdentName=[local]';
-const sassLoader = `${cssLoader}!postcss!sass?sourceMap`;
+const extractCSS = new ExtractTextPlugin('styles.css');
 
 // TODO uglify plugin for production
 
 const plugins = [
+  extractCSS,
+
   /*
   * Plugin: ForkCheckerPlugin
   * Description: Do type checking in a separate process, so webpack don't need to wait.
@@ -66,30 +66,22 @@ const loaders = [
   },
   {
     test: /\.scss$/,
-    loaders: [
-      'style-loader',
+    loader: extractCSS.extract([
       {
         loader: 'css-loader',
-        options: { importLoaders: 1 }
+        query: {
+          sourceMap: true,
+          modules: true,
+          importLoaders: 1,
+          localIdentName: '[local]',
+        }
       },
       {
-        loader: 'postcss-loader',
-        options: {
-          plugins: function () {
-            return [
-              autoprefixer({
-                browsers: [
-                  '>1%',
-                  'last 4 versions',
-                  'Firefox ESR',
-                  'not ie < 9', // React doesn't support IE8 anyway
-                ]
-              })
-            ];
-          }
-        }
-      }
-    ]
+        loader: 'sass-loader',
+        sourceMap: true,
+      },
+      'postcss-loader',
+    ]),
   },
   // "file" loader makes sure those assets get served by WebpackDevServer.
   // When you `import` an asset, you get its (virtual) filename.
