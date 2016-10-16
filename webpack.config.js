@@ -11,7 +11,19 @@ const PROD = NODE_ENV === 'production';
 
 const extractCSS = new ExtractTextPlugin('styles.css');
 
-// TODO uglify plugin for production
+const uglifyOptions = {
+  compress: {
+    screw_ie8: true, // React doesn't support IE8
+    warnings: false
+  },
+  mangle: {
+    screw_ie8: true
+  },
+  output: {
+    comments: false,
+    screw_ie8: true
+  }
+};
 
 const plugins = [
   extractCSS,
@@ -52,7 +64,12 @@ const plugins = [
     'window.jQuery': 'jquery',
   }),
 
-  PROD ? new webpack.optimize.OccurenceOrderPlugin() : null,
+  // This helps ensure the builds are consistent if source hasn't changed:
+  PROD ? new webpack.optimize.OccurrenceOrderPlugin() : null,
+  // Try to dedupe duplicated modules, if any:
+  PROD ? new webpack.optimize.DedupePlugin() : null,
+  // Uncomment to minify the production bundles.
+  // PROD ? new webpack.optimize.UglifyJsPlugin(uglifyOptions) : null,
 ].filter(_.identity);
 
 const loaders = [
@@ -108,23 +125,13 @@ const loaders = [
 module.exports = {
   devtool: 'source-map',
   entry: {
-    // TODO try to use webpackHotDevClient
-    // Include an alternative client for WebpackDevServer. A client's job is to
-    // connect to WebpackDevServer by a socket and get notified about changes.
-    // When you save a file, the client will either apply hot updates (in case
-    // of CSS changes), or refresh the page (in case of JS changes). When you
-    // make a syntax error, this client will display a syntax error overlay.
-    // Note: instead of the default WebpackDevServer client, we use a custom one
-    // to bring better experience for Create React App users. You can replace
-    // the line below with these two lines if you prefer the stock client:
-    // require.resolve('webpack-dev-server/client') + '?/',
-    // require.resolve('webpack/hot/dev-server'),
-    // require.resolve('react-dev-utils/webpackHotDevClient'),
-    hmr: 'webpack-hot-middleware/client',
-    // isomorphic polyfills
-    polyfills: './polyfills',
-    // vendor dependencies
-    vendor: './vendor.browser.js',
+    vendor: [
+      'webpack-hot-middleware/client',
+      // isomorphic polyfills
+      './polyfills',
+      // vendor dependencies
+      './vendor.browser.js'
+    ],
     // app entry point
     app: './src/client/index.tsx'
   },
