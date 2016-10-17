@@ -28,6 +28,8 @@ Scripts below could be run in project root directory.
 
 ### Tools
 
+* [Node.js](http://nodejs.org/)
+* [PostgreSQL](https://www.postgresql.org/)
 * [TypeScript](https://www.typescriptlang.org/)
 * [sass](http://sass-lang.com/)
 * [React](https://facebook.github.io/react/)
