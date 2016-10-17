@@ -4,7 +4,7 @@
 # calendar
 Team calendars is a web service to track team working time and manage other events using calendars.
 
-See [FEATRUES.md](FEATRUES.md) to get more ideas about the project.
+See [FEATURES.md](FEATURES.md) to get more ideas about the project.
 
 ## Development guide
 
