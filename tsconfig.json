@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "listFiles": false,
+    "jsx": "react",
+    "target": "es5",
+    "outDir": "app",
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "sourceMap": true,
+    "watch": false,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "types": [
+      "node",
+      "mocha",
+      "chai",
+      "react",
+      "react-dom",
+      "react-router"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
