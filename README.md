@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/edu-xored/calendar.svg?branch=master)](https://travis-ci.org/edu-xored/calendar)
 [![Stories in Ready](https://badge.waffle.io/edu-xored/calendar.svg?label=ready&title=Ready)](http://waffle.io/edu-xored/calendar)
 
 # calendar
