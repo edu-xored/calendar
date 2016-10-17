@@ -21,7 +21,7 @@ export default class HomePage extends React.Component<{}, PageState> {
   componentDidMount() {
     fetchJSON<User>('/api/user/1').then(user => {
       this.setState({ user });
-    })
+    });
   }
 
   render() {
@@ -31,6 +31,6 @@ export default class HomePage extends React.Component<{}, PageState> {
         <div>Hey,</div>
         <div>{user.name}!</div>
       </div>
-    )
+    );
   }
 }
