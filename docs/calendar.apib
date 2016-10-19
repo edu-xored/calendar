@@ -1,0 +1,110 @@
+FORMAT: 1A
+
+# Calendars
+REST interface used in https://github.com/edu-xored/calendar project.
+
+## Group Users
+
+API to manage user resources.
+
+## User [/api/user/{id}]
+
+User entity properties:
++ id
++ name
++ created_at
++ updated_at
++ created_by
++ updated_by
+
+### Retreive user by id [GET]
++ Response 200 (application/json)
+
+### Update user [PUT]
++ Response 200 (application/json)
+
+### Delete user [DELETE]
++ Response 204
+
+# GET /api/users
+Retreive all users.
++ Response 200 (application/json)
+
+# GET /api/me
+Retreive info about currently authenticated user.
++ Response 200 (application/json)
+
+
+## Group Teams
+
+API to manage team resources.
+
+## Team [/api/team/{id}]
+
+Team entity properties:
++ id
++ name
++ created_at
++ updated_at
++ created_by
++ updated_by
+
+### Retreive team by id [GET]
++ Response 200 (application/json)
+
+### Update team [PUT]
++ Response 200 (application/json)
+
+### Delete team [DELETE]
++ Response 204
+
+# POST /api/team/{id}/members
+Add/remove member(s) of specified team.
++ Response 200 (application/json)
+
+## Teams Collection [/api/teams]
+
+### Retreive all teams [GET]
++ Response 200 (application/json)
+
+#### Create new team [POST]
++ Response 201 (application/json)
+
+## Group Calendars
+
+API to manage calendar resources.
+
+## Calendar [/api/calendar/{id}]
+
+Calendar entity properties:
++ id
++ team_id
++ created_at
++ updated_at
++ created_by
++ updated_by
+
+### Retreive calendar by id [GET]
++ Response 200 (application/json)
+
+### Update calendar [PUT]
++ Response 200 (application/json)
+
+### Delete calendar [DELETE]
++ Response 204
+
+# GET /api/calendars
+Retreive all calendars.
++ Response 200 (application/json)
+
+## Calendar Events Collection [/api/calendar/{id}/events]
+
+### Retreive calendar events [GET]
++ Response 200 (application/json)
+
+### Add calendar events [POST]
++ Response 200 (application/json)
+
+# DELETE /api/events/{id}
+Delete specified event.
++ Response 204 (application/json)
