@@ -4,7 +4,7 @@
     "noImplicitAny": false,
     "listFiles": false,
     "jsx": "react",
-    "target": "es5",
+    "target": "es6",
     "outDir": "app",
     "inlineSourceMap": false,
     "inlineSources": false,

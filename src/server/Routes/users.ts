@@ -1,20 +1,21 @@
 import * as express from 'express';
+import * as usersStore from "./../Storages/UsersStore";
 import { User } from '../../lib/model';
-import { UsersService } from "./../Services/UsersService";
 
 const router = express.Router();
 
 router.get('/users', (req, res) => {
-  res.json(UsersService.Users());
+  usersStore.getUsers()
+    .then((result) => {
+      res.json(result);
+    });
 });
 
 router.get('/user/:id', (req, res) => {
-  let user = UsersService.User(req.params.id);
-  if (user != null) 
-  {
-    res.json(user);
-  }
-  res.sendStatus(404);
+  usersStore.getUser(req.params.id)
+    .then((result) => {
+        res.json(result);
+    });
 });
 
 export default router;
