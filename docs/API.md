@@ -23,3 +23,13 @@ Short API doc.
 * GET /api/calendar/:id/events - get calendar events
 * POST /api/calendar/:id/events - add calendar events
 * DELETE /api/events/:id - delete specified event
+
+# Notifications
+* GET /api/notifications - get all unread notifications of current user
+* POST /api/notifications/markasread - mark as read specified notifications
+
+# Avatars
+* GET /api/avatar/:user_id - get avatar image for specified user
+* POST /api/avatar - uploads avatar image to server
+* GET /api/myavatar - get avatar of current user
+* POST /api/myavatar - change avatar of current user

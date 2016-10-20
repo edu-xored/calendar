@@ -108,3 +108,31 @@ Retreive all calendars.
 # DELETE /api/events/{id}
 Delete specified event.
 + Response 204 (application/json)
+
+## Group Notifications
+
+# GET /api/notifications
+Get all unread notifications for current user.
++ Response 200 (application/json)
+
+# POST /api/notifications/markasread
+Mark as read specified notifications.
++ Response 200
+
+## Group Avatars
+
+# GET /api/avatar/{user_id}
+Get avatar image for specified user.
++ Response 200 (image/jpg)
+
+# POST /api/avatar
+Uploads avatar image to server.
++ Response 201
+
+# GET /api/myavatar
+Get avatar of current user.
++ Response 200 (image/jpg)
+
+# POST /api/myavatar
+Change avatar of current user.
++ Response 200
