@@ -8,26 +8,34 @@ export interface Entity {
 
 export interface User extends Entity {
   name: string;
-  login: string;
+  login?: string;
+  pwdhash?: string; // password hash
+  avatar?: string; // URL to avatar image, e.g. it could be a gravatar URL or URL to uploaded image
+  role?: string;
+  position?: string;
+  place?: string;
 }
 
 export interface Team extends Entity {
   name: string;
+  avatar: string;
+  description: string;
 }
 
 export interface TeamMember extends Entity {
-  groupId: string;
-  userId: string;
+  team_id: string;
+  user_id: string;
 }
 
 export interface Organization extends Entity {
   name: string;
+  avatar: string;
+  description: string;
 }
 
 export interface Event extends Entity {
-  // type: string;
+  type: string;
   comment: string;
-  // TODO combine into single range and store as PG tsrange
   start: Date;
   end: Date;
 }
@@ -35,9 +43,16 @@ export interface Event extends Entity {
 export interface Calendar extends Entity {
   name: string;
   type: string;
+  description: string;
 }
 
 export interface CalendarEvent extends Entity {
-  calendarId: string;
+  calendar_id: string;
   eventId: string;
+}
+
+export interface Notification extends Entity {
+  message: string;
+  user_id: string;
+  team_id: string;
 }
