@@ -1,9 +1,9 @@
 export interface Entity {
   id: string;
-  created_at?: Date;
-  created_by?: string;
-  updated_at?: Date;
-  updated_by?: string;
+  createdAt?: Date;
+  createdBy?: string;
+  updatedAt?: Date;
+  updatedBy?: string;
 }
 
 export interface User extends Entity {
@@ -23,8 +23,8 @@ export interface Team extends Entity {
 }
 
 export interface TeamMember extends Entity {
-  team_id: string;
-  user_id: string;
+  teamId: string;
+  userId: string;
 }
 
 export interface Organization extends Entity {
@@ -47,12 +47,12 @@ export interface Calendar extends Entity {
 }
 
 export interface CalendarEvent extends Entity {
-  calendar_id: string;
+  calendarId: string;
   eventId: string;
 }
 
 export interface Notification extends Entity {
   message: string;
-  user_id: string;
-  team_id: string;
+  userId: string;
+  teamId: string;
 }
