@@ -11,15 +11,7 @@
     "sourceMap": true,
     "watch": false,
     "preserveConstEnums": true,
-    "experimentalDecorators": true,
-    "types": [
-      "node",
-      "mocha",
-      "chai",
-      "react",
-      "react-dom",
-      "react-router"
-    ]
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules"
