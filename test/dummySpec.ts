@@ -1,3 +1,4 @@
+import mocha = require('mocha');
 import chai = require('chai');
 
 function add(x: number, y: number): number {
