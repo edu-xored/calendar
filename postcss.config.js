@@ -1,6 +1,8 @@
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
+  syntax: 'postcss-scss',
+  map: 'inline',
   plugins: [
     autoprefixer({
       browsers: [

@@ -93,10 +93,6 @@ const loaders = [
           localIdentName: '[local]',
         }
       },
-      {
-        loader: 'sass-loader',
-        sourceMap: true,
-      },
       'postcss-loader',
     ]),
   },

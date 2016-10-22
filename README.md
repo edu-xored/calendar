@@ -14,6 +14,7 @@ See [FEATURES.md](FEATURES.md) to get more ideas about the project.
 * `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler     
 * in project directory run `npm install`
 * `npm run dev` should start development web server
+* `npm install -g devtool` for debugging server code with chrome devtools
 
 ### Development scripts
 
@@ -25,6 +26,11 @@ Scripts below could be run in project root directory.
 * `npm start` - start production web server
 * `npm run lint` - inspect code with linter(s)
 * `npm test` - run automated unit/integration tests
+
+### Debugging server code
+
+* remove line 113 from `node_modules/source-map-support/source-map-support.js`, see [PR](https://github.com/evanw/node-source-map-support/pull/151) for more details
+* Run `devtool server.js`
 
 ### Tools
 
