@@ -11,8 +11,7 @@ See [FEATURES.md](FEATURES.md) to get more ideas about the project.
 ### Get Started
 
 * install [nodejs](https://nodejs.org/en/), we will use latest 6.7 version
-* `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler   
-* `npm install -g gulp` to install [Gulp](http://www.gulpjs.com/)   
+* `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler     
 * in project directory run `npm install`
 * `npm run dev` should start development web server
 
@@ -36,6 +35,7 @@ Scripts below could be run in project root directory.
 * [React](https://facebook.github.io/react/)
 * [webpack](https://webpack.github.io/)
 * [Semantic UI](http://semantic-ui.com)
+* [Semantic UI React](http://react.semantic-ui.com)
 
 ### Source Code Editors
 
