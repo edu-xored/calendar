@@ -724,7 +724,7 @@ declare module 'semantic-ui-react' {
 
   interface IFormGroupProps extends SuiBlockElement {
     grouped: 'grouped';
-    inline: 'inline'
+    inline: 'inline';
     widths?: Widths;
   }
 
@@ -848,7 +848,7 @@ declare module 'semantic-ui-react' {
   }
 
   interface IMenuMenuProps extends SuiBlockElement {
-    position: 'right'
+    position: 'right';
   }
 
 

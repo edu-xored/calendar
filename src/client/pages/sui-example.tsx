@@ -27,6 +27,6 @@ export default class Page extends React.Component<{}, PageState> {
           <Menu.Item name='logout' active={activeItem === 'logout'} onClick={this.handleItemClick} />
         </Menu.Menu>
       </Menu>
-    )
+    );
   }
 }
