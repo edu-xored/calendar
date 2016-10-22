@@ -83,6 +83,9 @@ const loaders = [
   {
     test: /\.jsx?$/,
     loader: 'babel-loader',
+    query: {
+      cacheDirectory: true,
+    }
   },
   {
     test: /\.tsx?$/,
