@@ -27,9 +27,12 @@ export default class HomePage extends React.Component<{}, PageState> {
   render() {
     const { user } = this.state;
     return (
-      <div className="flex">
-        <div>Hey,</div>
-        <div>{user.name}!</div>
+      <div>
+        <a href="/sui">Semantic UI example</a>
+        <div className="flex">
+          <div>Hey,</div>
+          <div>{user.name}!</div>
+        </div>
       </div>
     );
   }

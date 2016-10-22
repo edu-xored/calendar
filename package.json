@@ -56,7 +56,7 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1",
-    "semantic-ui": "^2.2.4"
+    "semantic-ui-react": "^0.56.10"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.1",
