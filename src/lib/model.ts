@@ -20,9 +20,13 @@ export interface Team extends Entity {
   name: string;
   avatar: string;
   description: string;
+  members?: User[]; // only as part of API payload, actually stored in separate association table TeamMembers
 }
 
-export interface TeamMember extends Entity {
+export interface TeamMember {
+  id: string;
+  createdAt?: Date;
+  createdBy?: string;
   teamId: string;
   userId: string;
 }
@@ -44,9 +48,13 @@ export interface Calendar extends Entity {
   name: string;
   type: string;
   description: string;
+  events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
 }
 
-export interface CalendarEvent extends Entity {
+export interface CalendarEvent {
+  id: string;
+  createdAt?: Date;
+  createdBy?: string;
   calendarId: string;
   eventId: string;
 }
