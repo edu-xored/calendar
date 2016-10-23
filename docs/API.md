@@ -1,5 +1,10 @@
 Short API doc.
 
+# Authentication
+* POST /api/login - basic auth to get token
+* POST /api/logout - close session
+* GET /api/token - verifies whether auth token is still valid 
+
 # Users
 * GET /api/me - get current user
 * GET /api/users - list all users
