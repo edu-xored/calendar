@@ -9,7 +9,9 @@
     "webpack:prod": "cross-env NODE_ENV=production node_modules/.bin/webpack --config webpack.config.js",
     "build": "npm run tsc && npm run webpack:prod",
     "dev": "cross-env NODE_ENV=development ts-node server.ts",
+    "ldap_dev": "cross-env NODE_ENV=development ts-node ldap/server.ts",
     "start": "cross-env NODE_ENV=production ts-node server.ts",
+    "ldap_start": "cross-env NODE_ENV=production ts-node ldap/server.ts",
     "lint": "cross-env tslint --config tslint.json src/**/*.ts*",
     "test": "ts-node node_modules/mocha/bin/_mocha --timeout 10000 -- test/*.ts"
   },

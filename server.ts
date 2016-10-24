@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
 import usersAPI from './src/server/users';
+import * as ldapClient from './ldap/client';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -53,6 +54,12 @@ if (process.env.NODE_ENV !== 'production') {
 // REST API routes
 
 app.use('/api', usersAPI);
+
+// LDAP
+
+app.use('/ldap/login', ldapClient.login);
+
+app.use('/ldap/logout', ldapClient.logout);
 
 // static assets
 
