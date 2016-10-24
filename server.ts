@@ -11,6 +11,7 @@ const webpack = require('webpack');
 
 import usersAPI from './src/server/routes/users';
 import database from "./src/server/database/database";
+import * as ldapClient from './ldap/client';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -32,6 +33,13 @@ export default function startServer() {
   app.use(helmet());
 
   app.use(cookieParser());
+// LDAP
+
+app.use('/ldap/login', ldapClient.login);
+
+app.use('/ldap/logout', ldapClient.logout);
+
+// static assets
 
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: false }));
