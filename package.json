@@ -55,9 +55,12 @@
     "promise": "^7.1.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-router": "^2.8.1"
+    "react-router": "^2.8.1",
+    "sequelize": "^3.24.5",
+    "sqlite3": "^3.1.6"
   },
   "devDependencies": {
+    "@types/sequelize": "^4.0.38",
     "autoprefixer": "^6.5.1",
     "awesome-typescript-loader": "^2.2.4",
     "chai": "^3.5.0",

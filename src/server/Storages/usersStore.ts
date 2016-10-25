@@ -1,25 +1,45 @@
+import "sequelize";
 import { User } from '../../lib/model';
+import { MUser, dbConfig } from "../database/database";
 
-const demoUsers: User[] = [{
-    id: '1',
-    name: 'Bob',
-    login: 'bob',
-}];
-
-// TODO: Established database connection.
-
-export function getUsers(filter?: any): Promise<User[]> {
+// I used it for testing and find it useful so I not deleted this code.
+export function create(user: User): Promise<string> {
     return new Promise((resolve, reject) => {
-        resolve(demoUsers);
+        dbConfig.sync()
+            .then(() => {
+                return MUser.create({
+                    name: user.name,
+                    login: user.login,
+                    createdBy: user.createdBy,
+                    updatedBy: user.updatedBy
+                });
+            })
+            .then((record) => {
+                resolve(record.toJSON());
+            });
     });
 }
 
-// export function getUsers(): Promise<User[]> {
-//     let result: User[] = await demoUsers;
-//     return result;
-// }
+export function getAll(): Promise<User[]> {
+    return new Promise<User[]>((resolve) => {
+        dbConfig.sync()
+            .then(() => {
+                return MUser.findAll()
+            })
+            .then((data) => {
+                resolve(data);
+            })
+    });
+}
 
-// export function getUser(id: string): Promise<User> {
-//     let result: User = demoUsers.filter((user) => { user.id == id })
-//     return result;
-// }
+export function get(id: number): Promise<User[]> {
+    return new Promise<User[]>((resolve) => {
+        dbConfig.sync()
+            .then(() => {
+                return MUser.findById(id)
+            })
+            .then((entity) => {
+                resolve(entity);
+            })
+    });
+}

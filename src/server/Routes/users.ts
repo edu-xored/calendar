@@ -5,17 +5,26 @@ import { User } from '../../lib/model';
 const router = express.Router();
 
 router.get('/users', (req, res) => {
-  usersStore.getUsers()
+  usersStore.getAll()
     .then((result) => {
       res.json(result);
     });
 });
 
 router.get('/user/:id', (req, res) => {
-  usersStore.getUser(req.params.id)
+  usersStore.get(req.params.id)
     .then((result) => {
         res.json(result);
     });
 });
+
+// router.get('/user/create/:name', (req, res) => {
+//   let user = {}
+//   user.name = req.params.name;
+//   usersStore.create(user)
+//     .then((result) => {
+//         res.json(result);
+//     });
+// });
 
 export default router;
