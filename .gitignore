@@ -47,3 +47,4 @@ typings
 app
 dist
 ts-node
+.awcache
