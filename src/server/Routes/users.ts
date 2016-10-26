@@ -18,13 +18,4 @@ router.get('/user/:id', (req, res) => {
     });
 });
 
-// router.get('/user/create/:name', (req, res) => {
-//   let user = {}
-//   user.name = req.params.name;
-//   usersStore.create(user)
-//     .then((result) => {
-//         res.json(result);
-//     });
-// });
-
 export default router;
