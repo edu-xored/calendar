@@ -40,6 +40,7 @@
     "@types/react": "^0.14.41",
     "@types/react-dom": "^0.14.18",
     "@types/react-router": "^2.0.38",
+    "babel-polyfill": "^6.16.0",
     "body-parser": "^1.15.2",
     "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
