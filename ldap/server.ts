@@ -1,6 +1,6 @@
 import * as ldap from 'ldapjs';
 
-let SUFFIX: string = 'o=eduxored';
+let BASE: string = 'o=eduxored';
 let db = {
   'cn=root, o=eduxored': {
     id: 'root_id',
@@ -23,16 +23,22 @@ let db = {
 };
 let server: ldap.Server = ldap.createServer(undefined);
 
+/**
+ * Any user may search after and compare, only binded as root has full power.
+ */
 function authorize(req: any, res: any, next: ldap.Server.NextFunction) {
-  /* Any user may search after bind, only root has full power */
   let isSearch: boolean = (req instanceof ldap.SearchRequest);
   let isCompare: boolean = (req instanceof ldap.CompareRequest);
-  if (!req.connection.ldap.bindDN.equals('cn=root') && !isSearch && !isCompare)
+  if (!req.connection.ldap.bindDN.equals('cn=root') && !isSearch && !isCompare) {
       return next(new ldap.InsufficientAccessRightsError('Insufficient access rights'));
+  }
 
   return next();
 }
 
+/**
+ * Binds root user.
+ */
 server.bind('cn=root', (req: any, res: any, next: ldap.Server.NextFunction) => {
   if (req.dn.toString() !== 'cn=root' || req.credentials !== 'secret') {
       return next(new ldap.InvalidCredentialsError('Invalid credentials'));
@@ -42,7 +48,7 @@ server.bind('cn=root', (req: any, res: any, next: ldap.Server.NextFunction) => {
   return next();
 });
 
-server.add(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
+server.add(BASE, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   if (db[dn])
     return next(new ldap.EntryAlreadyExistsError(dn));
@@ -52,7 +58,10 @@ server.add(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunct
   return next();
 });
 
-server.bind(SUFFIX, (req: any, res: any, next: ldap.Server.NextFunction) => {
+/**
+ * Binds common users.
+ */
+server.bind(BASE, (req: any, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   if (!db[dn])
     return next(new ldap.NoSuchObjectError(dn));
@@ -67,7 +76,7 @@ server.bind(SUFFIX, (req: any, res: any, next: ldap.Server.NextFunction) => {
   return next();
 });
 
-server.compare(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
+server.compare(BASE, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   if (!db[dn])
     return next(new ldap.NoSuchObjectError(dn));
@@ -85,7 +94,7 @@ server.compare(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextF
   return next();
 });
 
-server.del(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
+server.del(BASE, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   if (!db[dn])
     return next(new ldap.NoSuchObjectError(dn));
@@ -96,7 +105,7 @@ server.del(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunct
   return next();
 });
 
-server.modify(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
+server.modify(BASE, [authorize], (req: any, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   if (!req.changes.length)
     return next(new ldap.ProtocolError('changes required'));
@@ -145,7 +154,7 @@ server.modify(SUFFIX, [authorize], (req: any, res: any, next: ldap.Server.NextFu
   return next();
 });
 
-server.search(SUFFIX, [authorize], (req: ldap.SearchRequest,
+server.search(BASE, [authorize], (req: ldap.SearchRequest,
                                     res: ldap.SearchResponse,
                                     next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
