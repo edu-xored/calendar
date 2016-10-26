@@ -12,16 +12,13 @@
     "watch": false,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
-    "types": [
-      "node",
-      "mocha",
-      "chai",
-      "react",
-      "react-dom",
-      "react-router"
-    ]
+    "lib": ["es6", "dom"]
   },
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": true
+  }
 }

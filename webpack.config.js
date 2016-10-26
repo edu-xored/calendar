@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
+const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // TODO production config
@@ -27,6 +28,8 @@ const uglifyOptions = {
 
 const plugins = [
   extractCSS,
+
+  new TsConfigPathsPlugin(),
 
   /*
   * Plugin: ForkCheckerPlugin
@@ -78,6 +81,13 @@ const loaders = [
     loader: 'json',
   },
   {
+    test: /\.jsx?$/,
+    loader: 'babel-loader',
+    query: {
+      cacheDirectory: true,
+    }
+  },
+  {
     test: /\.tsx?$/,
     loader: 'awesome-typescript-loader',
   },
@@ -92,10 +102,6 @@ const loaders = [
           importLoaders: 1,
           localIdentName: '[local]',
         }
-      },
-      {
-        loader: 'sass-loader',
-        sourceMap: true,
       },
       'postcss-loader',
     ]),
@@ -136,7 +142,10 @@ module.exports = {
     app: './src/client/index.tsx'
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.less']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.less'],
+    alias: {
+      'semantic-ui-react': 'semantic-ui-react/src/index.js',
+    }
   },
   module: {
     loaders: loaders, // eslint-disable-line
@@ -153,20 +162,7 @@ module.exports = {
      */
     filename: '[name].bundle.js',
 
-    /**
-     * The filename of the SourceMaps for the JavaScript files.
-     * They are inside the output.path directory.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
-     */
-    sourceMapFilename: '[name].map',
-
-    /** The filename of non-entry chunks as relative path
-     * inside the output.path directory.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
-     */
-    chunkFilename: '[id].chunk.js',
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
 
     publicPath: '/dist/',
   }

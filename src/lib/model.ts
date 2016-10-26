@@ -8,26 +8,38 @@ export interface Entity {
 
 export interface User extends Entity {
   name: string;
-  login: string;
+  login?: string;
+  pwdhash?: string; // password hash
+  avatar?: string; // URL to avatar image, e.g. it could be a gravatar URL or URL to uploaded image
+  role?: string;
+  position?: string;
+  place?: string;
 }
 
 export interface Team extends Entity {
   name: string;
+  avatar: string;
+  description: string;
+  members?: User[]; // only as part of API payload, actually stored in separate association table TeamMembers
 }
 
-export interface TeamMember extends Entity {
-  groupId: string;
+export interface TeamMember {
+  id: string;
+  createdAt?: Date;
+  createdBy?: string;
+  teamId: string;
   userId: string;
 }
 
 export interface Organization extends Entity {
   name: string;
+  avatar: string;
+  description: string;
 }
 
 export interface Event extends Entity {
-  // type: string;
+  type: string;
   comment: string;
-  // TODO combine into single range and store as PG tsrange
   start: Date;
   end: Date;
 }
@@ -35,9 +47,20 @@ export interface Event extends Entity {
 export interface Calendar extends Entity {
   name: string;
   type: string;
+  description: string;
+  events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
 }
 
-export interface CalendarEvent extends Entity {
+export interface CalendarEvent {
+  id: string;
+  createdAt?: Date;
+  createdBy?: string;
   calendarId: string;
   eventId: string;
+}
+
+export interface Notification extends Entity {
+  message: string;
+  userId: string;
+  teamId: string;
 }

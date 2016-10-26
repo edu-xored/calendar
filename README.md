@@ -11,9 +11,10 @@ See [FEATURES.md](FEATURES.md) to get more ideas about the project.
 ### Get Started
 
 * install [nodejs](https://nodejs.org/en/), we will use latest 6.7 version
-* `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler   
+* `npm install -g typescript` to install [TypeScript](https://www.typescriptlang.org/) compiler     
 * in project directory run `npm install`
 * `npm run dev` should start development web server
+* `npm install -g devtool` for debugging server code with chrome devtools
 
 ### Development scripts
 
@@ -26,6 +27,11 @@ Scripts below could be run in project root directory.
 * `npm run lint` - inspect code with linter(s)
 * `npm test` - run automated unit/integration tests
 
+### Debugging server code
+
+* remove line 113 from `node_modules/source-map-support/source-map-support.js`, see [PR](https://github.com/evanw/node-source-map-support/pull/151) for more details
+* Run `devtool server.js`
+
 ### Tools
 
 * [Node.js](http://nodejs.org/)
@@ -34,6 +40,8 @@ Scripts below could be run in project root directory.
 * [sass](http://sass-lang.com/)
 * [React](https://facebook.github.io/react/)
 * [webpack](https://webpack.github.io/)
+* [Semantic UI](http://semantic-ui.com)
+* [Semantic UI React](http://react.semantic-ui.com)
 
 ### Source Code Editors
 

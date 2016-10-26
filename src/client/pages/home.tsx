@@ -19,17 +19,25 @@ export default class HomePage extends React.Component<{}, PageState> {
   };
 
   componentDidMount() {
-    fetchJSON<User>('/api/user/1').then(user => {
-      this.setState({ user });
-    });
+    (async () => {
+      try {
+        const user = await fetchJSON<User>('/api/user/1');
+        this.setState({ user });
+      } catch (err) {
+        alert(err);
+      }
+    })();
   }
 
   render() {
     const { user } = this.state;
     return (
-      <div className="flex">
-        <div>Hey,</div>
-        <div>{user.name}!</div>
+      <div>
+        <a href="/sui">Semantic UI example</a>
+        <div className="flex">
+          <div>Hey,</div>
+          <div>{user.name}!</div>
+        </div>
       </div>
     );
   }
