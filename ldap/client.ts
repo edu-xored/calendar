@@ -1,13 +1,8 @@
 import * as ldap from 'ldapjs';
 import * as express from 'express';
 import {EventEmitter} from 'events';
-/* 
-    TODO: fix auth (now it lets you to double login),
-          ldapComparePwd() -> ldapCompare()
-          more funcions,
+import {User} from '../src/lib/model';
 
-          
-*/
 interface ILdapConfig {
     server: {
         url: string,
@@ -29,88 +24,85 @@ let ldapConfig: ILdapConfig = {
 let clientOpts: ldap.Client.ClientOptions = {
     url: 'ldap://0.0.0.0:1389',
 };
-let ldapClient: ldap.Client = null;
-let ldapRootClient: ldap.Client = null;
 
 /**
- * Compares pwd of the entry on the server.
+ * Searches for a user by login, if it was found,
+ * compares its password with the one in the request.
  */
-function ldapComparePwd(ldapClient: ldap.Client, dn: ldap.DN, pwd: string, res: express.Response) {
-    ldapClient.compare(dn.toString(), 'pwdhash', pwd, (err: ldap.LDAPError,
-                                                            pass: boolean) => {
+export default function resolveUser(login: string, password: string,
+                                    cb: (error: string, user: User) => void): void {
+    let error: string;
+    let user: User;
+    if (!login || !password) {
+        cb(ldap.LDAP_INAPPROPRIATE_AUTHENTICATION + ':null:No username or password:null', null);
+        return;
+    };
+    let client: ldap.Client = makeClient((err: string) => {
+        if (err)
+            error = err;
+    });
+    if (error) {
+        cb(error, null);
+    }
+    let searchOpts: ldap.Client.SearchOptions = ldapConfig.search;
+    searchOpts.filter = '(login=' + login + ')';
+
+    client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
+                                         (err: ldap.LDAPError, res: EventEmitter) => {
+        res.on('searchEntry', (entry: ldap.SearchEntry) => {
+            compare(client, entry.dn, 'pwdhash', password, (err: string) => {
+                if (err) {
+                    error = err;
+                } else {
+                    user = makeUserFromEntry(entry);
+                }
+                return cb(error, user);
+            });
+        });
         res.on('error', (err: ldap.LDAPError) => {
-            return res.send(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
+            cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name, null);
+        });
+    });
+}
+
+/**
+ * Makes common client.
+ */
+function makeClient(cb: (error: string) => void): ldap.Client {
+    let client: ldap.Client = ldap.createClient(clientOpts);
+    client.on('error', (err: ldap.LDAPError) => {
+        client = null;
+        cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
+    });
+    return client;
+}
+
+/**
+ * Compares equality of pair {attribute: string} : {value: string}
+ */
+function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
+                                              value: string, cb: (err: string) => void): void {
+    client.compare(dn.toString(), attribute, value,
+                                  (err: ldap.LDAPError, pass: boolean, res: ldap.LDAPResult) => {
+        client.on('error', (err: ldap.LDAPError) => {
+            return cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
         });
         if (!pass) {
-            return res.send(ldap.LDAP_INVALID_CREDENTIALS + ':null:Wrong username or password:null');
+            return cb(ldap.LDAP_INVALID_CREDENTIALS + ':null:Wrong username or password:null');
         }
-        return res.send('0:null:Ok:null');
+        return cb(null);
     });
 };
 
 /**
- * Creates clients (common and root) in accroding to login,
- * binds rootClient to server.
+ * Parses users attributes from the SearchEntry.
  */
-export function login(req: express.Request, res: express.Response) {
-    if (req.query.login !== 'root') {
-        if (ldapClient === null) {
-            ldapClient = ldap.createClient(clientOpts);
-            ldapClient.on('error', (err: ldap.LDAPError) => {
-                ldapClient = null;
-                return res.send(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
-            });
-        }
-        authorize(ldapClient, req, res);
-    } else {
-        if (ldapRootClient === null) {
-            ldapRootClient = ldap.createClient(clientOpts);
-            ldapRootClient.on('error', (err: ldap.LDAPError) => {
-                ldapRootClient = null;
-                return res.send(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
-            });
-            ldapRootClient.bind('cn=root', req.query.pwd, (err: ldap.LDAPError) => {
-                res.on('error', (err: ldap.LDAPError) => {
-                    return res.send(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
-                });
-            });
-        }
-        authorize(ldapRootClient, req, res);
-    }
-};
-
-/**
- * NOW: unbind root client, equate it to null.
- * FIX: do smth in case of common client.
- */
-export function logout(req: express.Request, res: express.Response) {
-    if (req.query.login === 'root') {
-        ldapRootClient.unbind(undefined);
-        ldapRootClient = null;
-    }
-    res.end();
-};
-
-/**
- * Searches for the entry on the server, compares pwd by ldapComparePwd.
- */
-function authorize(ldapClient: ldap.Client, req: express.Request, res: express.Response) {
-    let login: string = req.query.login;
-    let pwd: string = req.query.pwd;
-    if (!login || !pwd) {
-        return res.send(ldap.LDAP_INAPPROPRIATE_AUTHENTICATION + ':null:No username or password:null');
-    };
-
-    let searchOpts: ldap.Client.SearchOptions = ldapConfig.search;
-    if (searchOpts.filter) {
-        searchOpts.filter = '(login=' + login + ')';
-    };
-    ldapClient.search('cn=' + login + ', ' + ldapConfig.base, searchOpts, (err: ldap.LDAPError, result: EventEmitter) => {
-        result.on('searchEntry', (entry: ldap.SearchEntry) => {
-            ldapComparePwd(ldapClient, entry.dn, pwd, res);
-        });
-        result.on('error', (err: ldap.LDAPError) => {
-            return res.send(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
-        });
+function makeUserFromEntry(entry: ldap.SearchEntry): User {
+    let user: User;
+    let userPrototype: any = {};
+    Object.keys(entry.object).forEach((value: string, index: number) => {
+        userPrototype[value] = entry.object[value];
     });
-};
+    user = userPrototype as User;
+    return user;
+}

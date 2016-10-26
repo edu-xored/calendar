@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
 import usersAPI from './src/server/users';
-import * as ldapClient from './ldap/client';
+import * as authAPI from './api/auth';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -57,9 +57,9 @@ app.use('/api', usersAPI);
 
 // LDAP
 
-app.use('/ldap/login', ldapClient.login);
+app.post('/api/login', authAPI.login);
 
-app.use('/ldap/logout', ldapClient.logout);
+app.post('/api/logout', authAPI.logout);
 
 // static assets
 
