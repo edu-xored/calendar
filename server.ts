@@ -9,7 +9,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
-import usersAPI from './src/server/users';
+import usersAPI from './src/server/routes/users';
+import database from "./src/server/database/database";
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -49,6 +50,11 @@ if (process.env.NODE_ENV !== 'production') {
   const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
   app.use(hotMiddleware(compiler));
 }
+
+// Db Synchronization
+database.sequelize.sync().then(() => {
+  console.log("DbSync Complete");
+});
 
 // REST API routes
 

@@ -8,8 +8,8 @@
     "tsc": "cross-env node_modules/.bin/tsc",
     "webpack:prod": "cross-env NODE_ENV=production node_modules/.bin/webpack --config webpack.config.js",
     "build": "npm run tsc && npm run webpack:prod",
-    "dev": "cross-env NODE_ENV=development ts-node server.ts",
-    "start": "cross-env NODE_ENV=production ts-node server.ts",
+    "dev": "cross-env NODE_ENV=development node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
     "lint": "cross-env tslint --config tslint.json src/**/*.ts*",
     "test": "ts-node node_modules/mocha/bin/_mocha --timeout 10000 -- test/*.ts"
   },
@@ -56,10 +56,13 @@
     "promise": "^7.1.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "sequelize": "^3.24.5",
+    "sqlite3": "^3.1.6",
     "react-router": "^3.0.0",
     "semantic-ui-react": "^0.56.13"
   },
   "devDependencies": {
+    "@types/sequelize": "^4.0.38",
     "autoprefixer": "^6.5.1",
     "awesome-typescript-loader": "^2.2.4",
     "babel-core": "^6.18.0",
@@ -79,7 +82,7 @@
     "postcss-loader": "^1.0.0",
     "postcss-scss": "^0.3.1",
     "react-hot-loader": "^3.0.0-beta.6",
-    "ts-node": "^1.6.0",
+    "ts-node": "^1.6.1",
     "tslint": "^3.15.1",
     "typescript": "^2.0.6",
     "typings": "^1.4.0",
