@@ -54,6 +54,7 @@ export interface Calendar extends Entity {
   description: string;
   teamId: string;
   organizationId: string;
+  teams: Team[];
   events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
 }
 
