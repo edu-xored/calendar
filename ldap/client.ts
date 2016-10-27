@@ -29,80 +29,103 @@ let clientOpts: ldap.Client.ClientOptions = {
  * Searches for a user by login, if it was found,
  * compares its password with the one in the request.
  */
-export default function resolveUser(login: string, password: string,
-                                    cb: (error: string, user: User) => void): void {
+export default async function resolveUser(login: string, password: string,
+                                    cb: (error: string, user: User) => void) {
     let error: string;
     let user: User;
+    let client: ldap.Client;
     if (!login || !password) {
         cb(ldap.LDAP_INAPPROPRIATE_AUTHENTICATION + ':null:No username or password:null', null);
         return;
     };
-    let client: ldap.Client = makeClient((err: string) => {
+    try {
+    client = await makeClient((err: string) => {
         if (err)
             error = err;
     });
+    } catch (error) {
+        cb(error, null);
+    }
     if (error) {
         cb(error, null);
     }
     let searchOpts: ldap.Client.SearchOptions = ldapConfig.search;
     searchOpts.filter = '(login=' + login + ')';
 
-    client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
+    try {
+    await client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
                                          (err: ldap.LDAPError, res: EventEmitter) => {
-        res.on('searchEntry', (entry: ldap.SearchEntry) => {
-            compare(client, entry.dn, 'pwdhash', password, (err: string) => {
+        res.on('searchEntry', async (entry: ldap.SearchEntry) => {
+            try {
+            await compare(client, entry.dn, 'pwdhash', password, async (err: string) => {
                 if (err) {
                     error = err;
                 } else {
-                    user = makeUserFromEntry(entry);
+                    try {
+                    user = await makeUserFromEntry(entry);
+                    } catch (error) {
+                        cb(error, null);
+                    }
                 }
                 return cb(error, user);
             });
+            } catch (error) {
+                cb(error, null);
+            }
         });
         res.on('error', (err: ldap.LDAPError) => {
             cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name, null);
         });
     });
+    } catch (error) {
+        cb(error, null);
+    }
 }
 
 /**
  * Makes common client.
  */
-function makeClient(cb: (error: string) => void): ldap.Client {
+async function makeClient(cb: (error: string) => void): Promise<ldap.Client> {
     let client: ldap.Client = ldap.createClient(clientOpts);
     client.on('error', (err: ldap.LDAPError) => {
         client = null;
         cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
     });
-    return client;
+    return new Promise<ldap.Client>((resolve) => {
+        resolve(client);
+    });
 }
 
 /**
  * Compares equality of pair {attribute: string} : {value: string}
  */
-function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
-                                              value: string, cb: (err: string) => void): void {
+async function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
+                                              value: string, cb: (err: string) => void): Promise<void> {
     client.compare(dn.toString(), attribute, value,
                                   (err: ldap.LDAPError, pass: boolean, res: ldap.LDAPResult) => {
         client.on('error', (err: ldap.LDAPError) => {
-            return cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
+            return new Promise<void>((resolve) =>
+                                cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name));
         });
         if (!pass) {
-            return cb(ldap.LDAP_INVALID_CREDENTIALS + ':null:Wrong username or password:null');
+            return new Promise<void>((resolve) =>
+                                cb(ldap.LDAP_INVALID_CREDENTIALS + ':null:Wrong username or password:null'));
         }
-        return cb(null);
+        return new Promise<void>((resolve) => cb(null));
     });
 };
 
 /**
  * Parses users attributes from the SearchEntry.
  */
-function makeUserFromEntry(entry: ldap.SearchEntry): User {
+async function makeUserFromEntry(entry: ldap.SearchEntry): Promise<User> {
     let user: User;
     let userPrototype: any = {};
     Object.keys(entry.object).forEach((value: string, index: number) => {
         userPrototype[value] = entry.object[value];
     });
     user = userPrototype as User;
-    return user;
+    return new Promise<User>((resolve) => {
+        resolve(user);
+    });
 }
