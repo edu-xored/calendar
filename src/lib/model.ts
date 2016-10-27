@@ -35,11 +35,13 @@ export interface Organization extends Entity {
   name: string;
   avatar: string;
   description: string;
+  teams: Team[];
 }
 
 export interface Event extends Entity {
   type: string;
   comment: string;
+  calendarId: string;
   start: Date;
   end: Date;
 }
@@ -48,6 +50,7 @@ export interface Calendar extends Entity {
   name: string;
   type: string;
   description: string;
+  teamId: string;
   events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
 }
 
