@@ -52,7 +52,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Db Synchronization
-database.sync().then(() => {
+database.sequelize.sync().then(() => {
   console.log("DbSync Complete");
 });
 

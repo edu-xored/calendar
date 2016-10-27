@@ -1,20 +1,12 @@
 import Sequelize = require("sequelize");
-//const env = process.env.NODE_ENV || 'development';
-//import config = require("../dbcongig.json").[env];
+// TODO: Make dev script in package.json 'development' NODE_ENV
+const env = 'development' || process.env.NODE_ENV; 
+const config = require("../../../dbconfig.json")[env];
+console.log(env);
+
+
 export default class Database {
-    static sequelize = new Sequelize('database', 'username', 'password', {
-        host: 'localhost',
-        dialect: 'sqlite',
+    static sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-        pool: {
-            max: 5,
-            min: 0,
-            idle: 10000
-        },
-
-        // SQLite only
-        storage: 'database.db'
-    });
-
-    static users = require('/models/userModel').default.bind(Database.sequelize);
+    static users = require('./models/userModel').default(Database.sequelize);
 }

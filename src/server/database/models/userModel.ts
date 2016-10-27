@@ -1,7 +1,7 @@
 import * as Sequelize from "sequelize";
 
 const userModel = (sequelize) => {
-  sequelize.define('User', {
+  return sequelize.define('User', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true
