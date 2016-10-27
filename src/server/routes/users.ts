@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as usersStore from "./../Storages/usersStore";
+import * as usersStore from "./../storages/usersStore";
 import { User } from '../../lib/model';
 
 const router = express.Router();
