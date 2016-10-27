@@ -1,22 +1,22 @@
 import "sequelize";
 import { User } from '../../lib/model';
-import { sequelize } from "../database/database";
-import { MUser } from "../database/models/MUser";
+import database from "../database/database";
+import userModel from "../database/models/userModel";
 
-export function getAll(): Promise<User[]> {
-    return sequelize.sync()
+export function getAll(): any {
+    return database.sync()
         .then(() => {
-            return MUser.findAll()
+            return userModel.findAll()
         })
         .then((data) => {
             return data;
         });
 }
 
-export function get(id: number): Promise<User> {
-    return sequelize.sync()
+export function get(id: number): any {
+    return database.sync()
         .then(() => {
-            return MUser.findById(id)
+            return userModel.findById(id)
         })
         .then((entity) => {
             return entity;

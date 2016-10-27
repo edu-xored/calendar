@@ -1,5 +1,7 @@
-const Sequelize = require('sequelize');
-export const sequelize = new Sequelize('database', 'username', 'password', {
+import Sequelize = require("sequelize");
+//const env = process.env.NODE_ENV || 'development';
+//import config = require("../dbcongig.json").[env];
+const database = new Sequelize('database', 'username', 'password', {
   host: 'localhost',
   dialect: 'sqlite',
 
@@ -12,3 +14,5 @@ export const sequelize = new Sequelize('database', 'username', 'password', {
   // SQLite only
   storage: 'database.db'
 });
+
+export default database;
