@@ -1,6 +1,7 @@
 import Sequelize = require("sequelize");
-//const env = process.env.NODE_ENV || 'development';
-//import config = require("../dbcongig.json").[env];
+const env = process.env.NODE_ENV || 'development';
+const config = require("../../../dbconfig.json")[env];
+
 const database = new Sequelize('database', 'username', 'password', {
   host: 'localhost',
   dialect: 'sqlite',
