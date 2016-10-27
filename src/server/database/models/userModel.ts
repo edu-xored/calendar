@@ -11,8 +11,14 @@ const userModel = (sequelize) => {
     updatedAt: Sequelize.TIME,
     updatedBy: Sequelize.STRING,
     name: Sequelize.STRING,
-    login: Sequelize.STRING
+    login: Sequelize.STRING,
+    email: Sequelize.STRING,
+    pwdhash: Sequelize.STRING,
+    avatar: Sequelize.STRING,
+    role: Sequelize.STRING,
+    position: Sequelize.STRING,
+    place: Sequelize.STRING
   });
-}
+};
 
 export default userModel;
