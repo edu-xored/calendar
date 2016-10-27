@@ -15,21 +15,7 @@ import database from "./src/server/database/database";
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
 const webpackConfig = require('./webpack.config');
-
-const app = express();
 const compiler = webpack(webpackConfig);
-
-app.use(morgan('dev'));
-app.use(cors());
-app.use(helmet());
-
-app.use(cookieParser());
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// parse application/json
-app.use(bodyParser.json());
 
 function logErrors(err, req, res, next) {
   if (err) {
@@ -37,52 +23,69 @@ function logErrors(err, req, res, next) {
   }
   next(err);
 }
-app.use(logErrors);
 
-if (process.env.NODE_ENV !== 'production') {
-  const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
-  app.use(devMiddleware(compiler, {
-    noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
-    stats: 'errors-only',
-  }));
+export default function startServer() {
+  const app = express();
 
-  const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
-  app.use(hotMiddleware(compiler));
+  app.use(morgan('dev'));
+  app.use(cors());
+  app.use(helmet());
+
+  app.use(cookieParser());
+
+  // parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: false }));
+
+  // parse application/json
+  app.use(bodyParser.json());
+  app.use(logErrors);
+
+  if (process.env.NODE_ENV !== 'production') {
+    const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
+    app.use(devMiddleware(compiler, {
+      noInfo: true,
+      publicPath: webpackConfig.output.publicPath,
+      stats: 'errors-only',
+    }));
+
+    const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
+    app.use(hotMiddleware(compiler));
+  }
+
+  // REST API routes
+
+  app.use('/api', usersAPI);
+
+  // static assets
+
+  app.use(express.static(ROOT_DIR));
+
+  // otherwise return index.html
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+  });
+
+  app.use((err, req, res, next) => { // eslint-disable-line
+    if (err) {
+      console.log(err);
+      res.status(500).send('bad code path');
+    }
+  });
+
+  // TODO detect port like in create-react-app
+
+  app.listen(PORT, '0.0.0.0', (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    console.log('Listening at http://0.0.0.0:%s', PORT);
+  });
 }
 
 // Db Synchronization
 database.sequelize.sync().then(() => {
   console.log("DbSync Complete");
-});
-
-// REST API routes
-
-app.use('/api', usersAPI);
-
-// static assets
-
-app.use(express.static(ROOT_DIR));
-
-// otherwise return index.html
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(ROOT_DIR, 'index.html'));
-});
-
-app.use((err, req, res, next) => { // eslint-disable-line
-  if (err) {
-    console.log(err);
-    res.status(500).send('bad code path');
-  }
-});
-
-// TODO detect port like in create-react-app
-
-app.listen(PORT, '0.0.0.0', (err) => {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  console.log('Listening at http://0.0.0.0:%s', PORT);
+  startServer();
 });
