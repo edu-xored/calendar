@@ -4,18 +4,32 @@ import { User } from '../../lib/model';
 
 const router = express.Router();
 
-router.get('/users', (req, res) => {
+router.get('/getUsers', (req, res) => {
   usersStore.getAll()
-    .then((result) => {
+    .then(result => {
       res.json(result);
     });
 });
 
-router.get('/user/:id', (req, res) => {
+router.get('/getUser/:id', (req, res) => {
   usersStore.get(req.params.id)
-    .then((result) => {
-        res.json(result);
+    .then(result => {
+      res.json(result);
     });
+});
+
+const user: User =
+  {
+    id: "sap",
+    name: "name"
+  }
+
+
+router.post('/createUser', (req, res) => {
+  usersStore.create(JSON.parse(req.body))
+    .then(result => {
+      res.json(result);
+    })
 });
 
 export default router;
