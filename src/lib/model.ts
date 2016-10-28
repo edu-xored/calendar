@@ -8,6 +8,7 @@ export interface Entity {
 
 export interface User extends Entity {
   name: string;
+  email?: string;
   login?: string;
   pwdhash?: string; // password hash
   avatar?: string; // URL to avatar image, e.g. it could be a gravatar URL or URL to uploaded image
