@@ -38,3 +38,8 @@ jspm_packages
 
 app
 dist
+
+.awcache
+
+# Database files
+*.db
