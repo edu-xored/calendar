@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Input, Menu, Dropdown, Container} from 'semantic-ui-react';
-import {User} from '../../lib/model';
+import {User} from '../lib/model';
 
 interface PageState {
   activeItem: string;
@@ -13,9 +13,8 @@ interface MenuItem {
   parent: boolean | string,
   rightSide: boolean,
 }
-interface MenuItems extends Array<MenuItem>{}
 
-export default class Page extends React.Component<{}, PageState> {
+export default class PageHeader extends React.Component<{}, PageState> {
   state: PageState = {
     activeItem: 'home',
   };
@@ -35,7 +34,7 @@ export default class Page extends React.Component<{}, PageState> {
   place: 's',
   };//TODO fetch real logged in user's information
 
-  menu: MenuItems = [
+  menu: MenuItem[] = [
     {
       name: 'home',
       text: 'Home',
@@ -95,46 +94,50 @@ export default class Page extends React.Component<{}, PageState> {
   ];
 
   showItem (item, child = false) {
-    if ((item.role === true && this.user.id) || (item.role && item.role == this.user.role))//TODO normal check for rights
+    if (item.parent == item.name)
       return;
-    var dropdown = <Dropdown.Menu />;
-    for (var tmpitem in this.menu)
+    if ((item.role === true && +(this.user.id) <= 0) || (item.role && item.role == this.user.role))//TODO normal check for rights
+      return;
+    var dropdown = [];
+    for (var tmpitem of this.menu)
       if (tmpitem.parent == item.name)
-        dropdown.addChild(this.showItem(item));
-    if (dropdown.numberOfItems > 0) {
+        dropdown.push(this.showItem(tmpitem));
+    if (dropdown.length > 0) {
       return (
         <Dropdown as={(child)? Dropdown.Item: Menu.Item} text={item.name}>
-          {dropdown}
+          <Dropdown.Menu>
+            {dropdown}
+          </Dropdown.Menu>
         </Dropdown>
       )
     } else {
       if (child)
         return (
-          <Dropdown.Item value={item.name} active={this.state.activeItem === item.name} onClick={this.handleDropdownItemClick} />
+          <Dropdown.Item value={item.name} text={item.text} active={this.state.activeItem === item.name} onClick={this.handleDropdownItemClick} />
         )
       else
         return (
-          <Menu.Item name={item.name} text={item.text} active={this.state.activeItem === item.name} onClick={this.handleMenuItemClick}/>
+          <Menu.Item name={item.name} active={this.state.activeItem === item.name} onClick={this.handleMenuItemClick}/>
         )
     }
   }
 
   render() {
 
-    var container = <Container/>;
-    for (var item in this.menu)
+    var container = [];
+    for (var item of this.menu)
       if (item.parent == false && !item.rightSide)
-        container.addChild(this.showItem(item));
-    container.addChild(
+        container.push(this.showItem(item));
+    container.push(
       <Menu.Item position='right'>
         <Input icon='search' placeholder='Search...' />
       </Menu.Item>
     );
-    for (var item in this.menu)
+    for (var item of this.menu)
       if (item.parent == false && item.rightSide)
-        container.addChild(this.showItem(item));
+        container.push(this.showItem(item));
     return (
-      <Menu>{container}</Menu>
+      <Menu><Container>{container}</Container></Menu>
     );
     /*
      <Container>

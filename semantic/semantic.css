@@ -65,7 +65,7 @@ input[type="password"] {
  */
 
 /*******************************
-             Page
+             PageHeader
 *******************************/
 
 html,
@@ -4780,7 +4780,7 @@ i.flag:not(.icon):before {
 *******************************/
 
 /*--------------
-     Page
+     PageHeader
 ---------------*/
 
 h1.ui.header {
@@ -16950,7 +16950,7 @@ ol.ui.horizontal.list li:before,
 *******************************/
 
 /*-----------------------
-       Page Grid
+       PageHeader Grid
 -------------------------*/
 
 @media only screen and (max-width: 767px) {
@@ -17162,7 +17162,7 @@ ol.ui.horizontal.list li:before,
   width: 6.25% !important;
 }
 
-/* Celled Page */
+/* Celled PageHeader */
 
 .ui.celled.page.grid {
   box-shadow: none;
@@ -23143,7 +23143,7 @@ Floated Menu / Item
   height: 280px;
 }
 
-/* Half Page */
+/* Half PageHeader */
 
 .ui[class*="half page"].ad {
   width: 300px;
@@ -27120,7 +27120,7 @@ a.ui.card:hover,
 *******************************/
 
 /*--------------
-      Page
+      PageHeader
 ---------------*/
 
 .ui.page.dimmer {
@@ -31829,13 +31829,13 @@ a.ui.nag {
   padding: 0em !important;
 }
 
-/* Whole Page */
+/* Whole PageHeader */
 
 body.pushable {
   background: #333333 !important;
 }
 
-/* Page Context */
+/* PageHeader Context */
 
 .pushable:not(body) {
   -webkit-transform: translate3d(0, 0, 0);
@@ -31865,7 +31865,7 @@ body.pushable {
 }
 
 /*--------------
-     Page
+     PageHeader
 ---------------*/
 
 .pushable > .pusher {
