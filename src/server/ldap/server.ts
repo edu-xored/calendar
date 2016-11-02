@@ -5,7 +5,7 @@ import {User} from '../../lib/model';
 
 /**
  *                            !!!WARNING!!!
- * !!!Node server may crush after LDAP server shutdown during its work!!!  
+ * !!!Node server may crash after LDAP server shutdown during its work!!!  
  *        !!!I don't know why it happens. Will be fixed later.!!!
  * 
  * Use 'npm run ldap_dev/ldap_start' to run server in dev/production mode
