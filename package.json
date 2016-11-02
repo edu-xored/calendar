@@ -62,7 +62,7 @@
     "sqlite3": "^3.1.8",
     "react-router": "^3.0.0",
     "semantic-ui-react": "^0.57.1",
-    "ldapjs": "3.10.8"
+    "ldapjs": "1.0.1"
   },
   "devDependencies": {
     "@types/sequelize": "^4.0.38",
