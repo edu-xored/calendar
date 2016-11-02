@@ -33,6 +33,12 @@ export default function startServer() {
 
   app.use(cookieParser());
 
+// LDAP
+
+app.post('/api/login', authAPI.login);
+
+app.post('/api/logout', authAPI.logout);
+
 // static assets
 
   // parse application/x-www-form-urlencoded
