@@ -1,7 +1,7 @@
 import * as ldap from 'ldapjs';
 import * as express from 'express';
 import {EventEmitter} from 'events';
-import {User} from '../src/lib/model';
+import {User} from '../../lib/model';
 
 interface ILdapConfig {
     server: {
@@ -38,24 +38,21 @@ export default async function resolveUser(login: string, password: string,
         cb(ldap.LDAP_INAPPROPRIATE_AUTHENTICATION + ':null:No username or password:null', null);
         return;
     };
-    try {
     client = await makeClient((err: string) => {
-        if (err)
+        if (err) {
             error = err;
+        }
     });
-    } catch (error) {
-        cb(error, null);
-    }
     if (error) {
-        cb(error, null);
+        return cb(error, null);
     }
     let searchOpts: ldap.Client.SearchOptions = ldapConfig.search;
     searchOpts.filter = '(login=' + login + ')';
 
     try {
     await client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
-                                         (err: ldap.LDAPError, res: EventEmitter) => {
-        res.on('searchEntry', async (entry: ldap.SearchEntry) => {
+                                            (err: ldap.LDAPError, res: EventEmitter) => {
+        res.on('searchEntry', async (entry: any) => {
             try {
             await compare(client, entry.dn, 'pwdhash', password, async (err: string) => {
                 if (err) {
@@ -64,17 +61,17 @@ export default async function resolveUser(login: string, password: string,
                     try {
                     user = await makeUserFromEntry(entry);
                     } catch (error) {
-                        cb(error, null);
+                        return cb(error, null);
                     }
                 }
                 return cb(error, user);
             });
             } catch (error) {
-                cb(error, null);
+                return cb(error, null);
             }
         });
         res.on('error', (err: ldap.LDAPError) => {
-            cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name, null);
+            return cb(err.code + ':' + err.dn + ':' + err.message + ':' + err.name, null);
         });
     });
     } catch (error) {
@@ -118,11 +115,11 @@ async function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
 /**
  * Parses users attributes from the SearchEntry.
  */
-async function makeUserFromEntry(entry: ldap.SearchEntry): Promise<User> {
+async function makeUserFromEntry(entry: any): Promise<User> {
     let user: User;
     let userPrototype: any = {};
-    Object.keys(entry.object).forEach((value: string, index: number) => {
-        userPrototype[value] = entry.object[value];
+    Object.keys(entry.attributes).forEach((value: string, index: number) => {
+        userPrototype[entry.attributes[index].type] = entry.attributes[index].vals;
     });
     user = userPrototype as User;
     return new Promise<User>((resolve) => {

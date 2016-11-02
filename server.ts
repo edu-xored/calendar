@@ -11,7 +11,6 @@ const webpack = require('webpack');
 
 import usersAPI from './src/server/routes/users';
 import database from "./src/server/database/database";
-import * as authAPI from './api/auth';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -33,11 +32,6 @@ export default function startServer() {
   app.use(helmet());
 
   app.use(cookieParser());
-// LDAP
-
-app.post('/api/login', authAPI.login);
-
-app.post('/api/logout', authAPI.logout);
 
 // static assets
 

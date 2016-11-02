@@ -10,10 +10,8 @@
     "build": "npm run tsc && npm run webpack:prod",
     "dev": "cross-env NODE_ENV=development node server.js",
     "start": "cross-env NODE_ENV=production node server.js",
-    "dev": "cross-env NODE_ENV=development node server.ts",
-    "ldap_dev": "cross-env NODE_ENV=development node ldap/server.ts",
-    "start": "cross-env NODE_ENV=production tnode server.ts",
-    "ldap_start": "cross-env NODE_ENV=production node ldap/server.ts",
+    "ldap_dev": "cross-env NODE_ENV=development ts-node src/server/ldap/server.ts",
+    "ldap_start": "cross-env NODE_ENV=production ts-node src/server/ldap/server.ts",
     "lint": "cross-env tslint --config tslint.json src/**/*.ts*",
     "test": "ts-node node_modules/mocha/bin/_mocha --timeout 10000 -- test/*.ts"
   },
