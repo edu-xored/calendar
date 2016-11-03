@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, RouterState } from 'react-router';
 import history from './history';
-import Calendar from './pages/calendar';
 import Home from './pages/home';
 import Blank from './pages/blank';
+import Calendar from './pages/calendar';
 
 const Routes = (
   <Router history={history}>
