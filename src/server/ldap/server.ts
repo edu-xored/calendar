@@ -1,6 +1,6 @@
 import * as ldap from 'ldapjs';
 import * as usersStore from '../../server/storages/usersStore';
-import {User} from '../../lib/model';
+import { User } from '../../lib/model';
 
 
 /**
@@ -22,7 +22,7 @@ function authorize(req: any, res: any, next: ldap.Server.NextFunction) {
   let isSearch: boolean = (req instanceof ldap.SearchRequest);
   let isCompare: boolean = (req instanceof ldap.CompareRequest);
   if (!req.connection.ldap.bindDN.equals('cn=root') && !isSearch && !isCompare) {
-      return next(new ldap.InsufficientAccessRightsError('Insufficient access rights'));
+    return next(new ldap.InsufficientAccessRightsError('Insufficient access rights'));
   }
 
   return next();
@@ -31,42 +31,46 @@ function authorize(req: any, res: any, next: ldap.Server.NextFunction) {
 /**
  * Binds common users.
  */
-server.compare(BASE, [authorize], async (req: ldap.CompareRequest, res: any, next: ldap.Server.NextFunction) => {
-  let dn: string = req.dn.toString();
-  let login: string = dn.split(', ')[0].split('=')[1];
-  let user: User = await usersStore.getByAttr('login', login);
-  if (!user)
-    return next(new ldap.NoSuchObjectError(dn));
+server.compare(BASE, [authorize],
+  async (req: ldap.CompareRequest, res: any, next: ldap.Server.NextFunction) => {
+    let dn: string = req.dn.toString();
+    let login: string = dn.split(', ')[0].split('=')[1];
+    let user: User = await usersStore.getByAttr('login', login);
+    if (!user) {
+      res.end(false);
+      return next(new ldap.NoSuchObjectError(dn));
+    }
 
-  if (!user[req.attribute])
-    return next(new ldap.NoSuchAttributeError(req.attribute));
+    if (!user[req.attribute]) {
+      res.end(false);
+      return next(new ldap.NoSuchAttributeError(req.attribute));
+    }
 
-  let matches: boolean = false;
-  let val = user[req.attribute];
-  if (val === req.value) {
+    let matches: boolean = false;
+    let val = user[req.attribute];
+    if (val === req.value) {
       matches = true;
-  };
+    };
 
-  res.end(matches);
-  return next();
-});
-
-server.search(BASE, [authorize], async (req: ldap.SearchRequest,
-                                    res: ldap.SearchResponse,
-                                    next: ldap.Server.NextFunction) => {
-  let dn: string = req.dn.toString();
-  let user: any = await usersStore.getByAttr(req.filter.toString().split('=')[0].split('(')[1],
-                                                req.filter.toString().split('=')[1].split(')')[0]);
-  if (!user) {
-    return next(new ldap.NoSuchObjectError(dn));
-  }
-  res.send({
-    dn: dn,
-    attributes: user.dataValues,
+    res.end(matches);
+    return next();
   });
 
-  return next();
-});
+server.search(BASE, [authorize],
+  async (req: ldap.SearchRequest, res: ldap.SearchResponse, next: ldap.Server.NextFunction) => {
+    const dn: string = req.dn.toString();
+    let user: any = await usersStore.getByAttr(req.filter.toString().split('=')[0].split('(')[1],
+      req.filter.toString().split('=')[1].split(')')[0]);
+    if (!user) {
+      return next(new ldap.NoSuchObjectError(dn));
+    }
+    res.send({
+      dn: dn,
+      attributes: user.dataValues,
+    });
+
+    return next();
+  });
 
 
 

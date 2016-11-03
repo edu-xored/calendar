@@ -9,6 +9,9 @@ router.get('/users', (req, res) => {
   usersStore.getAll()
     .then((result) => {
       res.json(result);
+    })
+    .catch((error) => {
+      res.json(error);
     });
 });
 
@@ -16,11 +19,14 @@ router.get('/user/:id', (req, res) => {
   usersStore.getById(req.params.id)
     .then((result) => {
         res.json(result);
+    })
+    .catch((error) => {
+      res.json(error);
     });
 });
 
 router.post('/login', (req, res) => {
-  authorization.login(req, res)
+  authorization.login(req.body.login, req.body.pwd)
     .then((user) => {
       res.json(user);
     })
@@ -30,7 +36,7 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  authorization.logout(req, res)
+  authorization.logout(req)
     .then((result) => {
         res.json(result);
     })
