@@ -45,7 +45,6 @@ export interface Event extends Entity {
   calendarId: string;
   start: Date;
   end: Date;
-  userId: string;
 }
 
 export interface Calendar extends Entity {
