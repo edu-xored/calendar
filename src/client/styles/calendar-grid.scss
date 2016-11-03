@@ -1,0 +1,82 @@
+.calendar-grid {
+  border: 3px solid #000;
+
+  display: block;
+  position: relative;
+  max-width: 700px;
+  height: 500px;
+  background: #fff;
+
+  overflow: hidden;
+}
+
+.grid-header {
+  // border: 2px solid blue;
+
+  position: relative;
+  top:0;
+  left:0;
+  display: flex;
+  z-index: 101;
+}
+
+.grid-header .grid-cell {
+  background: #dfdfdf;
+}
+
+.grid-body-wrapper {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  overflow: auto;
+}
+
+.grid-body {
+  display: flex;
+
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-flow: row nowrap;
+
+}
+
+.team-members-column {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.events-list-column {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.grid-header .grid-row {
+  height: 50px;
+}
+
+.grid-row {
+  // border: 1px solid green;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+
+  width: auto;
+  min-width: inherit;
+  height: 100px;
+}
+
+.grid-cell {
+  border: 1px solid red;
+
+  width: 100px;
+  height: auto;
+  display: flex;
+}
