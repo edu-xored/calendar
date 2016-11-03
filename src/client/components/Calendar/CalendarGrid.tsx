@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-<<<<<<< 50cd87c06962ed0e7406d1fee146bfdeac57556b
+
 import Row from './Row';
 
 import '../../styles/calendar-grid';
@@ -27,10 +27,10 @@ export default class CalendarGrid extends React.Component<any, any> {
 
     let headerRow = <Row id={'header-row'} rowData={ [...Array(headerLength+1).keys()] } />;
     let teamMembersRows = members.map((member, i) =>
-        <Row key={ i } id={ `team-row-${i}` } rowData={ [member] } />
+        <Row key={i} id={ `team-row-${i}` } rowData={ [member] } />
     );
     let eventsRows = [...Array(tmCount).keys()].map((i) =>
-        <Row key={ i } id={`event-row-${i}`} rowData={ [...Array(headerLength).keys()] } />
+        <Row key={i} id={ `event-row-${i}` } rowData={ [...Array(headerLength).keys()] } />
     );
 
     return (
@@ -59,9 +59,4 @@ export default class CalendarGrid extends React.Component<any, any> {
     gridHeader = document.getElementsByClassName('grid-header')[0];
     gridHeader.style.left = `${-grid.scrollLeft}px`;
   }
-=======
-
-export default class CalendarGrid extends React.Component<any, any> {
-  
->>>>>>> Add CalendarView component scaffold (issue #43)
 }
