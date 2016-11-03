@@ -6,6 +6,10 @@ export function getAll(): Promise<User[]> {
     return database.users.findAll() as any;
 }
 
-export function get(id: number): Promise<User> {
+export function getById(id: number): Promise<User> {
     return database.users.findById(id) as any;
+}
+
+export function getByAttr(attr: string, value: string): Promise<User> {
+    return database.users.findOne({where: {login: value}}) as any;
 }

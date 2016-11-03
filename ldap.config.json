@@ -1,0 +1,11 @@
+{
+    "server": {
+        "url": "ldap://0.0.0.0:1389"
+    },
+    "base": "o=eduxored",
+    "search": {
+        "scope": "base",
+        "filter": "(login=123)"
+    },
+    "url": "ldap://0.0.0.0:1389"
+}

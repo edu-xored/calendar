@@ -33,6 +33,8 @@ export default function startServer() {
 
   app.use(cookieParser());
 
+// static assets
+
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: false }));
 
