@@ -20,6 +20,7 @@ const defaultCalendar = {
   name: '',
   type: '',
   description: '',
+  organizationId: '',
   teamId: ''
 };
 
