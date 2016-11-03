@@ -15,9 +15,24 @@ interface ICalendarViewState {
   pattern: string
 }
 
+const defaultCalendar = {
+  id: '',
+  name: '',
+  type: '',
+  description: '',
+  teamId: ''
+};
+
+const defaultState = {
+  calendar: defaultCalendar,
+  data: [],
+  filterKey: '',
+  pattern: ''
+};
+
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
 
-state: ICalendarViewState;
+state: ICalendarViewState = defaultState;
 
   constructor(props) {
     super(props);
@@ -28,22 +43,25 @@ state: ICalendarViewState;
     let team: Team;
     let events: Event[];
 
+    calendar = defaultCalendar;
+
     // calendar = __GET_CALENDAR_DATA__(this.props.params.id);
     // team = __GET_TEAM_DATA__(calendar.teamId);
     // events = __GET_EVENTS__(this.props.params.id);
 
-    this.setState({
-      calendar: {
-        id: this.props.params.id,
-        name: calendar.name,
-        type: calendar.type,
-        description: calendar.description,
-        teamId: calendar.teamId
-      },
-      data: this.createDataArray(events, team.members),
-      filterKey: '',
-      pattern: ''
-    });
+    // this.setState({
+    //   calendar: {
+    //     id: this.props.params? this.props.params.id : '' ,
+    //     name: calendar.name,
+    //     type: calendar.type,
+    //     description: calendar.description,
+    //     teamId: calendar.teamId
+    //   },
+    //   data: this.createDataArray(events, team.members),
+    //   filterKey: '',
+    //   pattern: ''
+    // });
+
   }
 
   render() {
@@ -66,12 +84,11 @@ state: ICalendarViewState;
   }
 
   createDataArray(events: Event[], teamMembers: User[]) {
-    return teamMembers.map((tm) => {
-      return {
+    return teamMembers.map((tm) => ({
         user: tm,
         events: events.filter((event) => event.createdBy === tm.id)
-      };
-    });
+      })
+    );
   }
 
   setFilterParams(key: string, pattern: string) {
