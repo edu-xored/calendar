@@ -1,5 +1,5 @@
 .calendar-grid {
-  border: 3px solid #000;
+  // border: 3px solid #000;
 
   display: block;
   position: relative;
@@ -21,7 +21,7 @@
 }
 
 .grid-header .grid-cell {
-  background: #dfdfdf;
+  background: #efefef;
 }
 
 .grid-body-wrapper {
@@ -60,8 +60,6 @@
 }
 
 .grid-row {
-  // border: 1px solid green;
-
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -74,7 +72,8 @@
 }
 
 .grid-cell {
-  border: 1px solid red;
+  border-top: 1px solid #dfdfdf;
+  border-left: 1px solid #dfdfdf;
 
   width: 100px;
   height: auto;
