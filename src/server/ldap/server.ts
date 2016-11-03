@@ -11,8 +11,6 @@ import {User} from '../../lib/model';
  * Use 'npm run ldap_dev/ldap_start' to run server in dev/production mode
  */
 
-
-
 let BASE: string = 'o=eduxored';
 
 let server: ldap.Server = ldap.createServer(undefined);
@@ -36,7 +34,7 @@ function authorize(req: any, res: any, next: ldap.Server.NextFunction) {
 server.compare(BASE, [authorize], async (req: ldap.CompareRequest, res: any, next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
   let login: string = dn.split(', ')[0].split('=')[1];
-  let user: User = await usersStore.get_by_attr('login', login);
+  let user: User = await usersStore.getByAttr('login', login);
   if (!user)
     return next(new ldap.NoSuchObjectError(dn));
 
@@ -57,7 +55,7 @@ server.search(BASE, [authorize], async (req: ldap.SearchRequest,
                                     res: ldap.SearchResponse,
                                     next: ldap.Server.NextFunction) => {
   let dn: string = req.dn.toString();
-  let user: any = await usersStore.get_by_attr(req.filter.toString().split('=')[0].split('(')[1],
+  let user: any = await usersStore.getByAttr(req.filter.toString().split('=')[0].split('(')[1],
                                                 req.filter.toString().split('=')[1].split(')')[0]);
   if (!user) {
     return next(new ldap.NoSuchObjectError(dn));

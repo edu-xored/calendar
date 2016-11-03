@@ -13,7 +13,7 @@ router.get('/users', (req, res) => {
 });
 
 router.get('/user/:id', (req, res) => {
-  usersStore.get_by_id(req.params.id)
+  usersStore.getById(req.params.id)
     .then((result) => {
         res.json(result);
     });
@@ -21,8 +21,11 @@ router.get('/user/:id', (req, res) => {
 
 router.post('/login', (req, res) => {
   authorization.login(req, res)
-    .then((result) => {
-      res.json(result);
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((error) => {
+      res.json(error);
     });
 });
 
@@ -30,6 +33,9 @@ router.post('/logout', (req, res) => {
   authorization.logout(req, res)
     .then((result) => {
         res.json(result);
+    })
+    .catch((error) => {
+      res.json(error);
     });
 });
 
