@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-
 import Row from './Row';
 
 import '../../styles/calendar-grid';
