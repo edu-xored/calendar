@@ -14,21 +14,18 @@ router.get('/getUsers', (req, res) => {
 router.get('/getUser/:id', (req, res) => {
   usersStore.get(req.params.id)
     .then(result => {
-      res.json(result);
+      res.json({
+        data: result
+      });
     });
 });
 
-const user: User =
-  {
-    id: "sap",
-    name: "name"
-  }
-
-
 router.post('/createUser', (req, res) => {
-  usersStore.create(JSON.parse(req.body))
+  usersStore.create(req.body)
     .then(result => {
-      res.json(result);
+      res.json({
+        data: result
+      });
     })
 });
 
