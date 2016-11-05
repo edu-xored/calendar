@@ -4,7 +4,8 @@ const userModel = (sequelize) => {
   return sequelize.define('User', {
     id: {
       type: Sequelize.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     createdAt: Sequelize.TIME,
     createdBy: Sequelize.STRING,

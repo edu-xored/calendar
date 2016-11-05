@@ -7,7 +7,9 @@ const router = express.Router();
 router.get('/getUsers', (req, res) => {
   usersStore.getAll()
     .then(result => {
-      res.json(result);
+      res.json({
+        data: result
+      });
     });
 });
 
@@ -26,7 +28,7 @@ router.post('/createUser', (req, res) => {
       res.json({
         data: result
       });
-    })
+    });
 });
 
 export default router;

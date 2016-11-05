@@ -11,16 +11,6 @@ export function get(id: number): Promise<User> {
 }
 
 export function create(user: User): Promise<User> {
-    return database.users.create({
-        createdBy: user.createdBy,
-        updatedBy: user.updatedBy,
-        name: user.name,
-        login: user.login,
-        email: user.email,
-        pwdhash: user.pwdhash,
-        avatar: user.avatar,
-        role: user.role,
-        position: user.position,
-        place: user.place
-    }) as any;
+    user.id = null;
+    return database.users.create(user) as any;
 }
