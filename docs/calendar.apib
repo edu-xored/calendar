@@ -1,0 +1,185 @@
+FORMAT: 1A
+
+# Calendars
+REST interface used in https://github.com/edu-xored/calendar project.
+
+## Group Authentication
+
+# POST /api/login
+Login with basic auth.
++ Response 200 (application/json)
+
+# POST /api/logout
+Close session.
++ Response 200
+
+# GET /api/token
+Verifies whether auth token is still valid.
++ Response 200
+
+## Group Users
+
+API to manage user resources.
+
+## User [/api/user/{id}]
+
+User entity properties:
++ id - (string) UUID
++ name - (string) full user name
++ login - (string) short login
++ avatar - (string) URL to avatar image
++ role - (string) user role (admin, employee)
++ position - (string) employee position
++ place - (string) working place, office
++ createdAt - timestamp when record is created
++ updatedAt - timestamp when record is updated
++ createdBy - UUID of creator
++ updatedBy - UUID of last user who modifies the record
+
+### Retreive user by id [GET]
++ Response 200 (application/json)
+
+### Update user [PUT]
++ Response 200 (application/json)
+
+### Delete user [DELETE]
++ Response 204
+
+# GET /api/users
+Retreive all users.
++ Response 200 (application/json)
+
+# GET /api/me
+Retreive info about currently authenticated user.
++ Response 200 (application/json)
+
+
+## Group Teams
+
+API to manage team resources.
+
+## Team [/api/team/{id}]
+
+Team entity properties:
++ id - UUID of team record
++ name - (string) team name
++ avatar - (string) URL to avatar image
++ description - (string) additional notes
++ createdAt - timestamp when record is created
++ updatedAt - timestamp when record is updated
++ createdBy - UUID of creator
++ updatedBy - UUID of last user who modifies the record
++ members - array of user records
+
+### Retreive team by id [GET]
++ Response 200 (application/json)
+
+### Update team [PUT]
++ Response 200 (application/json)
+
+### Delete team [DELETE]
++ Response 204
+
+# POST /api/team/{id}/members
+Add/remove member(s) of specified team.
++ Response 200 (application/json)
+
+## Teams Collection [/api/teams]
+
+### Retreive all teams [GET]
++ Response 200 (application/json)
+
+#### Create new team [POST]
++ Response 201 (application/json)
+
+## Group Calendars
+
+API to manage calendar resources.
+
+## Calendar [/api/calendar/{id}]
+
+Calendar entity properties:
++ id - UUID of the calendar record
++ type - (string) calendar type
++ description - (string) additional notes
++ teamId - UUID of team
++ createdAt - timestamp when record is created
++ updatedAt - timestamp when record is updated
++ createdBy - UUID of creator
++ updatedBy - UUID of last user who modifies the record
+
+### Retreive calendar by id [GET]
++ Response 200 (application/json)
+
+### Update calendar [PUT]
++ Response 200 (application/json)
+
+### Delete calendar [DELETE]
++ Response 204
+
+# GET /api/calendars
+Retreive all calendars.
++ Response 200 (application/json)
+
+## Calendar Events Collection [/api/calendar/{id}/events]
+
+### Retreive calendar events [GET]
++ Response 200 (application/json)
+
+    [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "createdAt": "2016-10-23T10:01:47Z",
+            "createdBy": "550e8400-e29b-41d4-a716-446655440000",
+            "type": "PTO",
+            "comment": "sick",
+            "start": "2016-10-23T10:01:47Z",
+            "end": "2016-10-24T10:01:47Z"
+        }
+    ]
+
+### Add calendar events [POST]
++ Response 200 (application/json)
+
+# DELETE /api/events/{id}
+Delete specified event.
++ Response 204 (application/json)
+
+## Group Notifications
+
+# GET /api/notifications
+Get all unread notifications for current user.
++ Response 200 (application/json)
+
+    [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "createdAt": "2016-10-23T10:01:47Z",
+            "message": "message",
+            "userId": "550e8400-e29b-41d4-a716-446655440000",
+            "teamId": "550e8400-e29b-41d4-a716-446655440000"
+        }
+    ]
+
+
+# POST /api/notifications/markasread
+Mark as read specified notifications.
++ Response 200
+
+## Group Avatars
+
+# GET /api/avatar/{user_id}
+Get avatar image for specified user.
++ Response 200 (image/jpg)
+
+# POST /api/avatar
+Uploads avatar image to server.
++ Response 201
+
+# GET /api/myavatar
+Get avatar of current user.
++ Response 200 (image/jpg)
+
+# POST /api/myavatar
+Change avatar of current user.
++ Response 200

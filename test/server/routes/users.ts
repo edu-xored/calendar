@@ -8,13 +8,13 @@ let userId;
 
 describe("Users RestFul Api tests", () => {
     it("Should return null on getUser(0)", (done) => {
-        server.get(`/Api/getUser/${0}`)
+        server.get(`/Api/user/${0}`)
             .expect(200)
             .expect("Content-type", /json/)
             .end((err, res) => {
-                should(res.body.data).equal(null);
+                should(res.body).equal(null);
                 done();
-            });
+            });             
     });
 
     it("Should create new user and return him", (done) => {
@@ -25,7 +25,7 @@ describe("Users RestFul Api tests", () => {
         server.post("/Api/createUser")
             .send(user)
             .end((err, res) => {
-                user = res.body.data;
+                user = res.body;
                 should(user.id).not.equal(null);
                 userId = user.id;
                 done();
@@ -34,17 +34,17 @@ describe("Users RestFul Api tests", () => {
     });
 
     it("Should get created user from previous test", (done) => {
-        server.get(`/Api/getUser/${userId}`)
+        server.get(`/Api/user/${userId}`)
             .end((err, res) => {
-                should(res.body.data).not.equal(null);
+                should(res.body).not.equal(null);
                 done();
             });
     });
 
     it("Should get all users list, contains new user", (done) => {
-        server.get("/Api/getUsers")
+        server.get("/Api/users")
             .end((err, res) => {
-                let usersList: User[] = res.body.data;
+                let usersList: User[] = res.body;
                 should(usersList).not.empty();
                 should(usersList.find((u) => {
                     return u.id == userId;
