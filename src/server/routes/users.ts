@@ -25,6 +25,9 @@ router.post('/createUser', (req, res) => {
 router.get('/user/:id', (req, res) => {
   usersStore.getById(req.params.id)
     .then((result) => {
+      if (result == null) {
+        res.status(404);
+      }
       res.json(result);
     })
     .catch((error) => {

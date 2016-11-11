@@ -13,6 +13,7 @@ describe("Users RestFul Api tests", () => {
             .expect("Content-type", /json/)
             .end((err, res) => {
                 should(res.body).equal(null);
+                should(res.status).equal(404);
                 done();
             });             
     });

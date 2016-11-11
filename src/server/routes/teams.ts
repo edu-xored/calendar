@@ -27,6 +27,9 @@ router.get('/teams', (req, res) => {
 router.get('/team/:id', (req, res) => {
     teamsStore.getById(req.params.id)
         .then((result) => {
+            if (result == null) {
+                res.status(404);
+            }
             res.json(result);
         })
         .catch((error) => {

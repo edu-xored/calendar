@@ -16,7 +16,7 @@ export function create(team: Team): Promise<Team> {
 }
 
 export function getByAttr(attr: string, value: string): Promise<Team> {
-    return database.teams.findOne({where: {attr: value}}) as any;
+    return database.teams.findOne({where: {[attr]: value}}) as any;
 }
 
 export function removeById(id: number): Promise<void> {
