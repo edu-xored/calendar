@@ -139,25 +139,5 @@ export default class PageHeader extends React.Component<{}, PageState> {
     return (
       <Menu><Container>{container}</Container></Menu>
     );
-    /*
-     <Container>
-     <Menu.Item name='home' active={this.state.activeItem === 'home'} onClick={this.handleMenuItemClick} />
-     <Menu.Item name='calendars' active={this.state.activeItem === 'calendars'} onClick={this.handleMenuItemClick} />
-     <Menu.Item name='reports' active={this.state.activeItem === 'reports'} onClick={this.handleMenuItemClick}/>
-     <Menu.Item name='teams' active={this.state.activeItem === 'teams'} onClick={this.handleMenuItemClick}/>
-     {this.user.role === 'admin' &&
-     <Menu.Item name='admin' active={this.state.activeItem === 'admin'} onClick={this.handleMenuItemClick}/>
-     }
-     <Menu.Item position='right'>
-     <Input icon='search' placeholder='Search...' />
-     </Menu.Item>
-     <Dropdown as={Menu.Item} text={this.user.name}>
-     <Dropdown.Menu>
-     <Dropdown.Item value='options' text="My account" active={this.state.activeItem === 'options'} onClick={this.handleDropdownItemClick} />
-     <Dropdown.Item value='logout' text="Log Out" active={this.state.activeItem === 'logout'} onClick={this.handleDropdownItemClick} />
-     </Dropdown.Menu>
-     </Dropdown>
-     </Container>
-     */
   }
 }

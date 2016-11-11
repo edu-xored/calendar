@@ -57,6 +57,7 @@
     "morgan": "^1.7.0",
     "object-assign": "^4.1.0",
     "promise": "^7.1.1",
+    "rc-datepicker": "^4.0.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^3.0.0",
