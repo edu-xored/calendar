@@ -13,7 +13,7 @@
     "ldap_dev": "cross-env NODE_ENV=development ts-node src/server/ldap/server.ts",
     "ldap_start": "cross-env NODE_ENV=production ts-node src/server/ldap/server.ts",
     "lint": "cross-env tslint --config tslint.json src/**/*.ts*",
-    "test": "ts-node node_modules/mocha/bin/_mocha --timeout 30000 -- test/**/*.ts"
+    "test": "cross-env DEBUG=sequelize* ts-node node_modules/mocha/bin/_mocha --timeout 30000 -- test/**/*.ts"
   },
   "repository": {
     "type": "git",

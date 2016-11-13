@@ -1,10 +1,23 @@
-import Sequelize = require("sequelize");
+import * as ORM from 'sequelize';
+import defineUserModel from './userModel';
+import defineTeamModel from './teamModel';
+import defineOrgModel from './organizationModel';
+import defineEventModel from './eventModel';
+import defineCalendarModel from './calendarModel';
+
 const env = 'development' || process.env.NODE_ENV;
 const config = require("../../../dbconfig.json")[env];
-console.log(env);
 
-export default class Database {
-    static sequelize = new Sequelize(config.database, config.username, config.password, config);
+const orm = new ORM(config.database, config.username, config.password, config);
 
-    static users: Sequelize.Model<any, any> = require('./userModel').default(Database.sequelize);
-}
+const db = {
+  orm,
+  sequelize: orm,
+  users: defineUserModel(orm),
+  teams: defineTeamModel(orm),
+  organizations: defineOrgModel(orm),
+  events: defineEventModel(orm),
+  calendars: defineCalendarModel(orm),
+};
+
+export default db;

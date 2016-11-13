@@ -1,25 +1,14 @@
-import * as Sequelize from "sequelize";
+import * as ORM from "sequelize";
+import {makeEntityFn} from './common';
+import {User} from "../../lib/model";
 
-const userModel = (sequelize) => {
-  return sequelize.define('User', {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    createdAt: Sequelize.TIME,
-    createdBy: Sequelize.STRING,
-    updatedAt: Sequelize.TIME,
-    updatedBy: Sequelize.STRING,
-    name: Sequelize.STRING,
-    login: Sequelize.STRING,
-    email: Sequelize.STRING,
-    pwdhash: Sequelize.STRING,
-    avatar: Sequelize.STRING,
-    role: Sequelize.STRING,
-    position: Sequelize.STRING,
-    place: Sequelize.STRING
-  });
-};
-
-export default userModel;
+export default makeEntityFn<User>('User', {
+  name: ORM.STRING,
+  email: ORM.STRING,
+  login: ORM.STRING,
+  pwdhash: ORM.STRING,
+  avatar: ORM.STRING,
+  role: ORM.STRING,
+  position: ORM.STRING,
+  place: ORM.STRING
+});
