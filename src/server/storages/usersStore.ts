@@ -16,5 +16,5 @@ export function create(user: User): Promise<User> {
 }
 
 export function getByAttr(attr: string, value: string): Promise<User> {
-    return database.users.findOne({where: {attr: value}}) as any;
+    return database.users.findOne({where: {[attr]: value}}) as any;
 }
