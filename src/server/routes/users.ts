@@ -12,7 +12,7 @@ router.get('/users', (req, res) => {
     });
 });
 
-router.post('/createUser', (req, res) => {
+router.post('/users', (req, res) => {
   usersStore.create(req.body)
     .then((result) => {
       res.json(result);

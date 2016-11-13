@@ -22,7 +22,7 @@ describe("Users API", () => {
       id: "stub",
       name: "name"
     };
-    server.post("/api/createUser")
+    server.post("/api/users")
       .send(user)
       .end((err, res) => {
         if (err) throw err;
