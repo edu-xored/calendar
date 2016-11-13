@@ -7,6 +7,13 @@ const router = express.Router();
 
 router.get('/users', (req, res) => {
   usersStore.getAll()
+    .then(result => {
+      res.json(result);
+    });
+});
+
+router.post('/users', (req, res) => {
+  usersStore.create(req.body)
     .then((result) => {
       res.json(result);
     })
@@ -18,7 +25,11 @@ router.get('/users', (req, res) => {
 router.get('/user/:id', (req, res) => {
   usersStore.getById(req.params.id)
     .then((result) => {
+      if (result) {
         res.json(result);
+      } else {
+        res.sendStatus(404);
+      }
     })
     .catch((error) => {
       res.json(error);
@@ -38,7 +49,7 @@ router.post('/login', (req, res) => {
 router.post('/logout', (req, res) => {
   authorization.logout(req)
     .then((result) => {
-        res.json(result);
+      res.json(result);
     })
     .catch((error) => {
       res.json(error);
