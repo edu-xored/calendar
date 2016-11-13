@@ -1,14 +1,16 @@
 import "mocha";
 import * as supertest from "supertest";
 import * as should from "should";
+import { makeApp } from '../../../app';
 import { User } from "../../../src/lib/model";
 
-const server = supertest.agent("http://localhost:8000");
+const app = makeApp();
 let userId;
 
 describe("Users API", () => {
   it("should return 404 on GET /api/user/0", (done) => {
-    server.get(`/api/user/0`)
+    supertest(app)
+      .get(`/api/user/0`)
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
@@ -22,7 +24,8 @@ describe("Users API", () => {
       id: "stub",
       name: "name"
     };
-    server.post("/api/users")
+    supertest(app)
+      .post("/api/users")
       .send(user)
       .end((err, res) => {
         if (err) throw err;
@@ -34,7 +37,8 @@ describe("Users API", () => {
   });
 
   it("should get created user from previous test", (done) => {
-    server.get(`/api/user/${userId}`)
+    supertest(app)
+      .get(`/api/user/${userId}`)
       .end((err, res) => {
         if (err) throw err;
         should(res.body).not.equal(null);
@@ -43,7 +47,8 @@ describe("Users API", () => {
   });
 
   it("should get all users list, contains new user", (done) => {
-    server.get("/api/users")
+    supertest(app)
+      .get("/api/users")
       .end((err, res) => {
         if (err) throw err;
         let usersList: User[] = res.body;

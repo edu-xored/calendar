@@ -24,7 +24,7 @@ function logErrors(err, req, res, next) {
   next(err);
 }
 
-export default function startServer() {
+export function makeApp() {
   const app = express();
 
   app.use(morgan('dev'));
@@ -74,6 +74,11 @@ export default function startServer() {
     }
   });
 
+  return app;
+}
+
+export function startServer() {
+  const app = makeApp();
   // TODO detect port like in create-react-app
 
   app.listen(PORT, '0.0.0.0', (err) => {
