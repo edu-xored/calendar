@@ -6,5 +6,5 @@ console.log(env);
 export default class Database {
     static sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-    static users: Sequelize.Model<any, any> = require('./models/userModel').default(Database.sequelize);
+    static users: Sequelize.Model<any, any> = require('./userModel').default(Database.sequelize);
 }
