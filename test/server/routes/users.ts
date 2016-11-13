@@ -14,7 +14,7 @@ describe("Users API", () => {
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
-        res.body.should.eql({});
+        should(res.body).be.eql({});
         done();
       });
   });
@@ -30,7 +30,8 @@ describe("Users API", () => {
       .end((err, res) => {
         if (err) throw err;
         user = res.body;
-        should(user.id).not.equal(null);
+        should(user.id).not.be.null;
+        should(user.id).not.be.empty;
         userId = user.id;
         done();
       });
@@ -41,7 +42,7 @@ describe("Users API", () => {
       .get(`/api/user/${userId}`)
       .end((err, res) => {
         if (err) throw err;
-        should(res.body).not.equal(null);
+        should(res.body).not.be.null;
         done();
       });
   });
@@ -51,11 +52,10 @@ describe("Users API", () => {
       .get("/api/users")
       .end((err, res) => {
         if (err) throw err;
-        let usersList: User[] = res.body;
-        should(usersList).not.empty();
-        should(usersList.find((u) => {
-            return u.id == userId;
-        })).not.equal(undefined);
+        const users: User[] = res.body;
+        should(users).not.be.empty;
+        const user = users.find(u => u.id === userId);
+        should(user).be.Object();
         done();
       });
   });
