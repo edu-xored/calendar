@@ -14,7 +14,7 @@ describe("Users API", () => {
       .expect(404)
       .end((err, res) => {
         if (err) throw err;
-        should(res.body).equal(null);
+        res.body.should.eql({});
         done();
       });
   });

@@ -25,7 +25,11 @@ router.post('/users', (req, res) => {
 router.get('/user/:id', (req, res) => {
   usersStore.getById(req.params.id)
     .then((result) => {
-      res.json(result);
+      if (result) {
+        res.json(result);
+      } else {
+        res.sendStatus(404);
+      }
     })
     .catch((error) => {
       res.json(error);
