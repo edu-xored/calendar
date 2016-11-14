@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
 import usersAPI from './src/server/routes/users';
-import database from "./src/server/database/database";
+import database from "./src/server/database";
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;

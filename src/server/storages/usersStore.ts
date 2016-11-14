@@ -1,6 +1,6 @@
 import "sequelize";
 import { User } from '../../lib/model';
-import database from "../database/database";
+import database from "../database";
 
 export function getAll(): Promise<User[]> {
     return database.users.findAll() as any;
