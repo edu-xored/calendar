@@ -24,10 +24,7 @@ export interface Team extends Entity {
   members?: User[]; // only as part of API payload, actually stored in separate association table TeamMembers
 }
 
-export interface TeamMember {
-  id: string;
-  createdAt?: Date;
-  createdBy?: string;
+export interface TeamMember extends Entity {
   teamId: string;
   userId: string;
 }

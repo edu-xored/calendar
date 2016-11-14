@@ -1,14 +1,16 @@
 import * as ORM from "sequelize";
 
+export const ID = {
+  type: ORM.INTEGER,
+  primaryKey: true,
+  autoIncrement: true
+};
+
 const EntityFields = {
-  id: {
-    type: ORM.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+  id: ID,
   createdAt: ORM.TIME,
-  createdBy: ORM.STRING,
   updatedAt: ORM.TIME,
+  createdBy: ORM.STRING,
   updatedBy: ORM.STRING,
 };
 
