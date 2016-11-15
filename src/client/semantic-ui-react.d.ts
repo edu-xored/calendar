@@ -252,6 +252,7 @@ declare module 'semantic-ui-react' {
     icon?: Icons;
     inverted?: boolean;
     label?: any;
+    type?: any;
     labelPosition?: LabelPosition;
     loading?: boolean;
     negative?: boolean;
@@ -719,12 +720,17 @@ declare module 'semantic-ui-react' {
   }
 
   interface IFormControlProps extends SuiElement {
-    control: any;
+    control?: any;
+    label?: string;
+    name?: string;
+    value?: string;
+    placeholder?: string;
+    rows?: string;
   }
 
   interface IFormGroupProps extends SuiBlockElement {
-    grouped: 'grouped';
-    inline: 'inline';
+    grouped?: 'grouped' | boolean;
+    inline?: 'inline' | boolean;
     widths?: Widths;
   }
 
@@ -738,7 +744,7 @@ declare module 'semantic-ui-react' {
     Input: (props: IFormControlProps) => JSX.Element;
     Radio: (props: IFormControlProps) => JSX.Element;
     Select: (props: IFormControlProps) => JSX.Element;
-    Textarea: (props: IFormControlProps) => JSX.Element;
+    TextArea: (props: IFormControlProps) => JSX.Element;
     (props: IFormProps): JSX.Element;
   }
 
@@ -1740,7 +1746,7 @@ declare module 'semantic-ui-react' {
     /**
     * Popup width
     */
-    wide?: true | false | 'very';
+    wide?: boolean | 'very';
 
   }
 
