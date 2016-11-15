@@ -83,7 +83,9 @@ export function startServer() {
   const app = makeApp();
 
   // Db Synchronization
-  db.sequelize.sync().then(() => {
+  db.sequelize.sync({
+    logging: console.log,
+  }).then(() => {
     console.log("DbSync Complete");
 
     // TODO detect port like in create-react-app
