@@ -29,13 +29,6 @@ export interface TeamMember extends Entity {
   userId: string;
 }
 
-export interface Organization extends Entity {
-  name: string;
-  avatar: string;
-  description: string;
-  teams: Team[];
-}
-
 export interface Event extends Entity {
   type: string;
   comment: string;
@@ -52,14 +45,6 @@ export interface Calendar extends Entity {
   organizationId: string;
   teamId: string;
   events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
-}
-
-export interface CalendarEvent {
-  id: string;
-  createdAt?: Date;
-  createdBy?: string;
-  calendarId: string;
-  eventId: string;
 }
 
 export interface Notification extends Entity {

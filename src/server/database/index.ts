@@ -1,7 +1,6 @@
 import * as ORM from 'sequelize';
 import defineUserModel from './userModel';
 import defineTeamModel from './teamModel';
-import defineOrgModel from './organizationModel';
 import defineEventModel from './eventModel';
 import defineCalendarModel from './calendarModel';
 import {ID} from './common';
@@ -43,7 +42,6 @@ const db = {
   users: user,
   teams: team,
   members: member,
-  organizations: defineOrgModel(orm),
   events: event,
   calendars: calendar,
 };
