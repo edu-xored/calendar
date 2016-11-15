@@ -36,7 +36,9 @@ export function makeRouter<T>(api: API<T>) {
 
   // read operations
   router.get(`/${api.collectionName}`, (req, res) => {
-    api.orm.findAll().then(makeResultHandler(res), makeErrorHandler(res));
+    api.orm.findAll({
+      logging: console.log,
+    }).then(makeResultHandler(res), makeErrorHandler(res));
   });
 
   router.get(`/${api.resourceName}/:id`, (req, res) => {
@@ -45,32 +47,49 @@ export function makeRouter<T>(api: API<T>) {
       res.sendStatus(404);
       return;
     }
-    api.orm.findById(id).then(val => {
+
+    const errorHandler = makeErrorHandler(res);
+
+    api.orm.findById(id, {
+      logging: console.log,
+    }).then(val => {
       if (val) {
         res.json(val);
       } else {
         res.sendStatus(404);
       }
-    }, makeErrorHandler(res));
+    }, errorHandler);
   });
 
   // create operation
   router.post(`/${api.collectionName}`, (req, res) => {
+    const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(res);
 
     const data = api.makeResource(req.body);
     data.id = null;
-    api.orm.create(data).then(makeResultHandler(res)).catch(errorHandler);
+
+    api.orm.create(data, {
+      logging: console.log,
+    }).then(resultHandler, errorHandler);
   });
 
   // update operation
   router.put(`/${api.resourceName}/:id`, (req, res) => {
-    const data = api.makeResource(req.body);
+    const id = +req.params.id;
+    if (isNaN(id)) {
+      res.sendStatus(404);
+      return;
+    }
 
     const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(res);
 
-    api.orm.findById(+req.params.id).then((d: any) => {
+    const data = api.makeResource(req.body);
+
+    api.orm.findById(id, {
+      logging: console.log,
+    }).then((d: any) => {
       const val: ORM.Instance<any> = d;
       if (!val) {
         res.sendStatus(404);
@@ -82,10 +101,18 @@ export function makeRouter<T>(api: API<T>) {
 
   // delete operation
   router.delete(`/${api.resourceName}/:id`, (req, res) => {
+    const id = +req.params.id;
+    if (isNaN(id)) {
+      res.sendStatus(404);
+      return;
+    }
+
     const errorHandler = makeErrorHandler(res);
     const send200 = makeStatus200Handler(res);
 
-    api.orm.findById(+req.params.id).then((d: any) => {
+    api.orm.findById(id, {
+      logging: console.log,
+    }).then((d: any) => {
       const val: ORM.Instance<any> = d;
       if (val) {
         val.destroy().then(send200, errorHandler);
