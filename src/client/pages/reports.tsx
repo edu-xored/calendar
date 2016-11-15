@@ -13,11 +13,11 @@ export default class TabularReport extends React.Component<{}, {}> {
     return (
       <Container>
         <Popup trigger={<Input icon='calendar' placeholder='Start date' children={this.state.datePickerDate} />} on='focus'>
-          <DatePicker onChange={this.datePickerUpdated()} value={this.state.datePickerDate} />
+          <DatePicker onChange={this.datePickerUpdated} value={this.state.datePickerDate} />
         </Popup>
         -
-        <Popup trigger={<Input icon='calendar' placeholder='Last date' children={this.state.datePicker2Date} />} on='focus'>
-          <DatePicker onChange={this.datePicker2Updated()} value={this.state.datePicker2Date} />
+        <Popup trigger={<Input type="text" icon='calendar' placeholder='Last date' children={this.state.datePicker2Date} />} on='focus'>
+          <DatePicker onChange={this.datePicker2Updated} value={this.state.datePicker2Date} />
         </Popup>
         <Table basic='very' celled>
           <Table.Header fullWidth={true}>
