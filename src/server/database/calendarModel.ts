@@ -7,5 +7,4 @@ export default makeEntityFn<Calendar>('calendar', {
   type: ORM.STRING, // TODO enum type
   description: ORM.STRING,
   organizationId: ORM.STRING,
-  teamId: ORM.STRING,
 });
