@@ -1,39 +1,11 @@
-import * as express from 'express';
-import * as usersStore from "./../storages/usersStore";
-import { User } from '../../lib/model';
 import * as authorization from '../ldap/auth';
+import db from '../database';
+import {makeRouter} from './common';
 
-const router = express.Router();
-
-router.get('/users', (req, res) => {
-  usersStore.getAll()
-    .then(result => {
-      res.json(result);
-    });
-});
-
-router.post('/users', (req, res) => {
-  usersStore.create(req.body)
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
-router.get('/user/:id', (req, res) => {
-  usersStore.getById(req.params.id)
-    .then((result) => {
-      if (result) {
-        res.json(result);
-      } else {
-        res.sendStatus(404);
-      }
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+const router = makeRouter({
+  orm: db.users,
+  collectionName: 'users',
+  resourceName: 'user',
 });
 
 router.post('/login', (req, res) => {
