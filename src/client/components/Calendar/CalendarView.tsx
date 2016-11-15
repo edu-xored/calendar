@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as React  from 'react';
 
 // __FUNCTION_NAME__ should later be replaced with actual api method
@@ -9,11 +10,11 @@ import Controls from './Controls';
 import Filter from './Filter';
 
 interface ICalendarViewState {
-  calendar: Calendar,
-  data,
-  filterKey: string,
-  pattern: string
-}
+  calendar: Calendar;
+  data: any;
+  filterKey: string;
+  pattern: string;
+};
 
 const defaultCalendar = {
   id: '',
@@ -106,7 +107,7 @@ state: ICalendarViewState = defaultState;
     let filterKey = this.state.filterKey;
     let pattern = this.state.pattern;
 
-    if (filterKey.length == 0 || pattern.length == 0) {
+    if (_.isEmpty(filterKey) || _.isEmpty(pattern)) {
       return this.state.data;
     }
 

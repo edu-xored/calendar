@@ -39,6 +39,7 @@ jspm_packages
 # IDE folders
 .vscode
 .idea
+*.iml
 
 # Dev notes
 *.ignore

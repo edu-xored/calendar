@@ -15,7 +15,7 @@ export default class CalendarGrid extends React.Component<any, any> {
   }
 
   componentWillUnmount() {
-    let grid = document.getElementsByClassName('grid-body-wrapper')[0]
+    let grid = document.getElementsByClassName('grid-body-wrapper')[0];
     grid.removeEventListener('scroll', this.handleOnGridScroll);
   }
 
@@ -24,7 +24,7 @@ export default class CalendarGrid extends React.Component<any, any> {
     const headerLength = 31;
     const tmCount = members.length;
 
-    let headerRow = <Row id={'header-row'} rowData={ [...Array(headerLength+1).keys()] } />;
+    let headerRow = <Row id={'header-row'} rowData={ [...Array(headerLength + 1).keys()] } />;
     let teamMembersRows = members.map((member, i) =>
         <Row key={i} id={ `team-row-${i}` } rowData={ [member] } />
     );

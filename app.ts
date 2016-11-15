@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
 import usersAPI from './src/server/routes/users';
-import database from "./src/server/database/database";
+import db from "./src/server/database";
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -24,7 +24,7 @@ function logErrors(err, req, res, next) {
   next(err);
 }
 
-export default function startServer() {
+export function makeApp(testing?: boolean) {
   const app = express();
 
   app.use(morgan('dev'));
@@ -42,16 +42,18 @@ export default function startServer() {
   app.use(bodyParser.json());
   app.use(logErrors);
 
-  if (process.env.NODE_ENV !== 'production') {
-    const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
-    app.use(devMiddleware(compiler, {
-      noInfo: true,
-      publicPath: webpackConfig.output.publicPath,
-      stats: 'errors-only',
-    }));
+  if (!testing) {
+    if (process.env.NODE_ENV !== 'production') {
+      const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
+      app.use(devMiddleware(compiler, {
+        noInfo: true,
+        publicPath: webpackConfig.output.publicPath,
+        stats: 'errors-only',
+      }));
 
-    const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
-    app.use(hotMiddleware(compiler));
+      const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
+      app.use(hotMiddleware(compiler));
+    }
   }
 
   // REST API routes
@@ -74,20 +76,25 @@ export default function startServer() {
     }
   });
 
-  // TODO detect port like in create-react-app
-
-  app.listen(PORT, '0.0.0.0', (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    console.log('Listening at http://0.0.0.0:%s', PORT);
-  });
+  return app;
 }
 
-// Db Synchronization
-database.sequelize.sync().then(() => {
-  console.log("DbSync Complete");
-  startServer();
-});
+export function startServer() {
+  const app = makeApp();
+
+  // Db Synchronization
+  db.sequelize.sync().then(() => {
+    console.log("DbSync Complete");
+
+    // TODO detect port like in create-react-app
+
+    app.listen(PORT, '0.0.0.0', (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log('Listening at http://0.0.0.0:%s', PORT);
+    });
+  });
+}

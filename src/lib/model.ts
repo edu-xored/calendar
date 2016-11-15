@@ -24,19 +24,9 @@ export interface Team extends Entity {
   members?: User[]; // only as part of API payload, actually stored in separate association table TeamMembers
 }
 
-export interface TeamMember {
-  id: string;
-  createdAt?: Date;
-  createdBy?: string;
+export interface TeamMember extends Entity {
   teamId: string;
   userId: string;
-}
-
-export interface Organization extends Entity {
-  name: string;
-  avatar: string;
-  description: string;
-  teams: Team[];
 }
 
 export interface Event extends Entity {
@@ -52,17 +42,8 @@ export interface Calendar extends Entity {
   name: string;
   type: string;
   description: string;
-  organizationId: string;
   teamId: string;
   events?: Event[]; // only as part of API payload, actually stored in separate association table CalendarEvents
-}
-
-export interface CalendarEvent {
-  id: string;
-  createdAt?: Date;
-  createdBy?: string;
-  calendarId: string;
-  eventId: string;
 }
 
 export interface Notification extends Entity {
