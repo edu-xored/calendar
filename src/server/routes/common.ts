@@ -89,49 +89,48 @@ export function makeRouter<T>(api: API<T>) {
     api.orm.create(data, withLog).then(resultHandler, errorHandler);
   }));
 
-  // update operation
-  router.put(`/${api.resourceName}/:id`, wrap((req, res) => {
-    const id = +req.params.id;
-    if (isNaN(id)) {
-      res.sendStatus(404);
-      return;
-    }
-
-    const resultHandler = makeResultHandler(res);
-    const errorHandler = makeErrorHandler(req, res);
-
-    const data = api.makeResource(req.body);
-
-    api.orm.findById(id, withLog).then((d: any) => {
-      const val: ORM.Instance<any> = d;
-      if (!val) {
+  function makeModelHandler(handler: (req: express.Request, res: express.Response, val: ORM.Instance<T>) => void) {
+    return (req: express.Request, res: express.Response) => {
+      const id = +req.params.id;
+      if (isNaN(id)) {
         res.sendStatus(404);
         return;
       }
-      val.update(data).then(resultHandler, errorHandler);
-    }, errorHandler);
-  }));
+
+      const resultHandler = makeResultHandler(res);
+      const errorHandler = makeErrorHandler(req, res);
+
+      const data = api.makeResource(req.body);
+
+      api.orm.findById(id, withLog).then((d: any) => {
+        const val: ORM.Instance<T> = d;
+        if (!val) {
+          res.sendStatus(404);
+          return;
+        }
+        handler(req, res, val);
+      }, errorHandler);
+    };
+  }
+
+  // update operation
+  const updateHandler = makeModelHandler((req, res, val) => {
+    const resultHandler = makeResultHandler(res);
+    const errorHandler = makeErrorHandler(req, res);
+    const data = api.makeResource(req.body);
+    val.update(data).then(resultHandler, errorHandler);
+  });
+
+  router.put(`/${api.resourceName}/:id`, wrap(updateHandler));
 
   // delete operation
-  router.delete(`/${api.resourceName}/:id`, wrap((req, res) => {
-    const id = +req.params.id;
-    if (isNaN(id)) {
-      res.sendStatus(404);
-      return;
-    }
-
+  const deleteHandler = makeModelHandler((req, res, val) => {
     const errorHandler = makeErrorHandler(req, res);
-    const send200 = makeStatus200Handler(res);
+    const resultHandler = makeStatus200Handler(res);
+    val.destroy().then(resultHandler, errorHandler);
+  });
 
-    api.orm.findById(id, withLog).then((d: any) => {
-      const val: ORM.Instance<any> = d;
-      if (val) {
-        val.destroy().then(send200, errorHandler);
-      } else {
-        res.sendStatus(404);
-      }
-    }, errorHandler);
-  }));
+  router.delete(`/${api.resourceName}/:id`, wrap(deleteHandler));
 
   return router;
 }
