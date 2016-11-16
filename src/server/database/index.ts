@@ -4,7 +4,7 @@ import defineTeamModel from './teamModel';
 import defineEventModel from './eventModel';
 import defineCalendarModel from './calendarModel';
 import {ID} from './common';
-import {TeamMember} from "../../lib/model";
+import {User, TeamMember} from "../../lib/model";
 
 const env = process.env.NODE_ENV || 'development';
 const config = require("../../../dbconfig.json")[env];
@@ -47,3 +47,11 @@ const db = {
 };
 
 export default db;
+
+export function findUserByAttr(attr: string, value: string): Promise<User> {
+  return user.findOne({ where: { [attr]: value } }) as any;
+}
+
+export function findUserByLogin(login: string): Promise<User> {
+  return user.findOne({ where: { login } }) as any;
+}
