@@ -23,8 +23,7 @@ export function makeSpec(api: API) {
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
-          // console.log(res.body);
-          should(res.body).be.eql({});
+          should(res.body).be.empty;
           done();
         });
     });
@@ -35,8 +34,7 @@ export function makeSpec(api: API) {
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
-          // console.log(res.body);
-          should(res.body).be.eql({});
+          should(res.body).be.empty;
           done();
         });
     });
@@ -71,12 +69,49 @@ export function makeSpec(api: API) {
         .get(`/api/${api.collection}`)
         .end((err, res) => {
           if (err) throw err;
-          // console.log(res.body);
           const list: any[] = res.body || [];
           should(list).not.be.empty;
           const it = list.find(u => u.id === resourceId);
           should(it).be.Object();
           done();
+        });
+    });
+
+    it(`/DELETE /api/${api.type}/0 not found`, (done) => {
+      supertest(app)
+        .del(`/api/${api.type}/0`)
+        .end((err, res) => {
+          if (err) throw err;
+          should(res.body).be.empty;
+          done();
+        });
+    });
+
+    it(`/DELETE /api/${api.type}/z not found`, (done) => {
+      supertest(app)
+        .del(`/api/${api.type}/z`)
+        .end((err, res) => {
+          if (err) throw err;
+          should(res.body).be.empty;
+          done();
+        });
+    });
+
+    it(`/DELETE /api/${api.type}/:id`, (done) => {
+      const url = `/api/${api.type}/${resourceId}`;
+      supertest(app)
+        .del(url)
+        .end((err, res) => {
+          if (err) throw err;
+          should(res.body).be.empty;
+
+          supertest(app).get(url)
+            .expect(404)
+            .end((err, res) => {
+              if (err) throw err;
+              should(res.body).be.empty;
+              done();
+            });
         });
     });
   });
