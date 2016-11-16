@@ -11,6 +11,7 @@ interface API {
   type: string;
   collection: string;
   makeResource: () => any;
+  update: any;
 }
 
 export function makeSpec(api: API) {
@@ -41,9 +42,9 @@ export function makeSpec(api: API) {
 
     it(`/POST /api/${api.collection}`, (done) => {
       let resource = api.makeResource();
-      supertest(app)
-        .post(`/api/${api.collection}`)
+      supertest(app).post(`/api/${api.collection}`)
         .send(resource)
+        .expect(200)
         .end((err, res) => {
           if (err) throw err;
           resource = res.body;
@@ -54,19 +55,36 @@ export function makeSpec(api: API) {
         });
     });
 
-    it(`/GET /api/${api.type}/:id`, (done) => {
-      supertest(app)
-        .get(`/api/${api.type}/${resourceId}`)
+    it(`/GET and /PUT /api/${api.type}/:id`, (done) => {
+      const url = `/api/${api.type}/${resourceId}`;
+      supertest(app).get(url)
+        .expect(200)
         .end((err, res) => {
           if (err) throw err;
+
+          const resource = res.body;
+
           should(res.body).not.be.null;
-          done();
+          should(res.body).not.be.empty;
+
+          const updatedResource = Object.assign({}, resource, api.update);
+
+          supertest(app).put(url)
+            .send(updatedResource)
+            .expect(200)
+            .end((err, res) => {
+              if (err) throw err;
+              // TODO assert body is changed correctly, compare with updatedResource
+              should(res.body).not.be.null;
+              should(res.body).not.be.empty;
+              done();
+            });
         });
     });
 
     it(`/GET /api/${api.collection}`, (done) => {
-      supertest(app)
-        .get(`/api/${api.collection}`)
+      supertest(app).get(`/api/${api.collection}`)
+        .expect(200)
         .end((err, res) => {
           if (err) throw err;
           const list: any[] = res.body || [];
@@ -78,8 +96,8 @@ export function makeSpec(api: API) {
     });
 
     it(`/DELETE /api/${api.type}/0 not found`, (done) => {
-      supertest(app)
-        .del(`/api/${api.type}/0`)
+      supertest(app).del(`/api/${api.type}/0`)
+        .expect(404)
         .end((err, res) => {
           if (err) throw err;
           should(res.body).be.empty;
@@ -88,8 +106,8 @@ export function makeSpec(api: API) {
     });
 
     it(`/DELETE /api/${api.type}/z not found`, (done) => {
-      supertest(app)
-        .del(`/api/${api.type}/z`)
+      supertest(app).del(`/api/${api.type}/z`)
+        .expect(404)
         .end((err, res) => {
           if (err) throw err;
           should(res.body).be.empty;
@@ -99,8 +117,7 @@ export function makeSpec(api: API) {
 
     it(`/DELETE /api/${api.type}/:id`, (done) => {
       const url = `/api/${api.type}/${resourceId}`;
-      supertest(app)
-        .del(url)
+      supertest(app).del(url)
         .end((err, res) => {
           if (err) throw err;
           should(res.body).be.empty;
@@ -125,7 +142,8 @@ makeSpec({
       id: "1",
       name: "bob"
     };
-  }
+  },
+  update: {name: "rob"},
 });
 
 makeSpec({
@@ -136,7 +154,8 @@ makeSpec({
       id: "1",
       name: "super"
     };
-  }
+  },
+  update: {name: "bulls"},
 });
 
 makeSpec({
@@ -148,7 +167,8 @@ makeSpec({
       type: 'leaves',
       description: 'team leaves',
     };
-  }
+  },
+  update: {type: "absences"},
 });
 
 makeSpec({
@@ -160,4 +180,5 @@ makeSpec({
       comment: 'nothing',
     };
   },
+  update: {type: "presence"},
 });
