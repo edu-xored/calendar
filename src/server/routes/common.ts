@@ -70,7 +70,6 @@ export function makeRouter<T>(api: API<T>) {
     const errorHandler = makeErrorHandler(req, res);
 
     api.orm.findById(id, withLog).then(val => {
-      console.log(val);
       if (val) {
         res.json(val);
       } else {
