@@ -10,7 +10,6 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
 import installAPI from './src/server/routes';
-import db from "./src/server/database";
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
@@ -80,21 +79,13 @@ export function makeApp(testing?: boolean) {
 export function startServer() {
   const app = makeApp();
 
-  // Db Synchronization
-  db.sequelize.sync({
-    logging: console.log,
-  }).then(() => {
-    console.log("DbSync Complete");
+  // TODO detect port like in create-react-app
+  app.listen(PORT, '0.0.0.0', (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-    // TODO detect port like in create-react-app
-
-    app.listen(PORT, '0.0.0.0', (err) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-      console.log('Listening at http://0.0.0.0:%s', PORT);
-    });
+    console.log('Listening at http://0.0.0.0:%s', PORT);
   });
 }

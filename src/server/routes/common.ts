@@ -2,6 +2,8 @@ import * as _ from 'lodash';
 import * as ORM from "sequelize";
 import * as express from "express";
 
+const withLog = {logging: console.log};
+
 interface API<T> {
   orm: ORM.Model<T, any>;
   collectionName: string;
@@ -35,15 +37,30 @@ export function makeRouter<T>(api: API<T>) {
 
   const router = express.Router();
 
-  // read operations
-  router.get(`/${api.collectionName}`, (req, res) => {
-    const errorHandler = makeErrorHandler(req, res);
-    api.orm.findAll({
-      logging: console.log,
-    }).then(makeResultHandler(res), errorHandler);
-  });
+  let syncDone = false;
 
-  router.get(`/${api.resourceName}/:id`, (req, res) => {
+  // TODO try to implement as local router middleware
+  const wrap = (handler: (req: express.Request, res: express.Response) => void) => {
+    return (req: express.Request, res: express.Response) => {
+      if (syncDone) {
+        handler(req, res);
+        return;
+      }
+      const errorHandler = makeErrorHandler(req, res);
+      (api.orm as any).sequelize.sync(withLog).then(() => {
+        handler(req, res);
+        syncDone = true;
+      }, errorHandler);
+    };
+  };
+
+  // read operations
+  router.get(`/${api.collectionName}`, wrap((req, res) => {
+    const errorHandler = makeErrorHandler(req, res);
+    api.orm.findAll(withLog).then(makeResultHandler(res), errorHandler);
+  }));
+
+  router.get(`/${api.resourceName}/:id`, wrap((req, res) => {
     const id = +req.params.id;
     if (isNaN(id)) {
       res.sendStatus(404);
@@ -52,9 +69,7 @@ export function makeRouter<T>(api: API<T>) {
 
     const errorHandler = makeErrorHandler(req, res);
 
-    api.orm.findById(id, {
-      logging: console.log,
-    }).then(val => {
+    api.orm.findById(id, withLog).then(val => {
       console.log(val);
       if (val) {
         res.json(val);
@@ -62,23 +77,21 @@ export function makeRouter<T>(api: API<T>) {
         res.sendStatus(404);
       }
     }, errorHandler);
-  });
+  }));
 
   // create operation
-  router.post(`/${api.collectionName}`, (req, res) => {
+  router.post(`/${api.collectionName}`, wrap((req, res) => {
     const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
 
     const data = api.makeResource(req.body);
     data.id = null;
 
-    api.orm.create(data, {
-      logging: console.log,
-    }).then(resultHandler, errorHandler);
-  });
+    api.orm.create(data, withLog).then(resultHandler, errorHandler);
+  }));
 
   // update operation
-  router.put(`/${api.resourceName}/:id`, (req, res) => {
+  router.put(`/${api.resourceName}/:id`, wrap((req, res) => {
     const id = +req.params.id;
     if (isNaN(id)) {
       res.sendStatus(404);
@@ -90,9 +103,7 @@ export function makeRouter<T>(api: API<T>) {
 
     const data = api.makeResource(req.body);
 
-    api.orm.findById(id, {
-      logging: console.log,
-    }).then((d: any) => {
+    api.orm.findById(id, withLog).then((d: any) => {
       const val: ORM.Instance<any> = d;
       if (!val) {
         res.sendStatus(404);
@@ -100,10 +111,10 @@ export function makeRouter<T>(api: API<T>) {
       }
       val.update(data).then(resultHandler, errorHandler);
     }, errorHandler);
-  });
+  }));
 
   // delete operation
-  router.delete(`/${api.resourceName}/:id`, (req, res) => {
+  router.delete(`/${api.resourceName}/:id`, wrap((req, res) => {
     const id = +req.params.id;
     if (isNaN(id)) {
       res.sendStatus(404);
@@ -113,9 +124,7 @@ export function makeRouter<T>(api: API<T>) {
     const errorHandler = makeErrorHandler(req, res);
     const send200 = makeStatus200Handler(res);
 
-    api.orm.findById(id, {
-      logging: console.log,
-    }).then((d: any) => {
+    api.orm.findById(id, withLog).then((d: any) => {
       const val: ORM.Instance<any> = d;
       if (val) {
         val.destroy().then(send200, errorHandler);
@@ -123,7 +132,7 @@ export function makeRouter<T>(api: API<T>) {
         res.sendStatus(404);
       }
     }, errorHandler);
-  });
+  }));
 
   return router;
 }
