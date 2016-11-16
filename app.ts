@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
-import usersAPI from './src/server/routes/users';
+import installAPI from './src/server/routes';
 import db from "./src/server/database";
 
 const ROOT_DIR = path.normalize(__dirname);
@@ -33,7 +33,7 @@ export function makeApp(testing?: boolean) {
 
   app.use(cookieParser());
 
-// static assets
+  // static assets
 
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -57,11 +57,9 @@ export function makeApp(testing?: boolean) {
   }
 
   // REST API routes
-
-  app.use('/api', usersAPI);
+  installAPI(app);
 
   // static assets
-
   app.use(express.static(ROOT_DIR));
 
   // otherwise return index.html

@@ -104,15 +104,14 @@ makeSpec({
   }
 });
 
-/**
 makeSpec({
   type: 'calendar',
   collection: 'calendars',
   makeResource: () => {
     return {
       name: 'team calendar',
-      type: 'absences',
-      description: 'team absences',
+      type: 'leaves',
+      description: 'team leaves',
     };
   }
 });
@@ -127,4 +126,3 @@ makeSpec({
     };
   },
 });
-*/
