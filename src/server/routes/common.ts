@@ -53,6 +53,7 @@ export function makeRouter<T>(api: API<T>) {
     api.orm.findById(id, {
       logging: console.log,
     }).then(val => {
+      console.log(val);
       if (val) {
         res.json(val);
       } else {
