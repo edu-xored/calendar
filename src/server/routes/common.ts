@@ -21,8 +21,9 @@ function makeStatus200Handler(res: express.Response) {
   };
 }
 
-function makeErrorHandler(res: express.Response) {
+function makeErrorHandler(req: express.Request, res: express.Response) {
   return err => {
+    console.log(`${req.method} ${req.path} failed: ${err}`);
     res.json({error: err});
   };
 }
@@ -36,9 +37,10 @@ export function makeRouter<T>(api: API<T>) {
 
   // read operations
   router.get(`/${api.collectionName}`, (req, res) => {
+    const errorHandler = makeErrorHandler(req, res);
     api.orm.findAll({
       logging: console.log,
-    }).then(makeResultHandler(res), makeErrorHandler(res));
+    }).then(makeResultHandler(res), errorHandler);
   });
 
   router.get(`/${api.resourceName}/:id`, (req, res) => {
@@ -48,7 +50,7 @@ export function makeRouter<T>(api: API<T>) {
       return;
     }
 
-    const errorHandler = makeErrorHandler(res);
+    const errorHandler = makeErrorHandler(req, res);
 
     api.orm.findById(id, {
       logging: console.log,
@@ -65,7 +67,7 @@ export function makeRouter<T>(api: API<T>) {
   // create operation
   router.post(`/${api.collectionName}`, (req, res) => {
     const resultHandler = makeResultHandler(res);
-    const errorHandler = makeErrorHandler(res);
+    const errorHandler = makeErrorHandler(req, res);
 
     const data = api.makeResource(req.body);
     data.id = null;
@@ -84,7 +86,7 @@ export function makeRouter<T>(api: API<T>) {
     }
 
     const resultHandler = makeResultHandler(res);
-    const errorHandler = makeErrorHandler(res);
+    const errorHandler = makeErrorHandler(req, res);
 
     const data = api.makeResource(req.body);
 
@@ -108,7 +110,7 @@ export function makeRouter<T>(api: API<T>) {
       return;
     }
 
-    const errorHandler = makeErrorHandler(res);
+    const errorHandler = makeErrorHandler(req, res);
     const send200 = makeStatus200Handler(res);
 
     api.orm.findById(id, {
