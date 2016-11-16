@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import "./card.css"
+import "./calendar/semantic/semantic.css"
 
 export interface CardProps {side_:string; username_:string; role_:string; image_src_:string; command_: string; position_:string; place_: string; script_: string;}
 
@@ -21,7 +21,7 @@ export var BACK_SIDE = "back_side";
 class Front_card extends React.Component<Front_cardProps, {}> {
   render() {
   return (
-      <div className="card">
+      <div className="ui.card">
             <img src={this.props.image_src_}  alt="Avatar"/>
             <div >
                 <h3><a>{this.props.username_}</a>></h3>
@@ -36,7 +36,7 @@ class Front_card extends React.Component<Front_cardProps, {}> {
 class Back_card extends React.Component<Back_cardProps, {}> {
   render() {
     return (
-      <div className="">
+      <div className="ui.card">
             <div ><a >{this.props.command_}</a></div>
             <div ><p >{this.props.position_}</p></div>
             <div ><p >{this.props.place_}</p></div>
