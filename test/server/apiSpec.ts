@@ -23,6 +23,9 @@ export function makeSpec(api: API) {
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
+          if (!_.isEmpty(res.body)) {
+            console.log(res.body);
+          }
           should(res.body).be.eql({});
           done();
         });
@@ -72,7 +75,7 @@ export function makeSpec(api: API) {
         .get(`/api/${api.collection}`)
         .end((err, res) => {
           if (err) throw err;
-          const list: any[] = res.body;
+          const list: any[] = res.body || [];
           should(list).not.be.empty;
           const it = list.find(u => u.id === resourceId);
           should(it).be.Object();
