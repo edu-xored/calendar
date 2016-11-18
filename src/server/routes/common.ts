@@ -11,7 +11,7 @@ interface API<T> {
   makeResource?: (payload: any) => any;
 }
 
-function makeResultHandler(res: express.Response) {
+export function makeResultHandler(res: express.Response) {
   return value => {
     res.json(value);
   };
@@ -23,7 +23,7 @@ function makeStatus200Handler(res: express.Response) {
   };
 }
 
-function makeErrorHandler(req: express.Request, res: express.Response) {
+export function makeErrorHandler(req: express.Request, res: express.Response) {
   return err => {
     console.log(`${req.method} ${req.path} failed: ${err}`);
     res.json({error: err});
