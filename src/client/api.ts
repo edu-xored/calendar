@@ -1,4 +1,3 @@
-require('es6-promise');
 require('isomorphic-fetch');
 
 import {User, Team, Calendar, Event} from '../lib/model';
@@ -39,7 +38,7 @@ function makeAPI<T>(api) {
   const collectionPath = `${BASE}/${api.collection}`;
   const resourcePath = id => `${BASE}/${api.resource}/${id}`;
   return {
-    create(payload): Promise<T> {
+    create(payload: T): Promise<T> {
       return fetch(collectionPath, {
         credentials: "same-origin",
         method: 'POST',
@@ -53,13 +52,13 @@ function makeAPI<T>(api) {
         headers: makeHeaders(),
       }).then(toJSON);
     },
-    get(id): Promise<T>  {
+    get(id: string): Promise<T>  {
       return fetch(resourcePath(id), {
         credentials: "same-origin",
         headers: makeHeaders(),
       }).then(toJSON);
     },
-    update(id, payload): Promise<T>  {
+    update(id: string, payload: T): Promise<T>  {
       return fetch(resourcePath(id), {
         credentials: "same-origin",
         method: 'PUT',
