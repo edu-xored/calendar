@@ -13,10 +13,7 @@
     "preserveConstEnums": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
-    "types": [
-      "node"
-    ]
+    "lib": ["es6", "dom"]
   },
   "exclude": [
     "node_modules"
