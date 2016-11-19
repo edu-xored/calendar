@@ -9,6 +9,7 @@ interface API<T> {
   collectionName: string;
   resourceName: string;
   makeResource?: (payload: any) => any;
+  filter?: (data: any) => any;
 }
 
 export function makeResultHandler(res: express.Response) {
@@ -34,13 +35,19 @@ export function makeRouter<T>(api: API<T>) {
   if (!api.makeResource) {
     api.makeResource = _.identity;
   }
+  if (!api.filter) {
+    api.filter = _.identity;
+  }
 
   const router = express.Router();
 
   // read operations
   router.get(`/${api.collectionName}`, (req, res) => {
     const errorHandler = makeErrorHandler(req, res);
-    api.orm.findAll(withLog).then(makeResultHandler(res), errorHandler);
+    api.orm.findAll(withLog).then(list => {
+      list = _.map(list || [], (t: any) => t.toJSON()).filter(api.filter);
+      res.json(list);
+    }, errorHandler);
   });
 
   router.get(`/${api.resourceName}/:id`, (req, res) => {
@@ -52,9 +59,9 @@ export function makeRouter<T>(api: API<T>) {
 
     const errorHandler = makeErrorHandler(req, res);
 
-    api.orm.findById(id, withLog).then(val => {
-      if (val) {
-        res.json(val);
+    api.orm.findById(id, withLog).then((d: any) => {
+      if (d) {
+        res.json(api.filter(d.toJSON()));
       } else {
         res.sendStatus(404);
       }
@@ -69,7 +76,9 @@ export function makeRouter<T>(api: API<T>) {
     const data = api.makeResource(req.body);
     data.id = null;
 
-    api.orm.create(data, withLog).then(resultHandler, errorHandler);
+    api.orm.create(data, withLog).then((d: any) => {
+      res.json(api.filter(d.toJSON()));
+    }, errorHandler);
   });
 
   // common code for update/delete operations
@@ -81,10 +90,7 @@ export function makeRouter<T>(api: API<T>) {
         return;
       }
 
-      const resultHandler = makeResultHandler(res);
       const errorHandler = makeErrorHandler(req, res);
-
-      const data = api.makeResource(req.body);
 
       api.orm.findById(id, withLog).then((d: any) => {
         const val: ORM.Instance<T> = d;
@@ -102,7 +108,9 @@ export function makeRouter<T>(api: API<T>) {
     const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
     const data = api.makeResource(req.body);
-    val.update(data).then(resultHandler, errorHandler);
+    val.update(data).then((d: any) => {
+      res.json(api.filter(d.toJSON()));
+    }, errorHandler);
   });
 
   router.put(`/${api.resourceName}/:id`, updateHandler);
