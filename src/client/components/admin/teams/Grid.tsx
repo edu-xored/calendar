@@ -7,29 +7,17 @@ interface IGridState {
     headers: string[];
 }
 
-const teams: Team[] = [];
-
 const headers = ["id", "createAt", "createBy", "updateAt", "updateBy", "name", "avatar", "description"];
 
 export default class Grid extends React.Component<any, IGridState> {
-    init() {
-        for (let i=0; i < 10; i++) {
-            teams.push({
-                id: `${i}`,
-                name: 'name',
-                avatar: 'yes',
-                description: 'very good'
-            });
-        }
-    }
     render() {
-        this.init();
+        let teams = this.props.data;
         let teamsRows = [];
         teams.forEach(team => {
             let data = [];
             headers.forEach((propertyName) => {
                 data.push(team[propertyName]);
-            })
+            });
             teamsRows.push(
                 <div>
                     <Row id={team.id} rowData={data} />
