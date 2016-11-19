@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 
 import { Team } from '../../../../lib/model';
-import { fetchJSON } from '../../../api';
+import api from '../../../api';
 import AddPanel from './AddPanel';
 import Grid from "./Grid";
 
@@ -20,10 +20,11 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
 
     constructor(props) {
         super(props);
-        fetchJSON<Team[]>('/api/teams').then((teams: Team[]) => {
-            this.setState({ data: teams });
+        api.teams.getList().then((teams: Team[]) => {
+            this.state.data = teams;
+            this.render();
         });
-        this.addTeam.bind(this);
+        this.addTeam = this.addTeam.bind(this);
     }
 
     addTeam(team: Team) {
@@ -32,6 +33,7 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
         this.setState({
             data: teams
         });
+        api.teams.create(team);
     }
 
     render() {
