@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
 
+import {sync} from './src/server/database';
 import installAPI from './src/server/routes';
 
 const ROOT_DIR = path.normalize(__dirname);
@@ -78,14 +79,17 @@ export function makeApp(testing?: boolean) {
 
 export function startServer() {
   const app = makeApp();
+  sync().then(() => {
+    // TODO detect port like in create-react-app
+    app.listen(PORT, '0.0.0.0', (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-  // TODO detect port like in create-react-app
-  app.listen(PORT, '0.0.0.0', (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    console.log('Listening at http://0.0.0.0:%s', PORT);
+      console.log('Listening at http://0.0.0.0:%s', PORT);
+    });
+  }, err => {
+    throw err;
   });
 }

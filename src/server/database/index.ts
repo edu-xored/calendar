@@ -48,6 +48,23 @@ const db = {
 
 export default db;
 
+let syncDone = false;
+
+export function sync(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (syncDone) {
+      return resolve(true);
+    }
+    return orm.sync({logging: console.log}).then(() => {
+      syncDone = true;
+      resolve(true);
+    }, err => {
+      syncDone = true;
+      reject(err);
+    });
+  });
+}
+
 export function findUserByAttr(attr: string, value: string): Promise<User> {
   return user.findOne({ where: { [attr]: value } }) as any;
 }
