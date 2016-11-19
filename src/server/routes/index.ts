@@ -1,4 +1,5 @@
 import * as express from 'express';
+import auth from './auth';
 import users from './users';
 import teams from './teams';
 import calendars from './calendars';
@@ -15,6 +16,7 @@ export default function install(app: express.Application) {
     });
   });
 
+  app.use('/api', auth);
   app.use('/api', users);
   app.use('/api', teams);
   app.use('/api', calendars);
