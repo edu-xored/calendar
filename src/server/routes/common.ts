@@ -37,30 +37,13 @@ export function makeRouter<T>(api: API<T>) {
 
   const router = express.Router();
 
-  let syncDone = false;
-
-  // TODO try to implement as local router middleware
-  const wrap = (handler: (req: express.Request, res: express.Response) => void) => {
-    return (req: express.Request, res: express.Response) => {
-      if (syncDone) {
-        handler(req, res);
-        return;
-      }
-      const errorHandler = makeErrorHandler(req, res);
-      (api.orm as any).sequelize.sync(withLog).then(() => {
-        handler(req, res);
-        syncDone = true;
-      }, errorHandler);
-    };
-  };
-
   // read operations
-  router.get(`/${api.collectionName}`, wrap((req, res) => {
+  router.get(`/${api.collectionName}`, (req, res) => {
     const errorHandler = makeErrorHandler(req, res);
     api.orm.findAll(withLog).then(makeResultHandler(res), errorHandler);
-  }));
+  });
 
-  router.get(`/${api.resourceName}/:id`, wrap((req, res) => {
+  router.get(`/${api.resourceName}/:id`, (req, res) => {
     const id = +req.params.id;
     if (isNaN(id)) {
       res.sendStatus(404);
@@ -76,10 +59,10 @@ export function makeRouter<T>(api: API<T>) {
         res.sendStatus(404);
       }
     }, errorHandler);
-  }));
+  });
 
   // create operation
-  router.post(`/${api.collectionName}`, wrap((req, res) => {
+  router.post(`/${api.collectionName}`, (req, res) => {
     const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
 
@@ -87,8 +70,9 @@ export function makeRouter<T>(api: API<T>) {
     data.id = null;
 
     api.orm.create(data, withLog).then(resultHandler, errorHandler);
-  }));
+  });
 
+  // common code for update/delete operations
   function makeModelHandler(handler: (req: express.Request, res: express.Response, val: ORM.Instance<T>) => void) {
     return (req: express.Request, res: express.Response) => {
       const id = +req.params.id;
@@ -121,7 +105,7 @@ export function makeRouter<T>(api: API<T>) {
     val.update(data).then(resultHandler, errorHandler);
   });
 
-  router.put(`/${api.resourceName}/:id`, wrap(updateHandler));
+  router.put(`/${api.resourceName}/:id`, updateHandler);
 
   // delete operation
   const deleteHandler = makeModelHandler((req, res, val) => {
@@ -130,7 +114,7 @@ export function makeRouter<T>(api: API<T>) {
     val.destroy().then(resultHandler, errorHandler);
   });
 
-  router.delete(`/${api.resourceName}/:id`, wrap(deleteHandler));
+  router.delete(`/${api.resourceName}/:id`, deleteHandler);
 
   return router;
 }
