@@ -2,6 +2,7 @@ import "mocha";
 import * as _ from "lodash";
 import * as supertest from "supertest";
 import * as should from "should";
+import {User} from '../../src/lib/model';
 import db from '../../src/server/database';
 import { makeApp } from '../../app';
 
@@ -12,9 +13,12 @@ interface API {
   collection: string;
   makeResource: () => any;
   update: any;
+  addTests?: (ctx: any) => void;
 }
 
 export function makeSpec(api: API) {
+  const ctx: any = {};
+
   describe(`${api.collection} API`, () => {
     let resourceId;
 
@@ -51,6 +55,7 @@ export function makeSpec(api: API) {
           should(resource.id).not.be.null;
           should(resource.id).not.be.empty;
           resourceId = resource.id;
+          ctx.resourceId = resourceId;
           done();
         });
     });
@@ -115,6 +120,11 @@ export function makeSpec(api: API) {
         });
     });
 
+    // add more tests for given API
+    if (api.addTests) {
+        api.addTests(ctx);
+    }
+
     it(`/DELETE /api/${api.type}/:id`, (done) => {
       const url = `/api/${api.type}/${resourceId}`;
       supertest(app).del(url)
@@ -156,6 +166,58 @@ makeSpec({
     };
   },
   update: {name: "bulls"},
+  addTests: (ctx: any) => {
+    it('should add/remove members', (done) => {
+      const userName = 'batman';
+      // add user
+      supertest(app).post('/api/users')
+        .send({name: userName})
+        .expect(200)
+        .end((err, res) => {
+          if (err) throw err;
+
+          const user: User = res.body;
+          should(user.name).be.eql(userName);
+
+          const teamId = ctx.resourceId;
+
+          // add user to the team
+          supertest(app).post(`/api/team/${teamId}/members`)
+            .send([user.id])
+            .expect(200)
+            .end((err, res) => {
+              if (err) throw err;
+
+              supertest(app).get(`/api/team/${teamId}/members`)
+                .expect(200)
+                .end((err, res) => {
+                  if (err) throw err;
+
+                  should(res.body.length).be.eql(1);
+                  should(res.body[0].id).be.eql(user.id);
+                  should(res.body[0].name).be.eql(user.name);
+
+                  supertest(app).delete(`/api/team/${teamId}/members`)
+                    .send([user.id])
+                    .expect(200)
+                    .end((err, res) => {
+                      if (err) throw err;
+
+                      supertest(app).get(`/api/team/${teamId}/members`)
+                        .expect(200)
+                        .end((err, res) => {
+                          if (err) throw err;
+
+                          should(res.body.length).be.eql(0);
+
+                          done();
+                        });
+                    });
+                });
+            });
+        });
+    });
+  },
 });
 
 makeSpec({
