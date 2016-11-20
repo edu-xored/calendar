@@ -220,6 +220,7 @@ declare module 'semantic-ui-react' {
     * Additional classes.
     */
     className?: string;
+    textAlign?: string;
   }
 
   interface SuiBlockElement extends SuiElement {
