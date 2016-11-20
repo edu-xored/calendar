@@ -39,7 +39,7 @@ function makeHeaders() {
   const token = getToken();
   return {
     Authorization: token ? 'Bearer ' + token : undefined,
-    'Content-Type': CONTENT_JSON,
+    'Content-Type': CONTENT_JSON
   };
 }
 
@@ -48,8 +48,6 @@ function makeAPI<T, E>(api, ext?: E) {
   const resourcePath = id => `${BASE}/${api.resource}/${id}`;
   return Object.assign({
     create(payload: T): Promise<T> {
-      console.log(payload);
-      
       return fetch(collectionPath, {
         credentials: "same-origin",
         method: 'POST',

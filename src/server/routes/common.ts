@@ -70,17 +70,12 @@ export function makeRouter<T>(api: API<T>) {
 
   // create operation
   router.post(`/${api.collectionName}`, (req, res) => {
-    console.log(req.body);
-    
     const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
 
     const data = api.makeResource(req.body);
     data.id = null;
 
-    console.log(data);
-    
-    //api.orm.create(data, withLog).then(resultHandler, errorHandler);
     api.orm.create(data, withLog).then((d: any) => {
       res.json(api.filter(d.toJSON()));
     }, errorHandler);

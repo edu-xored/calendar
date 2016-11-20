@@ -20,20 +20,30 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
 
     constructor(props) {
         super(props);
-        api.teams.getList().then((teams: Team[]) => {
-            this.state.data = teams;
-            this.render();
-        });
+
+        this.init = this.init.bind(this);
         this.addTeam = this.addTeam.bind(this);
+        this.deleteTeam = this.deleteTeam.bind(this);
+
+        this.init();        
+    }
+
+    init() {
+        api.teams.getList().then((teams: Team[]) => {
+            this.setState({
+                data: teams
+            })
+        });
     }
 
     addTeam(team: Team) {
-        let teams = this.state.data;
-        teams.push(team);
-        this.setState({
-            data: teams
-        });
         api.teams.create(team);
+        this.init();
+    }
+    
+    deleteTeam(id: string) {
+        api.teams.remove(id);
+        this.init();
     }
 
     render() {
@@ -43,7 +53,7 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
                     <AddPanel add={this.addTeam} />
                 </section>
                 <section className='calendar-grid'>
-                    <Grid data={this.state.data} />
+                    <Grid data={this.state.data} deleteTeam={this.deleteTeam}/>
                 </section>
             </div>
         );
