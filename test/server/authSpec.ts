@@ -1,7 +1,7 @@
 import "mocha";
 import * as supertest from "supertest";
 import * as should from "should";
-import {User} from '../../src/lib/model';
+import { User } from '../../src/lib/model';
 import { makeApp } from '../../app';
 
 const app = makeApp(true);
@@ -24,7 +24,7 @@ describe("auth api", () => {
         should(user.pwdhash).be.undefined();
 
         supertest(app).post('/api/login')
-          .send({username: user.name, password: 'batman'})
+          .send({ username: user.name, password: 'batman' })
           .expect(200)
           .end((err, res) => {
             if (err) throw err;
@@ -32,6 +32,18 @@ describe("auth api", () => {
             const token: string = res.body;
             should(token).be.not.empty();
             console.log('token:', token);
+
+
+            supertest(app).get(`/api/me`)
+              .set('Authorization', 'Bearer ' + token)
+              .expect(200)
+              .end((err, res) => {
+                if (err) throw err;
+
+                const me: User = res.body;
+                should(me).is.equal(user);
+                done();
+              });
 
             supertest(app).delete(`/api/user/${user.id}`)
               .set('Authorization', 'Bearer ' + token)
