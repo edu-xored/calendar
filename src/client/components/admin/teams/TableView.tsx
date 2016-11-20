@@ -33,8 +33,6 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
         this.setState({
             data: teams
         });
-        console.log(team);
-        
         api.teams.create(team);
     }
 
