@@ -4,12 +4,12 @@ import users from './users';
 import teams from './teams';
 import calendars from './calendars';
 import events from './events';
-import {sync} from '../database';
+import {initdb} from '../database';
 
 export default function install(app: express.Application) {
   // sync database on first api call
   app.use('/api/*', (req, res, next) => {
-    sync().then(() => {
+    initdb().then(() => {
       authMiddleware(req, res, next);
     }, err => {
       res.sendStatus(500);
