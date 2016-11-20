@@ -3,7 +3,7 @@ require('isomorphic-fetch');
 import {User, Team, Calendar, Event} from '../lib/model';
 
 export function fetchJSON<T>(path: string): Promise<T> {
-  return window.fetch(path).then(res => res.json());
+  return window.fetch(path).then<T>(res => res.json());
 }
 
 const BASE = '/api';
@@ -30,14 +30,14 @@ function toJSON(res) {
 function makeHeaders() {
   // TODO get token from storage
   return {
-    // TODO Authorization: 'Bearer ' + token
-  };
+    Authorization: '$local_admin'
+  }
 }
 
-function makeAPI<T>(api) {
+function makeAPI<T, E>(api, ext?: E) {
   const collectionPath = `${BASE}/${api.collection}`;
   const resourcePath = id => `${BASE}/${api.resource}/${id}`;
-  return {
+  return Object.assign({
     create(payload: T): Promise<T> {
       return fetch(collectionPath, {
         credentials: "same-origin",
@@ -73,8 +73,21 @@ function makeAPI<T>(api) {
         headers: makeHeaders(),
       }).then(toJSON);
     },
-  };
+  }, ext);
 }
+
+const teamAPI = makeAPI<Team, {}>({
+  resource: 'team',
+  collection: 'teams',
+}, {
+  getMembers(teamId: string) : Promise<User[]> {
+    const url = `${BASE}/teams/${teamId}/members`;
+    return fetch(url, {
+      credentials: "same-origin",
+      headers: makeHeaders(),
+    }).then<User[]>(toJSON);
+  }
+});
 
 export default {
   login: function(username, password) {
@@ -94,19 +107,16 @@ export default {
       headers: makeHeaders(),
     }).then(toJSON);
   },
-  users: makeAPI<User>({
+  users: makeAPI<User, {}>({
     resource: 'user',
     collection: 'users',
-  }),
-  teams: makeAPI<Team>({
-    resource: 'team',
-    collection: 'teams',
-  }),
-  calendars: makeAPI<Calendar>({
+  }, {}),
+  teams: teamAPI,
+  calendars: makeAPI<Calendar, {}>({
     resource: 'calendar',
     collection: 'calendars',
   }),
-  events: makeAPI<Event>({
+  events: makeAPI<Event, {}>({
     resource: 'event',
     collection: 'events',
   }),
