@@ -1,12 +1,11 @@
 import "mocha";
-import * as _ from "lodash";
 import * as supertest from "supertest";
 import * as should from "should";
 import {User} from '../../src/lib/model';
-import db from '../../src/server/database';
 import { makeApp } from '../../app';
 
 const app = makeApp(true);
+const localAuth = '$local_admin';
 
 interface API {
   type: string;
@@ -16,6 +15,22 @@ interface API {
   addTests?: (ctx: any) => void;
 }
 
+function get(url: string) {
+  return supertest(app).get(url).set('Authorization', localAuth);
+}
+
+function post(url: string) {
+  return supertest(app).post(url).set('Authorization', localAuth);
+}
+
+function put(url: string) {
+  return supertest(app).put(url).set('Authorization', localAuth);
+}
+
+function del(url: string) {
+  return supertest(app).del(url).set('Authorization', localAuth);
+}
+
 export function makeSpec(api: API) {
   const ctx: any = {};
 
@@ -23,8 +38,7 @@ export function makeSpec(api: API) {
     let resourceId;
 
     it(`should return 404 on GET /api/${api.type}/0`, (done) => {
-      supertest(app)
-        .get(`/api/${api.type}/0`)
+      get(`/api/${api.type}/0`)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -34,8 +48,7 @@ export function makeSpec(api: API) {
     });
 
     it(`should return 404 on GET /api/${api.type}/z`, (done) => {
-      supertest(app)
-        .get(`/api/${api.type}/z`)
+      get(`/api/${api.type}/z`)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -46,7 +59,7 @@ export function makeSpec(api: API) {
 
     it(`/POST /api/${api.collection}`, (done) => {
       let resource = api.makeResource();
-      supertest(app).post(`/api/${api.collection}`)
+      post(`/api/${api.collection}`)
         .send(resource)
         .expect(200)
         .end((err, res) => {
@@ -62,7 +75,7 @@ export function makeSpec(api: API) {
 
     it(`/GET and /PUT /api/${api.type}/:id`, (done) => {
       const url = `/api/${api.type}/${resourceId}`;
-      supertest(app).get(url)
+      get(url)
         .expect(200)
         .end((err, res) => {
           if (err) throw err;
@@ -74,7 +87,7 @@ export function makeSpec(api: API) {
 
           const updatedResource = Object.assign({}, resource, api.update);
 
-          supertest(app).put(url)
+          put(url)
             .send(updatedResource)
             .expect(200)
             .end((err, res) => {
@@ -88,7 +101,7 @@ export function makeSpec(api: API) {
     });
 
     it(`/GET /api/${api.collection}`, (done) => {
-      supertest(app).get(`/api/${api.collection}`)
+      get(`/api/${api.collection}`)
         .expect(200)
         .end((err, res) => {
           if (err) throw err;
@@ -101,7 +114,7 @@ export function makeSpec(api: API) {
     });
 
     it(`/DELETE /api/${api.type}/0 not found`, (done) => {
-      supertest(app).del(`/api/${api.type}/0`)
+      del(`/api/${api.type}/0`)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -111,7 +124,7 @@ export function makeSpec(api: API) {
     });
 
     it(`/DELETE /api/${api.type}/z not found`, (done) => {
-      supertest(app).del(`/api/${api.type}/z`)
+      del(`/api/${api.type}/z`)
         .expect(404)
         .end((err, res) => {
           if (err) throw err;
@@ -127,12 +140,12 @@ export function makeSpec(api: API) {
 
     it(`/DELETE /api/${api.type}/:id`, (done) => {
       const url = `/api/${api.type}/${resourceId}`;
-      supertest(app).del(url)
+      del(url)
         .end((err, res) => {
           if (err) throw err;
           should(res.body).be.empty;
 
-          supertest(app).get(url)
+          get(url)
             .expect(404)
             .end((err, res) => {
               if (err) throw err;
@@ -170,7 +183,7 @@ makeSpec({
     it('should add/remove members', (done) => {
       const userName = 'batman';
       // add user
-      supertest(app).post('/api/users')
+      post('/api/users')
         .send({name: userName})
         .expect(200)
         .end((err, res) => {
@@ -182,13 +195,13 @@ makeSpec({
           const teamId = ctx.resourceId;
 
           // add user to the team
-          supertest(app).post(`/api/team/${teamId}/members`)
+          post(`/api/team/${teamId}/members`)
             .send([user.id])
             .expect(200)
             .end((err, res) => {
               if (err) throw err;
 
-              supertest(app).get(`/api/team/${teamId}/members`)
+              get(`/api/team/${teamId}/members`)
                 .expect(200)
                 .end((err, res) => {
                   if (err) throw err;
@@ -197,20 +210,25 @@ makeSpec({
                   should(res.body[0].id).be.eql(user.id);
                   should(res.body[0].name).be.eql(user.name);
 
-                  supertest(app).delete(`/api/team/${teamId}/members`)
+                  del(`/api/team/${teamId}/members`)
                     .send([user.id])
                     .expect(200)
                     .end((err, res) => {
                       if (err) throw err;
 
-                      supertest(app).get(`/api/team/${teamId}/members`)
+                      get(`/api/team/${teamId}/members`)
                         .expect(200)
                         .end((err, res) => {
                           if (err) throw err;
 
                           should(res.body.length).be.eql(0);
 
-                          done();
+                          del(`/api/user/${user.id}`)
+                            .expect(200)
+                            .end((err, res) => {
+                              if (err) throw err;
+                              done();
+                            });
                         });
                     });
                 });

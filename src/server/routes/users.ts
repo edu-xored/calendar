@@ -1,31 +1,21 @@
-import * as authorization from '../ldap/auth';
+import * as _ from 'lodash';
 import db from '../database';
 import {makeRouter} from './common';
+const passwordHash = require('password-hash');
 
 const router = makeRouter({
   orm: db.users,
   collectionName: 'users',
   resourceName: 'user',
-});
-
-router.post('/login', (req, res) => {
-  authorization.login(req.body.login, req.body.pwd)
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
-router.post('/logout', (req, res) => {
-  authorization.logout(req)
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+  makeResource: (data: any) => {
+    const password = data.password || '123';
+    data = _.omit(data, ['password']);
+    data.pwdhash = passwordHash.generate(password);
+    return data;
+  },
+  filter: (data: any) => {
+    return _.omit(data, ['pwdhash']);
+  },
 });
 
 export default router;
