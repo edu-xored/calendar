@@ -256,6 +256,7 @@ declare module 'semantic-ui-react' {
     loading?: boolean;
     negative?: boolean;
     positive?: boolean;
+    type?: string;
     primary?: boolean;
     secondary?: boolean;
     size?: Sizes;
