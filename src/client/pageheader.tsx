@@ -10,7 +10,7 @@ interface PageState {
 interface MenuItem {
   name: string;
   text: string;
-  link?: string,
+  link?: string;
   rightSide?: boolean;
   items?: MenuItem[];
 }
