@@ -25,7 +25,7 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
         this.addTeam = this.addTeam.bind(this);
         this.deleteTeam = this.deleteTeam.bind(this);
 
-        this.init();        
+        this.init();
     }
 
     init() {
@@ -40,10 +40,13 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
         api.teams.create(team);
         this.init();
     }
-    
+
     deleteTeam(id: string) {
-        api.teams.remove(id);
-        this.init();
+        api.teams.remove(id).then(() => {
+          this.init();
+        }, err => {
+          alert(err);
+        });
     }
 
     render() {

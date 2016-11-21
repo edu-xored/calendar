@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as React from 'react';
 
 import Row from './Row';
@@ -6,7 +7,7 @@ import { Team } from '../../../../lib/model';
 
 interface IGridProps {
     deleteTeam: (id: string) => void;
-    data: any[]; 
+    data: any[];
 }
 
 interface IGridState {
@@ -30,15 +31,10 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     render() {
-        let teams = this.props.data;
-        let teamsRows = [];
-        teams.forEach(team => {
-            let data = [];
-            headers.forEach((propertyName) => {
-                data.push(team[propertyName]);
-            });
-            teamsRows.push(
-                <div>
+        const teamsRows = _.map(this.props.data, team => {
+            const data = _.map(headers, propertyName => team[propertyName]);
+            return (
+                <div key={team.id}>
                     <Row id={team.id} rowData={data} onDelete={this.handleDelete} />
                 </div>
             );
