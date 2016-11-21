@@ -48,7 +48,7 @@ export default class CalendarView extends React.Component<any, ITeamsViewState> 
 
     render() {
         return (
-            <div className='calendar-view'>
+            <div className='teams-view'>
                 <section className='add-panel'>
                     <AddPanel add={this.addTeam} />
                 </section>

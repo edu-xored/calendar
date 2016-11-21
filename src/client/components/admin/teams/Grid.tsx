@@ -6,7 +6,7 @@ import { Team } from '../../../../lib/model';
 
 interface IGridProps {
     deleteTeam: (id: string) => void;
-    data: any[]; 
+    data: any[];
 }
 
 interface IGridState {
@@ -32,15 +32,13 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         let teams = this.props.data;
         let teamsRows = [];
-        teams.forEach(team => {
+        teams.forEach((team, i) => {
             let data = [];
             headers.forEach((propertyName) => {
                 data.push(team[propertyName]);
             });
             teamsRows.push(
-                <div>
-                    <Row id={team.id} rowData={data} onDelete={this.handleDelete} />
-                </div>
+                <Row key={i} id={team.id} rowData={data} onDelete={this.handleDelete} />
             );
         });
         return (
@@ -49,7 +47,7 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
                     {headers.map((cellData, i) => <Cell key={i} data={cellData} />)}
                 </section>
                 <section className='teams-rows'>
-                    { teamsRows }
+                    {teamsRows}
                 </section>
             </div>
         );
