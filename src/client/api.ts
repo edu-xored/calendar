@@ -80,7 +80,12 @@ function makeAPI<T, E>(api, ext?: E) {
         credentials: "same-origin",
         method: 'DELETE',
         headers: makeHeaders(),
-      }).then(toJSON);
+      }).then(res => {
+        if (res.status == 200) {
+          return true;
+        }
+        throw new Error(`http error: ${res.statusText}`);
+      });
     },
   }, ext);
 }
