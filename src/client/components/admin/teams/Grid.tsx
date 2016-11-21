@@ -45,7 +45,7 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
                     {headers.map((cellData, i) => <Cell key={i} data={cellData} />)}
                 </section>
                 <section className='teams-rows'>
-                    { teamsRows }
+                    {teamsRows}
                 </section>
             </div>
         );
