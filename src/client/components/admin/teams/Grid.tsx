@@ -34,9 +34,7 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
         const teamsRows = _.map(this.props.data, team => {
             const data = _.map(headers, propertyName => team[propertyName]);
             return (
-                <div key={team.id}>
-                    <Row id={team.id} rowData={data} onDelete={this.handleDelete} />
-                </div>
+                <Row key={team.id} id={team.id} rowData={data} onDelete={this.handleDelete} />
             );
         });
         return (
