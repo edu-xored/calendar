@@ -1,6 +1,7 @@
+import * as _ from 'lodash';
 import * as React from 'react';
 import {Input, Menu, Dropdown, Container} from 'semantic-ui-react';
-import {User} from '../lib/model';
+import history from './history';
 
 interface PageState {
   activeItem: string;
@@ -9,135 +10,109 @@ interface PageState {
 interface MenuItem {
   name: string;
   text: string;
-  role: boolean | string;
-  parent: boolean | string;
-  rightSide: boolean;
+  link?: string;
+  rightSide?: boolean;
+  items?: MenuItem[];
 }
 
+const menu: MenuItem[] = [
+  {
+    name: 'home',
+    text: 'Home',
+    link: '/',
+  },
+  {
+    name: 'calendars',
+    text: 'Calendars',
+    link: '/calendars',
+  },
+  {
+    name: 'reports',
+    text: 'Reports',
+    link: '/reports',
+  },
+  {
+    name: 'teams',
+    text: 'Teams',
+    link: '/teams',
+  },
+  {
+    name: 'admin',
+    text: 'Admin',
+    link: '/admin',
+  },
+  /*
+  {
+    name: 'user',
+    text: 'User Name',
+    items: [
+      {
+        name: 'account',
+        text: 'My Profile',
+      },
+      {
+        name: 'logout',
+        text: 'Logout',
+      }
+    ],
+  }
+  */
+];
+
 export default class PageHeader extends React.Component<{}, PageState> {
-  state: PageState = {
-    activeItem: 'home',
-  };
+  render() {
+    const items = _.map(menu, t => this.renderItem(t));
+    return (
+      <Menu>
+        <Container>
+          {items}
+          <Menu.Item position='right'>
+            <Input icon='search' placeholder='Search...'/>
+          </Menu.Item>
+        </Container>
+      </Menu>
+    );
+  }
 
-  handleItemClick = (name) => this.setState({activeItem: name});
-  handleMenuItemClick = (e, {name}) => this.handleItemClick(name);
-  handleDropdownItemClick = (e, {value}) => this.handleItemClick(value);
-
-  user: User = {
-    id: '1',
-    login: '%username%',
-    name: '%username%',
-    pwdhash: '%username%', // password hash
-    avatar: '', // URL to avatar image, e.g. it could be a gravatar URL or URL to uploaded image
-    role: 'admin',
-    position: '213',
-    place: 's',
-  }; // TODO fetch real logged in user's information
-
-  menu: MenuItem[] = [
-    {
-      name: 'home',
-      text: 'Home',
-      role: false,
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'calendars',
-      text: '',
-      role: false,
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'reports',
-      text: 'Reports',
-      role: false,
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'teams',
-      text: 'Teams',
-      role: false,
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'admin',
-      text: 'Admin',
-      role: 'admin',
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'user',
-      text: this.user.name,
-      role: true,
-      parent: false,
-      rightSide: false,
-    },
-    {
-      name: 'account',
-      text: 'My account',
-      role: true,
-      parent: 'user',
-      rightSide: false,
-    },
-    {
-      name: 'logout',
-      text: 'Logout',
-      role: true,
-      parent: 'user',
-      rightSide: false,
-    },
-  ];
-
-  showItem(item, child = false) {
-    if (item.parent === item.name)
-      return;
-    if ((item.role === true && +(this.user.id) <= 0) || (item.role && item.role === this.user.role)) // TODO normal check for rights
-      return;
-    let dropdown = [];
-    for (let tmpitem of this.menu)
-      if (tmpitem.parent === item.name)
-        dropdown.push(this.showItem(tmpitem));
-    if (dropdown.length > 0) {
+  renderItem(item: MenuItem, isDropdown?: boolean) {
+    if (!_.isEmpty(item.items)) {
+      const content = _.map(item.items, t => this.renderItem(t, true));
       return (
-        <Dropdown as={(child) ? Dropdown.Item : Menu.Item} text={item.text}>
+        <Dropdown key={item.name} as={isDropdown ? Dropdown.Item : Menu.Item} text={item.text}>
           <Dropdown.Menu>
-            {dropdown}
+            {content}
           </Dropdown.Menu>
         </Dropdown>
       );
-    } else {
-      if (child)
-        return (
-          <Dropdown.Item value={item.name} text={item.text} active={this.state.activeItem === item.name}
-                         onClick={this.handleDropdownItemClick}/>
-        );
-      else
-        return (
-          <Menu.Item name={item.name} active={this.state.activeItem === item.name} onClick={this.handleMenuItemClick}/>
-        );
     }
-  }
 
-  render() {
-    let container = [];
-    for (let item of this.menu)
-      if (item.parent === false && !item.rightSide)
-        container.push(this.showItem(item));
-    container.push(
-      <Menu.Item position='right'>
-        <Input icon='search' placeholder='Search...'/>
+    // TODO determine active state from current route
+    const active = false;
+    const onClick = this.makeItemClickHandler(item);
+
+    if (isDropdown) {
+      return (
+        <Dropdown.Item key={item.name} value={item.name} text={item.text} active={active}
+                       onClick={onClick} />
+      );
+    }
+
+    return (
+      <Menu.Item key={item.name} name={item.name} active={active} onClick={onClick}>
+        {item.text}
       </Menu.Item>
     );
-    for (let item of this.menu)
-      if (item.parent === false && item.rightSide)
-        container.push(this.showItem(item));
-    return (
-      <Menu><Container>{container}</Container></Menu>
-    );
+  }
+
+  makeItemClickHandler(item: MenuItem) {
+    return (e: any) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (item.link) {
+        history.push(item.link);
+        return;
+      }
+    };
   }
 }

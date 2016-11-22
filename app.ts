@@ -8,21 +8,15 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
+const UnauthorizedError = require('express-jwt/lib/errors/UnauthorizedError');
 
-import usersAPI from './src/server/routes/users';
-import db from "./src/server/database";
+import {initdb} from './src/server/database';
+import installAPI from './src/server/routes';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
 const webpackConfig = require('./webpack.config');
 const compiler = webpack(webpackConfig);
-
-function logErrors(err, req, res, next) {
-  if (err) {
-    console.error(err.stack);
-  }
-  next(err);
-}
 
 export function makeApp(testing?: boolean) {
   const app = express();
@@ -33,14 +27,13 @@ export function makeApp(testing?: boolean) {
 
   app.use(cookieParser());
 
-// static assets
+  // static assets
 
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: false }));
 
   // parse application/json
   app.use(bodyParser.json());
-  app.use(logErrors);
 
   if (!testing) {
     if (process.env.NODE_ENV !== 'production') {
@@ -57,11 +50,9 @@ export function makeApp(testing?: boolean) {
   }
 
   // REST API routes
-
-  app.use('/api', usersAPI);
+  installAPI(app);
 
   // static assets
-
   app.use(express.static(ROOT_DIR));
 
   // otherwise return index.html
@@ -71,8 +62,12 @@ export function makeApp(testing?: boolean) {
 
   app.use((err, req, res, next) => { // eslint-disable-line
     if (err) {
-      console.log(err);
-      res.status(500).send('bad code path');
+      console.log('error:', err);
+      if (err instanceof UnauthorizedError) {
+        res.sendStatus(403);
+      } else {
+        res.status(500).send(err.toString());
+      }
     }
   });
 
@@ -81,13 +76,8 @@ export function makeApp(testing?: boolean) {
 
 export function startServer() {
   const app = makeApp();
-
-  // Db Synchronization
-  db.sequelize.sync().then(() => {
-    console.log("DbSync Complete");
-
+  initdb().then(() => {
     // TODO detect port like in create-react-app
-
     app.listen(PORT, '0.0.0.0', (err) => {
       if (err) {
         console.log(err);
@@ -96,5 +86,7 @@ export function startServer() {
 
       console.log('Listening at http://0.0.0.0:%s', PORT);
     });
+  }, err => {
+    throw err;
   });
 }

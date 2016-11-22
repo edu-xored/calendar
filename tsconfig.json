@@ -15,7 +15,8 @@
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
     "types": [
-      "node"
+      "node",
+      "whatwg-fetch"
     ]
   },
   "exclude": [
