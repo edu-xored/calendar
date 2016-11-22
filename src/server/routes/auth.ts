@@ -70,7 +70,6 @@ export function authMiddleware(req: express.Request, res: express.Response, next
   }
 
   // TODO basic auth
-
   jwtMiddleware(req, res, next);
 }
 
