@@ -1,12 +1,20 @@
-require('isomorphic-fetch');
-
 import {User, Team, Calendar, Event} from '../lib/model';
 
+const BASE = '/api';
+const TOKEN_KEY = 'access_token';
+const CONTENT_JSON = 'application/json';
+
 export function fetchJSON<T>(path: string): Promise<T> {
-  return window.fetch(path).then(res => res.json());
+  return window.fetch(path).then<T>(res => res.json());
 }
 
-const BASE = '/api';
+function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+function setToken(value: string) {
+  localStorage.setItem(TOKEN_KEY, value);
+}
 
 function base64(s: string): string {
   return (typeof Buffer !== "undefined") ? new Buffer(s).toString('base64') : btoa(s);
@@ -20,24 +28,25 @@ function basicAuth(username, password) {
   return 'Basic ' + base64(s);
 }
 
-function toJSON(res) {
+function toJSON<T>(res): Promise<T> {
   if (res.ok) {
-    return res.json();
+    return res.json() as any;
   }
   throw new Error(`http error: ${res.statusText}`);
 }
 
 function makeHeaders() {
-  // TODO get token from storage
+  const token = getToken();
   return {
-    // TODO Authorization: 'Bearer ' + token
+    Authorization: token ? 'Bearer ' + token : undefined,
+    'Content-Type': CONTENT_JSON,
   };
 }
 
-function makeAPI<T>(api) {
+function makeAPI<T, E>(api, ext?: E) {
   const collectionPath = `${BASE}/${api.collection}`;
   const resourcePath = id => `${BASE}/${api.resource}/${id}`;
-  return {
+  return Object.assign({
     create(payload: T): Promise<T> {
       return fetch(collectionPath, {
         credentials: "same-origin",
@@ -73,40 +82,53 @@ function makeAPI<T>(api) {
         headers: makeHeaders(),
       }).then(toJSON);
     },
-  };
+  }, ext);
 }
 
+const teamAPI = makeAPI<Team, {}>({
+  resource: 'team',
+  collection: 'teams',
+}, {
+  getMembers(teamId: string): Promise<User[]> {
+    const url = `${BASE}/teams/${teamId}/members`;
+    return fetch(url, {
+      credentials: "same-origin",
+      headers: makeHeaders(),
+    }).then<User[]>(toJSON);
+  }
+});
+
 export default {
-  login: function(username, password) {
+  login: function(username, password): Promise<string> {
     return fetch(`${BASE}/login`, {
       credentials: "same-origin",
       method: 'POST',
       headers: {
-        Authorization: basicAuth(username, password),
+        'Content-Type': CONTENT_JSON,
       },
       body: JSON.stringify({username, password}),
-    }).then(toJSON);
+    }).then<string>(toJSON)
+      .then(token => {
+        setToken(token);
+        return token;
+      });
   },
-  // TODO not implemented yet
-  me: function() {
+  me: function(): Promise<User> {
     return fetch(`${BASE}/me`, {
       credentials: "same-origin",
       headers: makeHeaders(),
     }).then(toJSON);
   },
-  users: makeAPI<User>({
+  users: makeAPI<User, {}>({
     resource: 'user',
     collection: 'users',
   }),
-  teams: makeAPI<Team>({
-    resource: 'team',
-    collection: 'teams',
-  }),
-  calendars: makeAPI<Calendar>({
+  teams: teamAPI,
+  calendars: makeAPI<Calendar, {}>({
     resource: 'calendar',
     collection: 'calendars',
   }),
-  events: makeAPI<Event>({
+  events: makeAPI<Event, {}>({
     resource: 'event',
     collection: 'events',
   }),

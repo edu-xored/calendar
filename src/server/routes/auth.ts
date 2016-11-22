@@ -57,14 +57,14 @@ const jwtMiddleware = expressJWT({ secret });
 
 export function authMiddleware(req: express.Request, res: express.Response, next: (err?: any) => void) {
   const path = (req.originalUrl || req.url).toLowerCase();
-  if (path == '/api/login' || path == '/api/logout') {
+  if (path === '/api/login' || path === '/api/logout') {
     next();
     return;
   }
 
   // TODO local admin, check that client is from localhost
   const headers = req.headers as any;
-  if (headers.authorization == '$local_admin') {
+  if (headers.authorization === '$local_admin') {
     next();
     return;
   }
