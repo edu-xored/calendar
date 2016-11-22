@@ -3,6 +3,7 @@ import * as supertest from "supertest";
 import * as should from "should";
 import { User } from '../../src/lib/model';
 import { makeApp } from '../../app';
+import * as _ from 'lodash';
 
 const app = makeApp(true);
 const localAuth = '$local_admin';
@@ -12,9 +13,9 @@ describe("auth api", () => {
     supertest(app).post(`/api/users`)
       .set('Authorization', localAuth)
       .send({
-        login: 'batman',
-        name: 'batman',
-        password: 'batman',
+        login: 'aquaman',
+        name: 'aquaman',
+        password: 'aquaman',
       })
       .expect(200)
       .end((err, res) => {
@@ -24,7 +25,7 @@ describe("auth api", () => {
         should(user.pwdhash).be.undefined();
 
         supertest(app).post('/api/login')
-          .send({ username: user.name, password: 'batman' })
+          .send({ username: user.name, password: 'aquaman' })
           .expect(200)
           .end((err, res) => {
             if (err) throw err;
@@ -41,17 +42,22 @@ describe("auth api", () => {
                 if (err) throw err;
 
                 const me: User = res.body;
-                should(me).is.equal(user);
-                done();
+                console.log("ActualMe:", me);
+                const filter = (user: any) => {
+                  return _.pick(user, ["name", "login", "id"]);
+                }
+                should(filter(me)).is.deepEqual(filter(user));
+         
+
+                supertest(app).delete(`/api/user/${user.id}`)
+                  .set('Authorization', 'Bearer ' + token)
+                  .expect(200)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    done();
+                  });
               });
 
-            supertest(app).delete(`/api/user/${user.id}`)
-              .set('Authorization', 'Bearer ' + token)
-              .expect(200)
-              .end((err, res) => {
-                if (err) throw err;
-                done();
-              });
           });
       });
   });

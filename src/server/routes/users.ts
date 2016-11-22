@@ -1,10 +1,12 @@
 import * as _ from 'lodash';
 import db from '../database';
-import { makeRouter } from './common';
+import { makeRouter, makeResultHandler, makeErrorHandler } from './common';
+
 const passwordHash = require('password-hash');
-const expressJWT = require('express-jwt');
-const secret = 'super secret';
-const jwtMiddleware = expressJWT({ secret });
+const omitPassword = (data: any) => {
+  return _.omit(data, ['pwdhash']);
+}
+
 
 const router = makeRouter({
   orm: db.users,
@@ -16,31 +18,23 @@ const router = makeRouter({
     data.pwdhash = passwordHash.generate(password);
     return data;
   },
-  filter: (data: any) => {
-    return _.omit(data, ['pwdhash']);
-  },
+  filter: omitPassword,
 });
 
-router.get(`/me`, (req, res) => {
-  const errHandler = err => {
-  };
-  const next = (err?: any) => void
-
-  jwtMiddleware(req, res, next);
-
-  db.users.all().then((d : any) => {
-    console.log("OUT::", d);
-  });
-
-
-  const id = (req as any).user.user.id;
-  db.users.findById(id).then((d: any) => {  
-    if (d) {
-      res.json(_.omit(d.toJSON(), ['pwdhash']));
-    } else {
+router.get('/me', (req, res) => {
+  const errorHandler = makeErrorHandler(req, res);
+  const resultHandler = makeResultHandler(res);
+  const id = +(req as any).user.user.id;
+  db.users.findById(id, console.log).then((value: any) => {
+    if (value) {
+      const user = omitPassword(value.toJSON());
+      console.log("InsudeActualUser:", value.toJSON());
+      resultHandler(user);
+    }
+    else {
       res.sendStatus(500);
     }
-  });
+  }, errorHandler);
 });
 
 export default router;

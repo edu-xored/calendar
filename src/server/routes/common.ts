@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as ORM from "sequelize";
 import * as express from "express";
 
-const withLog = {logging: console.log};
+const withLog = { logging: console.log };
 
 interface API<T> {
   orm: ORM.Model<T, any>;
@@ -27,7 +27,7 @@ function makeStatus200Handler(res: express.Response) {
 export function makeErrorHandler(req: express.Request, res: express.Response) {
   return err => {
     console.log(`${req.method} ${req.path} failed: ${err}`);
-    res.json({error: err});
+    res.json({ error: err });
   };
 }
 
