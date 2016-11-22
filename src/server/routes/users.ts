@@ -1,59 +1,21 @@
-import * as express from 'express';
-import * as usersStore from "./../storages/usersStore";
-import { User } from '../../lib/model';
-import * as authorization from '../ldap/auth';
+import * as _ from 'lodash';
+import db from '../database';
+import {makeRouter} from './common';
+const passwordHash = require('password-hash');
 
-const router = express.Router();
-
-router.get('/users', (req, res) => {
-  usersStore.getAll()
-    .then(result => {
-      res.json(result);
-    });
-});
-
-router.post('/users', (req, res) => {
-  usersStore.create(req.body)
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
-router.get('/user/:id', (req, res) => {
-  usersStore.getById(req.params.id)
-    .then((result) => {
-      if (result) {
-        res.json(result);
-      } else {
-        res.sendStatus(404);
-      }
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
-router.post('/login', (req, res) => {
-  authorization.login(req.body.login, req.body.pwd)
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
-router.post('/logout', (req, res) => {
-  authorization.logout(req)
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+const router = makeRouter({
+  orm: db.users,
+  collectionName: 'users',
+  resourceName: 'user',
+  makeResource: (data: any) => {
+    const password = data.password || '123';
+    data = _.omit(data, ['password']);
+    data.pwdhash = passwordHash.generate(password);
+    return data;
+  },
+  filter: (data: any) => {
+    return _.omit(data, ['pwdhash']);
+  },
 });
 
 export default router;

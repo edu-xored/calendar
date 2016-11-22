@@ -8,23 +8,17 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
+const UnauthorizedError = require('express-jwt/lib/errors/UnauthorizedError');
 
-import usersAPI from './src/server/routes/users';
-import database from "./src/server/database";
+import {initdb} from './src/server/database';
+import installAPI from './src/server/routes';
 
 const ROOT_DIR = path.normalize(__dirname);
 const PORT = process.env.PORT || 8000;
 const webpackConfig = require('./webpack.config');
 const compiler = webpack(webpackConfig);
 
-function logErrors(err, req, res, next) {
-  if (err) {
-    console.error(err.stack);
-  }
-  next(err);
-}
-
-export function makeApp() {
+export function makeApp(testing?: boolean) {
   const app = express();
 
   app.use(morgan('dev'));
@@ -33,33 +27,32 @@ export function makeApp() {
 
   app.use(cookieParser());
 
-// static assets
+  // static assets
 
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: false }));
 
   // parse application/json
   app.use(bodyParser.json());
-  app.use(logErrors);
 
-  if (process.env.NODE_ENV !== 'production') {
-    const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
-    app.use(devMiddleware(compiler, {
-      noInfo: true,
-      publicPath: webpackConfig.output.publicPath,
-      stats: 'errors-only',
-    }));
+  if (!testing) {
+    if (process.env.NODE_ENV !== 'production') {
+      const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
+      app.use(devMiddleware(compiler, {
+        noInfo: true,
+        publicPath: webpackConfig.output.publicPath,
+        stats: 'errors-only',
+      }));
 
-    const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
-    app.use(hotMiddleware(compiler));
+      const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
+      app.use(hotMiddleware(compiler));
+    }
   }
 
   // REST API routes
-
-  app.use('/api', usersAPI);
+  installAPI(app);
 
   // static assets
-
   app.use(express.static(ROOT_DIR));
 
   // otherwise return index.html
@@ -69,8 +62,12 @@ export function makeApp() {
 
   app.use((err, req, res, next) => { // eslint-disable-line
     if (err) {
-      console.log(err);
-      res.status(500).send('bad code path');
+      console.log('error:', err);
+      if (err instanceof UnauthorizedError) {
+        res.sendStatus(403);
+      } else {
+        res.status(500).send(err.toString());
+      }
     }
   });
 
@@ -79,20 +76,17 @@ export function makeApp() {
 
 export function startServer() {
   const app = makeApp();
-  // TODO detect port like in create-react-app
+  initdb().then(() => {
+    // TODO detect port like in create-react-app
+    app.listen(PORT, '0.0.0.0', (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-  app.listen(PORT, '0.0.0.0', (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    console.log('Listening at http://0.0.0.0:%s', PORT);
+      console.log('Listening at http://0.0.0.0:%s', PORT);
+    });
+  }, err => {
+    throw err;
   });
 }
-
-// Db Synchronization
-database.sequelize.sync().then(() => {
-  console.log("DbSync Complete");
-  startServer();
-});

@@ -1,13 +1,12 @@
 import * as ldap from 'ldapjs';
-import * as usersStore from '../../server/storages/usersStore';
 import { User } from '../../lib/model';
-
+import { findUserByAttr } from '../database';
 
 /**
  *                            !!!WARNING!!!
- * !!!Node server may crash after LDAP server shutdown during its work!!!  
+ * !!!Node server may crash after LDAP server shutdown during its work!!!
  *        !!!I don't know why it happens. Will be fixed later.!!!
- * 
+ *
  * Use 'npm run ldap_dev/ldap_start' to run server in dev/production mode
  */
 
@@ -35,7 +34,7 @@ server.compare(BASE, [authorize],
   async (req: ldap.CompareRequest, res: any, next: ldap.Server.NextFunction) => {
     let dn: string = req.dn.toString();
     let login: string = dn.split(', ')[0].split('=')[1];
-    let user: User = await usersStore.getByAttr('login', login);
+    let user: User = await findUserByAttr('login', login);
     if (!user) {
       res.end(false);
       return next(new ldap.NoSuchObjectError(dn));
@@ -59,8 +58,9 @@ server.compare(BASE, [authorize],
 server.search(BASE, [authorize],
   async (req: ldap.SearchRequest, res: ldap.SearchResponse, next: ldap.Server.NextFunction) => {
     const dn: string = req.dn.toString();
-    let user: any = await usersStore.getByAttr(req.filter.toString().split('=')[0].split('(')[1],
-      req.filter.toString().split('=')[1].split(')')[0]);
+    const name = req.filter.toString().split('=')[0].split('(')[1];
+    const value = req.filter.toString().split('=')[1].split(')')[0];
+    let user: any = await findUserByAttr(name, value);
     if (!user) {
       return next(new ldap.NoSuchObjectError(dn));
     }
