@@ -1,58 +1,19 @@
 import * as React from 'react';
+import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
 import { Button, Container, Header, Image, Table} from 'semantic-ui-react'
 
 export default class Calendarlist extends React.Component<{}, {}> {
-  team: Team = {
-    id: "1",
-    name: "Developers",
-    avatar: "http://semantic-ui.com/images/avatar2/small/lena.png",
-    description: "Lorem ipsum",
-    members: [],
-  };
-  calendars: Calendar[] = [
-    {
-      id: "1",
-      name: 'Calendar',
-      type: 'default',
-      description: "Lorem ipsum",
-      teamId: "1",
-      events: [],
-    },
-    {
-      id: "1",
-      name: 'Calendar',
-      type: 'default',
-      description: "Lorem ipsum",
-      teamId: "1",
-      events: [],
-    },
-    {
-      id: "1",
-      name: 'Calendar',
-      type: 'default',
-      description: "Lorem ipsum",
-      teamId: "1",
-      events: [],
-    },
-    {
-      id: "1",
-      name: 'Calendar',
-      type: 'default',
-      description: "Lorem ipsum",
-      teamId: "1",
-      events: [],
-    },
-  ];
   ShowRow(calendar:Calendar) {
+    let team: Team = API.teams.get(calendar.teamId);
     return (
             <Table.Row>
               <Table.Cell>
                 <Header as='h4' image>
-                  <Image src={this.team.avatar} shape='rounded' size='mini'/>
+                  <Image src={team.avatar} shape='rounded' size='mini'/>
                   <Header.Content>
                     {calendar.name}
-                    <div className="sub header">{this.team.name}</div>
+                    <div className="sub header">{team.name}</div>
                   </Header.Content>
                 </Header>
               </Table.Cell>
@@ -67,11 +28,12 @@ export default class Calendarlist extends React.Component<{}, {}> {
                 </Button.Group>
               </Table.Cell>
             </Table.Row>
-            );	
+            );
   }
   render() {
+    let calendars = API.calendars.getList();
   	let rows = [];
-    for (let calendar of this.calendars)
+    for (let calendar of calendars)
       rows.push(this.ShowRow(calendar));
     return (
       <Container>
