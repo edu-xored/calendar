@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 
-import Row from './Row';
-import Cell from './Cell';
+import Row from '../common/Row';
+import Cell from '../common/Cell';
 import { Team } from '../../../../lib/model';
 
 interface IGridProps {

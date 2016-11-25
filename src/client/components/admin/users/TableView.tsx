@@ -11,7 +11,7 @@ interface IUsersViewState {
 };
 
 const defaultState = {
-    data: [],
+    data: []
 };
 
 export default class CalendarView extends React.Component<any, IUsersViewState> {
