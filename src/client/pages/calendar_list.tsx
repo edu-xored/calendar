@@ -3,9 +3,41 @@ import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
 import { Button, Container, Header, Image, Table} from 'semantic-ui-react'
 
-export default class Calendarlist extends React.Component<{}, {}> {
-  ShowRow(calendar:Calendar) {
-    let team: Team = API.teams.get(calendar.teamId);
+interface CalendarListState {
+  calendars: Calendar[];
+  teams: Team[];
+}
+
+export default class CalendarList extends React.Component<{}, {}> {
+  state: CalendarListState = {
+    calendars: [],
+    teams: [],
+  }
+
+   componentDidMount() {
+     API.teams.getList().then((teams: Team[]) => {
+       this.setState({
+         teams: teams,
+       })
+     });
+     API.calendars.getList().then((calendars: Calendar[]) => {
+       this.setState({
+         calendars: calendars,
+       })
+     });
+   }
+
+   FindTeam = (id: string) => {
+     for (let team of this.state.teams)
+       if (team.id === id)
+         return team;
+     return null;
+   }
+
+  ShowRow(calendar: Calendar) {
+    let team: Team = this.FindTeam(calendar.teamId);
+    if (team === null)
+      return;
     return (
             <Table.Row>
               <Table.Cell>
@@ -31,9 +63,8 @@ export default class Calendarlist extends React.Component<{}, {}> {
             );
   }
   render() {
-    let calendars = API.calendars.getList();
   	let rows = [];
-    for (let calendar of calendars)
+    for (let calendar of this.state.calendars)
       rows.push(this.ShowRow(calendar));
     return (
       <Container>
