@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
 import { Button, Container, Header, Image, Table} from 'semantic-ui-react'
@@ -15,27 +16,24 @@ export default class CalendarList extends React.Component<{}, {}> {
   }
 
    componentDidMount() {
-     API.teams.getList().then((teams: Team[]) => {
+     API.teams.getList().then((teams) => {
        this.setState({
          teams: teams,
        })
      });
-     API.calendars.getList().then((calendars: Calendar[]) => {
+     API.calendars.getList().then((calendars) => {
        this.setState({
          calendars: calendars,
        })
      });
    }
 
-   FindTeam = (id: string) => {
-     for (let team of this.state.teams)
-       if (team.id === id)
-         return team;
-     return null;
+   findTeam = (id: string) => {
+     return (_.find(this.state.teams, t => t.id === id));
    }
 
-  ShowRow(calendar: Calendar) {
-    let team: Team = this.FindTeam(calendar.teamId);
+  showRow(calendar: Calendar) {
+    let team: Team = this.findTeam(calendar.teamId);
     if (team === null)
       return;
     return (
@@ -65,7 +63,7 @@ export default class CalendarList extends React.Component<{}, {}> {
   render() {
   	let rows = [];
     for (let calendar of this.state.calendars)
-      rows.push(this.ShowRow(calendar));
+      rows.push(this.showRow(calendar));
     return (
       <Container>
         <Table basic='very' celled>
