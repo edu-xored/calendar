@@ -3,10 +3,10 @@ import db from '../database';
 import { makeRouter, makeResultHandler, makeErrorHandler } from './common';
 
 const passwordHash = require('password-hash');
-const omitPassword = (data: any) => {
+
+function omitPassword(data: any) {
   return _.omit(data, ['pwdhash']);
 }
-
 
 const router = makeRouter({
   orm: db.users,
