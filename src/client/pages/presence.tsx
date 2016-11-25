@@ -4,9 +4,41 @@ import {Event, User, Team} from "./../../lib/model";
 import {Image, Header, Container, Form, Button, Radio} from 'semantic-ui-react';
 import {start} from "repl";
 
+interface PresenceState {
+  events: Event[];
+  users: User[];
+}
+
 export default class PresencePage extends React.Component<{}, {}> {
+  state: PresenceState = {
+    events: [],
+    users: [],
+  }
+
+  componentDidMount() {
+    API.users.getList().then((users: User[]) => {
+      this.setState({
+        users: users,
+      })
+    });
+    API.events.getList().then((events: Event[]) => {
+      this.setState({
+        events: events,
+      })
+    });
+  }
+
+  FindUser = (id: string) => {
+    for (let user of this.state.users)
+      if (user.id === id)
+        return user;
+    return null;
+  }
+
   ShowAbsent(event: Event) {
-    let user: User = API.users.get(event.userId);
+    let user = this.FindUser(event.userId);
+    if (user === null)
+      return;
     return (
       <Header as='h4' image>
         <Image src={user.avatar} shape='rounded' size='mini'/>
@@ -19,9 +51,8 @@ export default class PresencePage extends React.Component<{}, {}> {
   }
   render() {
     let absentUsers = [];
-    let events: Event[] = API.events.getList();
-    let now = new Date();
-    for (let event of events) {
+    let now = new Date(Date.now());
+    for (let event of this.state.events) {
       if (event.allDay && event.start.getDate() === now.getDate()
         && event.start.getMonth() === now.getMonth()
         && event.start.getFullYear() === now.getFullYear()
