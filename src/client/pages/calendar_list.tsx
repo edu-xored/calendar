@@ -9,6 +9,16 @@ interface CalendarListState {
   teams: Team[];
 }
 
+class DeleteBtnListener {
+  id: string;
+  constructor (id: string) {
+    this.id = id;
+  }
+  onBtnClick () {
+    API.calendars.remove(this.id);
+  }
+}
+
 export default class CalendarList extends React.Component<{}, {}> {
   state: CalendarListState = {
     calendars: [],
@@ -36,6 +46,8 @@ export default class CalendarList extends React.Component<{}, {}> {
     let team: Team = this.findTeam(calendar.teamId);
     if (team === null)
       return;
+    let delBtnListener: DeleteBtnListener;
+    delBtnListener = new DeleteBtnListener(calendar.id);
     return (
             <Table.Row>
               <Table.Cell>
@@ -54,7 +66,7 @@ export default class CalendarList extends React.Component<{}, {}> {
                 <Button.Group>
                   <Button color='blue'>View</Button>
                   <Button color='green'>Edit</Button>
-                  <Button color='red'>Delete</Button>
+                  <Button color='red' onClick={delBtnListener.onBtnClick}>Delete</Button>
                 </Button.Group>
               </Table.Cell>
             </Table.Row>

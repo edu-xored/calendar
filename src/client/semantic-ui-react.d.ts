@@ -261,6 +261,7 @@ declare module 'semantic-ui-react' {
     secondary?: boolean;
     size?: Sizes;
     toggle?: boolean;
+    onClick?: Function;
   }
 
   interface IButtonContent extends SuiBlockElement {
