@@ -19,7 +19,7 @@ export default class LoginPage extends React.Component<{}, LoginState> {
                 <div className="column">
                     <form className="ui large form" style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
                         <h2 className="ui teal image header">
-                            <img src="pictureCalendearForLoginPage.png" className="image"></img>
+                            <img src="/public/img/pictureCalendearForLoginPage.png" className="image"></img>
                             <div className="content">Log-in to your account</div>
                         </h2>
                         <div className="ui stacked segment">
