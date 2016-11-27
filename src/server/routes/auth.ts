@@ -58,9 +58,7 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  const resultHandler = makeResultHandler(res);
-  const errorHandler = makeErrorHandler(req, res);
-  ldap.logout(req).then(resultHandler, errorHandler);
+  res.sendStatus(200);
 });
 
 const jwtMiddleware = expressJWT({ secret });
