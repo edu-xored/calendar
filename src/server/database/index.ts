@@ -1,10 +1,11 @@
+import * as _ from 'lodash';
 import * as ORM from 'sequelize';
 import defineUserModel from './userModel';
 import defineTeamModel from './teamModel';
 import defineEventModel from './eventModel';
 import defineCalendarModel from './calendarModel';
 import {ID} from './common';
-import {User, TeamMember} from "../../lib/model";
+import {User, Team, TeamMember} from "../../lib/model";
 
 const passwordHash = require('password-hash');
 
@@ -52,6 +53,14 @@ const db = {
 
 export default db;
 
+export function findUserByAttr(attr: string, value: string): Promise<User> {
+  return user.findOne({ where: { [attr]: value }, logging: console.log }) as any;
+}
+
+export function findUserByLogin(login: string): Promise<User> {
+  return user.findOne({ where: { login }, logging: console.log }) as any;
+}
+
 let initialized = false;
 
 export function initdb(): Promise<any> {
@@ -64,7 +73,7 @@ export function initdb(): Promise<any> {
       reject(err);
     };
     return orm.sync({logging: console.log}).then(() => {
-      initAdminUser().then(() => {
+      initData().then(() => {
         initialized = true;
         resolve(true);
       }, onError);
@@ -72,7 +81,14 @@ export function initdb(): Promise<any> {
   });
 }
 
-function initAdminUser() {
+function initData() {
+  return Promise.all([
+    initAdminUser(),
+    initTeams()
+  ]);
+}
+
+function initAdminUser(): Promise<any> {
   return findUserByLogin('admin').then(user => {
     if (user) {
       return user;
@@ -94,10 +110,117 @@ function createAdminUser() {
   }, withLog);
 }
 
-export function findUserByAttr(attr: string, value: string): Promise<User> {
-  return user.findOne({ where: { [attr]: value }, logging: console.log }) as any;
+function initTeams(): Promise<any> {
+  const teamsJSON: any[] = require('../../../data/teams.json');
+  const usersJSON: any[] = require('../../../data/users.json');
+  const teams = _.map(teamsJSON, t => (
+    _.assign({}, t, {
+      members: _.map(t.members, userName => _.find(usersJSON, u => u.name === userName)).filter(_.identity)
+    })
+  ));
+  return Promise.all(_.map(teams, initTeam));
 }
 
-export function findUserByLogin(login: string): Promise<User> {
-  return user.findOne({ where: { login }, logging: console.log }) as any;
+function initTeam(input: any): Promise<any> {
+  const members: any = input.members || [];
+  const data: any = _.omit(input, ['members']);
+
+  const initMembers = teamId => {
+    console.log('init members for team:', data.name);
+    return Promise.all(_.map(members, m => initMember(teamId, m)));
+  };
+
+  const initCalendars = team => (
+    Promise.all([
+      initCalendar(team, 'PTO'),
+      initCalendar(team, 'WFH'),
+    ])
+  );
+
+  const initRelations = (team: any) => (
+    Promise.all([
+      initMembers(team.id),
+      initCalendars(team.toJSON())
+    ])
+  );
+
+  const create = () => {
+    console.log('init team:', data.name);
+    return team.create(data, withLog).then((d: any) => initRelations(d));
+  };
+
+  return team.findOne({
+    where: { name: data.name },
+    logging: console.log
+  }).then((d: any) => {
+    if (!d) {
+      return create();
+    }
+    return initRelations(d);
+  }, err => {
+    console.log('error:', err);
+    return create();
+  }) as any;
+}
+
+function initMember(teamId: number, data: any): Promise<any> {
+  const link = (user: ORM.Instance<User>) => {
+    return (user as any).getTeams(withLog).then((teams: any[]) => {
+      const team = _.find(teams, t => +t.id === +teamId);
+      if (team) return team;
+      return (user as any).addTeam(teamId);
+    });
+  };
+
+  const create = () => {
+    console.log('init user:', data.name);
+    if (!data.login) {
+      data.login = data.name;
+    }
+    if (!data.role) {
+      data.role = 'superhero';
+    }
+    if (!data.position) {
+      data.position = 'superhero';
+    }
+    const pwd = data.password || data.login;
+    data.pwdhash = passwordHash.generate(pwd);
+    return user.create(data, withLog).then((u: any) => link(u));
+  };
+
+  return team.findOne({
+    where: { name: data.name },
+    logging: console.log
+  }).then((d: any) => {
+    if (!d) {
+      return create();
+    }
+    return link(d);
+  }, err => {
+    console.log('error:', err);
+    return create();
+  }) as any;
+}
+
+function initCalendar(team: Team, type: string) {
+  const create = () => {
+    const name = `${team.name} ${type} Calendar`;
+    console.log('init calendar:', name);
+    const data = {
+      name,
+      type,
+      teamId: +team.id,
+    };
+    return calendar.create(data, withLog);
+  };
+
+  return calendar.findOne({
+    where: { type },
+    logging: console.log
+  }).then((c: any) => {
+    return c || create();
+  }, err => {
+    console.log('error:', err);
+    return create();
+  });
 }
