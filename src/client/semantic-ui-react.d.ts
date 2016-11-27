@@ -1645,6 +1645,7 @@ declare module 'semantic-ui-react' {
   // Modal
 
   interface IModalProps extends SuiBlockElement {
+    trigger?: any;
     /**
     * A modal can reduce its complexity
     */

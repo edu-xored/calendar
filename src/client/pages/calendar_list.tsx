@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
-import { Button, Container, Header, Image, Table} from 'semantic-ui-react'
+import { Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react'
 
 interface CalendarListState {
   calendars: Calendar[];
@@ -66,7 +66,20 @@ export default class CalendarList extends React.Component<{}, {}> {
                 <Button.Group>
                   <Button color='blue'>View</Button>
                   <Button color='green'>Edit</Button>
-                  <Button color='red' onClick={delBtnListener.onBtnClick}>Delete</Button>
+                  <Modal trigger={<Button color='red'>Delete</Button>} basic size='small'>
+                    <Header icon='archive' content='Archive Old Messages' />
+                    <Modal.Content>
+                      <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button basic color='red' inverted>
+                        <Icon name='remove' /> No
+                      </Button>
+                      <Button color='green' inverted onClick={delBtnListener.onBtnClick}>
+                        <Icon name='checkmark' /> Yes
+                      </Button>
+                    </Modal.Actions>
+                  </Modal>
                 </Button.Group>
               </Table.Cell>
             </Table.Row>
