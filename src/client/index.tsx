@@ -10,11 +10,4 @@ class Root extends React.Component<{}, {}> {
   }
 }
 
-// TODO remove when login page is completed!
-API.login('admin', 'admin').then(() => {
-  console.log('logged in as admin');
-}, err => {
-  console.log('error:', err);
-});
-
 render(<Root/>, document.getElementById('root'));
