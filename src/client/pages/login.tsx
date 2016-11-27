@@ -1,6 +1,7 @@
 import * as React from 'react';
 import API from '../api';
 import history from '../history';
+import { Button, Input } from 'semantic-ui-react';
 
 interface LoginState {
     userName?: string;
@@ -18,15 +19,15 @@ export default class LoginPage extends React.Component<{}, LoginState> {
                 <form style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
                     <p>WELCOME</p>
                     <p>
-                        <input style={inputStyle} name="username" value={this.state.userName}
+                        <Input type="text" value={this.state.userName}
                                onChange={this.handleUserNameChange.bind(this)}/>
                     </p>
                     <p>
-                        <input style={inputStyle} name="password" value={this.state.password}
+                        <Input type="password" value={this.state.password}
                                onChange={this.handlePasswordChange.bind(this)}/>
                     </p>
                      {this.state.error ? <p style={{color :'red'}}>Invalid username or password</p> : null}
-                    <p><button type="submit">Login</button></p>
+                    <p><Button type="submit" primary>Login</Button></p>
                 </form>
             </div>
         );
