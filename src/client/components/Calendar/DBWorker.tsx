@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {User, Team, Calendar, Event} from '../../../lib/model';
-import api from '../../api';
+import API from '../../api';
 
 
 const getFormForEntity = (entity: any, formKey: number) => {
@@ -23,27 +23,67 @@ const getFormForEntity = (entity: any, formKey: number) => {
 }
 
 const onCalendarFormSubmit = (e) => {
-  alert('WORKS!!!');
+  console.log('Adding a calendar to db');
   e.preventDefault();
   try {
-    api.calendars.create({
-      id: e.target.id,
-      name: e.target.name,
-      type: e.target.type,
-      description: e.target.description,
-      teamId: e.target.teamId
+    API.calendars.create({
+      name: e.target.name.value.trim(),
+      type: e.target.type.value.trim(),
+      description: e.target.description.value.trim(),
+      teamId: e.target.teamId.value.trim()
     }).then(res => console.log(res));
   } catch(err) {
     console.log(err);
   }
 };
 const onUserFormSubmit = (e) => {
-
+  e.preventDefault();
+  try {
+    API.users.create({
+      name: e.target.name.value.trim(),
+      email: e.target.email.value.trim(),
+      login: e.target.login.value.trim(),
+      role: e.target.role.value.trim(),
+      position: e.target.position.value.trim(),
+      place: e.target.place.value.trim(),
+    }).then(res => console.log(res));
+  } catch(err) {
+    console.log(err);
+  }
 };
 const onEventFormSubmit = (e) => {
+  e.preventDefault();
+  };
 
-};
-const onTeamFormSubmit = (e) => {
+const  onTeamFormSubmit = (e) => {
+
+  e.preventDefault();
+  let allUsers: User[];
+  allUsers = API.users.getList()
+    .then(
+      users => {
+        console.log(users);
+        return users;
+    }).catch(err => {
+      console.log("Couldn't load users");
+    });
+
+  try {
+    API.teams.create({
+      name: e.target.name.value.trim(),
+      description: e.target.description.value.trim(),
+      members: allUsers
+    }).then(res => console.log(res));
+  } catch(err) {
+    console.log(err);
+  }
+
+  try {
+    API.teams.getList()
+    .then(res => console.log(res));
+  } catch(err) {
+    console.log(err);
+  }
 
 };
 
@@ -53,10 +93,10 @@ export default class DBWorker extends React.Component<any, any> {
   }
 
   render() {
-    let uProps = ['id', 'name', 'email', 'login', 'pwdhash', 'avatar', 'role', 'position', 'place'];
-    let tProps = ['id', 'name', 'avatar', 'description'];
-    let cProps = ['id', 'name', 'type', 'description', 'teamId'];
-    let eProps = ['id', 'type', 'comment', 'calendarId', 'start', 'end', 'userId'];
+    let uProps = ['name', 'email', 'login', 'avatar', 'role', 'position', 'place'];
+    let tProps = ['name', 'avatar', 'description'];
+    let cProps = ['name', 'type', 'description', 'teamId'];
+    let eProps = ['type', 'comment', 'calendarId', 'start', 'end', 'userId'];
     const entities = [
       {
         type: 'User',

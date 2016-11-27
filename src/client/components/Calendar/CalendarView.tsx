@@ -1,12 +1,16 @@
 import * as _ from 'lodash';
 import * as React  from 'react';
 
-import api from '../../api';
+import API from '../../api';
+
+import { Form, Button, Header, Modal } from 'semantic-ui-react';
 
 import { Calendar, Event, Team, User } from '../../../lib/model';
 import CalendarGrid from './CalendarGrid';
 import Controls from './Controls';
-import Filter from './Filter';
+import UserList from './UserList';
+import EventModal from './EventModal';
+import Constants from '../constants';
 
 import DBWorker from './DBWorker';
 
@@ -15,102 +19,162 @@ interface ICalendarViewState {
   data: any;
   filterKey: string;
   pattern: string;
-};
-
-const defaultCalendar = {
-  id: '',
-  name: '',
-  type: '',
-  description: '',
-  organizationId: '',
-  teamId: ''
+  showEventModal: boolean;
+  eventModalAction: string;
+  currentMonth: number;
+  currentYear: number;
 };
 
 const defaultState = {
-  calendar: defaultCalendar,
+  calendar: null,
   data: [],
   filterKey: '',
-  pattern: ''
+  pattern: '',
+  showEventModal: false,
+  eventModalAction: null,
+  currentMonth: new Date().getMonth(),
+  currentYear: new Date().getFullYear()
 };
 
 async function fetchCalendarData(calendarId: string) : Promise<any> {
   try {
-    const calendar = await api.calendars.get(calendarId);
-    const team = await api.teams.getMembers(calendar.teamId);
-    const allEvents = await api.events.getList();
+    const calendar = await API.calendars.get(calendarId);
+    // const team = await API.teams.getMembers(calendar.teamId);
+    const allEvents = await API.events.getList();
 
-    let events = allEvents.filter(e => (e.calendarId === calendarId));
+    const events = allEvents.filter(e => (e.calendarId == calendarId));
 
-
-    return { calendar, team, events:null };
+    return { calendar, team: [], events};
   } catch(err) {
     console.log(err);
     return null;
   }
 }
 
+// constants to sync DOM elements' scroll
+const USER_LIST_CLASS_NAME = 'user-list';
+const GRID_CLASS_NAME = 'grid-body';
+
+const headerLength = 31;
+const fakeMembers = [
+  {
+    id: '1',
+    name: "Alex",
+  },
+  {
+    id: '2',
+    name: "Bill"
+  },
+  {
+    id: '3',
+    name: "Jack"
+  },
+  {
+    id: '4',
+    name: "William"
+  },
+  {
+    id: '5',
+    name: "John"
+  },
+  {
+    id: '6',
+    name: "Rob"
+  },
+  {
+    id: '7',
+    name: "Sam"
+  },
+  {
+    id: '8',
+    name: "Bob"
+  },
+  {
+    id: '9',
+    name: "Steve"
+  },
+  {
+    id:'10',
+    name: "Tim"
+  }
+];
+
+
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
 
+static mouseOnElement: string = null;
 state: ICalendarViewState = defaultState;
 static contextTypes = {
   router: React.PropTypes.object
 }
-
-  constructor(props) {
-    super(props);
-    /*
-    try {
-      api.calendars.create({
-        id: '2',
-        name: 'TestCalendar',
-        type: 'some type',
-        description: 'This is the first calendar in our database!',
-        teamId: '2'
-      }).then(res => console.log(res));
-    } catch(err) {
-      console.log(err);
-    }
-    */
-  }
 
   componentDidMount() {
     let calendar: Calendar;
     let team: User[];
     let events: Event[];
 
-    const id = (this.context as any).router.params.id;
-    fetchCalendarData(id)
-    .then(res => { console.log(res); ({ calendar, team, events } = res); })
+    document
+      .getElementsByClassName(GRID_CLASS_NAME)[0]
+      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = GRID_CLASS_NAME });
+
+    document
+      .getElementsByClassName(USER_LIST_CLASS_NAME)[0]
+      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = USER_LIST_CLASS_NAME });
+
+    const calendarId = (this.context as any).router.params.id;
+    fetchCalendarData(calendarId)
+    .then(res => {
+      ({ calendar, team, events } = res);
+      this.setState(Object.assign({}, this.state,
+        {
+          calendar: calendar,
+          data: this.createDataArray(events, fakeMembers)
+        })
+      );
+    })
     .catch(err => {
       console.log('Coundn\'t fetch calendar from server. Error: ' + err);
       calendar = team = events = null;
-    });
-
-    this.setState({
-      calendar: calendar,
-      data: this.createDataArray(events, team),
-      filterKey: '',
-      pattern: ''
     });
   }
 
   render() {
     let data = this.filterData();
+    console.log('state data: ', data);
 
     return (
-      <div className='calendar-view'>
-        <section className='top-row'>
-          <Filter
-            onFilterChange={ this.setFilterParams }
-            filterText={ this.state.pattern }
-          />
-          <Controls />
-        </section>
-        <section className='bottom-row'>
-          <CalendarGrid data={ data }/>
-        </section>
+      <div className='calendar-view-wrapper'>
+        <div className='calendar-view'>
+          <section className='left-col'>
+            <UserList
+              data={ data }
+              filterText={ this.state.pattern }
+              onFilterChange={ this.setFilterParams.bind(this) }
+              syncScrollPosition={ this.syncScrollPosition.bind(this) }
+            />
+          </section>
+          <section className='right-col'>
+            <Controls
+              currentMonth={ this.state.currentMonth }
+              currentYear={ this.state.currentYear }
+            />
+            <CalendarGrid
+              gridWidth={ new Date(this.state.currentYear, this.state.currentMonth + 1, 0).getDate() }
+              data={ data }
+              handleOnEventCellClick={ this.showEventModal.bind(this) }
+              syncScrollPosition={ this.syncScrollPosition.bind(this) }
+            />
+          </section>
+        </div>
 
-        <DBWorker />
+        { this.state.showEventModal &&
+          <EventModal
+            action={ this.state.eventModalAction }
+            onFormSubmit={ this.onEventSubmit.bind(this) }
+            onCloseEventModal={ this.closeEventModal.bind(this) }
+            onHideEventModal={ this.hideEventModal.bind(this) }
+          />
+        }
       </div>
     );
   }
@@ -122,7 +186,7 @@ static contextTypes = {
 
     return teamMembers.map((tm) => ({
         user: tm,
-        events: events.filter((event) => (event.createdBy === tm.id))
+        events: events.filter((event) => (event.userId == tm.id))
       })
     );
   }
@@ -144,6 +208,59 @@ static contextTypes = {
     if (this.state.data === null || _.isEmpty(filterKey) || _.isEmpty(pattern)) {
       return this.state.data;
     }
-    return this.state.data.filter((item) => item.user[filterKey].match(pattern));
+    return this.state.data.filter((item) => item.user[filterKey].match(new RegExp(pattern, 'i')));
+  }
+
+  showEventModal(action: string) {
+    if (action == Constants.ADD_NEW_EVENT) {
+      this.setState(Object.assign(
+        { showEventModal: true, eventModalAction: action }
+      ));
+    }
+  }
+
+  hideEventModal() {
+
+  }
+
+  closeEventModal() {
+    this.setState(Object.assign(
+      { showEventModal: false, eventModalAction:null }
+    ));
+  }
+
+  onEventSubmit({eventTitle, eventComment, eventStart, eventEnd}) {
+    if (this.state.eventModalAction == Constants.ADD_NEW_EVENT) {
+      API.events.create({
+        calendarId: (this.context as any).router.params.id,
+        type: eventTitle,
+        comment: eventComment,
+        start: eventStart,
+        end: eventEnd,
+        userId: '1'
+      }).then(() => {
+        console.log("Form has been submitted successfully");
+      }).catch((err) => {
+        console.log("Error while creating event. " + err);
+      });
+
+      // remove these lines
+      API.events.getList()
+      .then(events => {console.log('events:', events)})
+      .catch(err => {console.log(err)});
+    }
+
+  }
+
+  syncScrollPosition(eventTrigger: string) {
+    const userList = document.getElementsByClassName(USER_LIST_CLASS_NAME)[0];
+    const grid = document.getElementsByClassName(GRID_CLASS_NAME)[0];
+
+      if (CalendarView.mouseOnElement == USER_LIST_CLASS_NAME) {
+        grid.scrollTo(0, userList.scrollTop);
+      }
+      else if (CalendarView.mouseOnElement == GRID_CLASS_NAME) {
+        userList.scrollTo(0, grid.scrollTop);
+      }
   }
 }
