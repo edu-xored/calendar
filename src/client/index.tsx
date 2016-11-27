@@ -17,5 +17,4 @@ API.login('admin', 'admin').then(() => {
   console.log('error:', err);
 });
 
-render(<PageHeader/>, document.getElementById('header'));
 render(<Root/>, document.getElementById('root'));
