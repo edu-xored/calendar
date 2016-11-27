@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Router, Route, IndexRoute, RouterState } from 'react-router';
+import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router';
 import history from './history';
 import Home from './pages/home';
 import Blank from './pages/blank';
@@ -7,6 +7,19 @@ import CalendarList from './pages/calendar_list';
 import Calendar from './pages/calendar';
 import Login from './pages/login';
 import PageHeader from './pageheader';
+import API from './api';
+
+function requireUser(nextState: RouterState, replace: RedirectFunction, callback?: Function) {
+  API.me().then(() => {
+    callback();
+  }, () => {
+    replace({
+      pathname: '/login',
+      state: { nextPathname: nextState.location.pathname }
+    });
+    callback();
+  });
+}
 
 class BasicLayout extends React.Component<any, {}> {
   render() {
@@ -25,10 +38,10 @@ class BasicLayout extends React.Component<any, {}> {
 
 const Routes = (
   <Router history={history}>
-    <Route path="/" component={BasicLayout}>
-      <IndexRoute component={Home}/>
-      <Route path="admin/calendars" component={CalendarList}/>
-      <Route path="calendar/*" component={Calendar}/>
+    <Route path="/" component={BasicLayout} onEnter={requireUser}>
+      <IndexRoute component={Home} onEnter={requireUser}/>
+      <Route path="admin/calendars" component={CalendarList} onEnter={requireUser}/>
+      <Route path="calendar/*" component={Calendar} onEnter={requireUser}/>
     </Route>
     <Route path="/login" component={Login}/>
     <Route path="*" component={Blank}/>
