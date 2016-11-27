@@ -21,18 +21,15 @@ const headers = ['id', 'createAt', 'createBy', 'updateAt', 'updateBy', 'name', '
 export default class Grid extends React.Component<IGridProps, IGridState> {
     constructor(props) {
         super(props);
-
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
     }
 
-    handleDelete(e: MouseEvent) {
+    handleDelete = (e: MouseEvent) => {
         let target: HTMLButtonElement = e.target as HTMLButtonElement;
         let entityId = target.parentElement.id;
         this.props.deleteTeam(entityId);
     }
 
-    handleEdit(e: MouseEvent) {
+    handleEdit = (e: MouseEvent) => {
         let target: HTMLButtonElement = e.target as HTMLButtonElement;
         let entityId = target.parentElement.id;
         this.props.openEditModal(entityId);
