@@ -7,22 +7,14 @@ import { Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui
 interface CalendarListState {
   calendars: Calendar[];
   teams: Team[];
-}
-
-class DeleteBtnListener {
-  id: string;
-  constructor (id: string) {
-    this.id = id;
-  }
-  onBtnClick () {
-    API.calendars.remove(this.id);
-  }
+  delModalOpened: string;
 }
 
 export default class CalendarList extends React.Component<{}, {}> {
   state: CalendarListState = {
     calendars: [],
     teams: [],
+    delModalOpened: "null",
   }
 
    componentDidMount() {
@@ -46,8 +38,19 @@ export default class CalendarList extends React.Component<{}, {}> {
     let team: Team = this.findTeam(calendar.teamId);
     if (team === null)
       return;
-    let delBtnListener: DeleteBtnListener;
-    delBtnListener = new DeleteBtnListener(calendar.id);
+    const onRemove = () => {
+      API.calendars.remove(calendar.id)
+    };
+    const handleModalOpened = (e) => {
+      this.setState({
+        delModalOpened: calendar.id,
+      });
+    }
+    const handleModalClosed = (e) => {
+      this.setState({
+        delModalOpened: "null",
+      });
+    }
     return (
             <Table.Row>
               <Table.Cell>
@@ -66,16 +69,16 @@ export default class CalendarList extends React.Component<{}, {}> {
                 <Button.Group>
                   <Button color='blue'>View</Button>
                   <Button color='green'>Edit</Button>
-                  <Modal trigger={<Button color='red'>Delete</Button>} basic size='small'>
+                  <Modal trigger={<Button color='red' onClick={handleModalOpened}>Delete</Button>} open={this.state.delModalOpened === calendar.id} onClose={handleModalClosed} basic size='small'>
                     <Header icon='archive' content='Archive Old Messages' />
                     <Modal.Content>
-                      <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+                      <p>Do you really want to delete calendar "{calendar.name}"?</p>
                     </Modal.Content>
                     <Modal.Actions>
-                      <Button basic color='red' inverted>
+                      <Button basic color='red' inverted onClick={handleModalClosed}>
                         <Icon name='remove' /> No
                       </Button>
-                      <Button color='green' inverted onClick={delBtnListener.onBtnClick}>
+                      <Button color='green' inverted onClick={onRemove}>
                         <Icon name='checkmark' /> Yes
                       </Button>
                     </Modal.Actions>
