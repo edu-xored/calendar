@@ -27,7 +27,6 @@ interface IModalProps {
 export default class Modal extends React.Component<IModalProps, IModalState> {
     constructor(props) {
         super(props);
-
         this.state = { entity: this.props.entity };
     }
 
@@ -40,13 +39,18 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
         this.props.closeModal();
     };
 
-    renderInput(fieldName: string) {
+    renderEditField(fieldName: string) {
         const handleOnChange = (e: any) => {
             let state = this.state;
             this.state.entity[fieldName] = e.target.value;
             this.setState(state);
         };
-        return <input key={fieldName} placeholder={fieldName} value={this.state.entity[fieldName]} onChange={handleOnChange} />;
+        return (
+            <div id={`edit-field-${fieldName}`} key={fieldName} >
+                <label>{fieldName}:</label>
+                <input placeholder={fieldName} value={this.state.entity[fieldName]} onChange={handleOnChange} />
+            </div>
+        );
     }
 
     render() {
@@ -56,7 +60,7 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
                 onRequestClose={this.props.closeModal}
                 style={customStyles}
                 >
-                {this.props.fields.map((fieldName) => this.renderInput(fieldName))}
+                {this.props.fields.map((fieldName) => this.renderEditField(fieldName))}
                 <button onClick={this.props.closeModal}>Cancel</button>
                 <button onClick={this.apply}>Save</button>
             </ReactModal>
