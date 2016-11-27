@@ -15,20 +15,34 @@ export default class LoginPage extends React.Component<{}, LoginState> {
         const formStyle = {width: '300px', margin: '50px auto'};
         const inputStyle = {width: '300px'};
         return (
-            <div>
-                <form style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
-                    <p>WELCOME</p>
-                    <p>
-                        <Input type="text" value={this.state.userName} required
-                               onChange={this.handleUserNameChange.bind(this)}/>
-                    </p>
-                    <p>
-                        <Input type="password" value={this.state.password} required
-                               onChange={this.handlePasswordChange.bind(this)}/>
-                    </p>
-                     {this.state.error ? <p style={{color :'red'}}>Invalid username or password</p> : null}
-                    <p><Button type="submit" primary>Login</Button></p>
-                </form>
+            <div className="ui middle aligned center aligned grid">
+                <div className="column">
+                    <form className="ui large form" style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
+                        <h2 className="ui teal image header">
+                            <img src="pictureCalendearForLoginPage.png" className="image"></img>
+                            <div className="content">Log-in to your account</div>
+                        </h2>
+                        <div className="ui stacked segment">
+                            <div className="field">
+                                <div className="ui left icon input">
+                                    <i className="user icon"></i>
+                                    <input type="text" placeholder="Login"
+                                        value={this.state.userName}
+                                        onChange={this.handleUserNameChange.bind(this)}/>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <div className="ui left icon input">
+                                    <i className="lock icon"></i>
+                                    <input type="password" placeholder="Password" value={this.state.password}
+                                        onChange={this.handlePasswordChange.bind(this)}/>
+                                </div>
+                            </div>
+                            {this.state.error ? <p style={{color :'red'}}>Invalid username or password</p> : null}
+                            <button type="submit" className="ui fluid large teal submit button">Login</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
   }
