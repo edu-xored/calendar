@@ -261,6 +261,7 @@ declare module 'semantic-ui-react' {
     secondary?: boolean;
     size?: Sizes;
     toggle?: boolean;
+    type?: string;
   }
 
   interface IButtonContent extends SuiBlockElement {
@@ -456,6 +457,8 @@ declare module 'semantic-ui-react' {
     transparent?: boolean;
     type?: string;
     placeholder?: string;
+    value?: any;
+    onChange?: any;
   }
 
   export const Input: (props?: IInputProps) => JSX.Element;
