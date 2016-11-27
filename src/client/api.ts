@@ -90,7 +90,7 @@ const teamAPI = makeAPI<Team, {}>({
   collection: 'teams',
 }, {
   getMembers(teamId: string): Promise<User[]> {
-    const url = `${BASE}/teams/${teamId}/members`;
+    const url = `${BASE}/team/${teamId}/members`;
     return fetch(url, {
       credentials: "same-origin",
       headers: makeHeaders(),
