@@ -459,6 +459,7 @@ declare module 'semantic-ui-react' {
     placeholder?: string;
     value?: any;
     onChange?: any;
+    required?: boolean;
   }
 
   export const Input: (props?: IInputProps) => JSX.Element;

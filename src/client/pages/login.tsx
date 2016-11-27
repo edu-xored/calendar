@@ -19,11 +19,11 @@ export default class LoginPage extends React.Component<{}, LoginState> {
                 <form style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
                     <p>WELCOME</p>
                     <p>
-                        <Input type="text" value={this.state.userName}
+                        <Input type="text" value={this.state.userName} required
                                onChange={this.handleUserNameChange.bind(this)}/>
                     </p>
                     <p>
-                        <Input type="password" value={this.state.password}
+                        <Input type="password" value={this.state.password} required
                                onChange={this.handlePasswordChange.bind(this)}/>
                     </p>
                      {this.state.error ? <p style={{color :'red'}}>Invalid username or password</p> : null}
