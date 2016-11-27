@@ -13,15 +13,15 @@ const customStyles = {
 };
 
 interface IModalState {
-    entity: any
+    entity: any;
 };
 
 interface IModalProps {
     entity: any;
-    closeModal: any,
-    fields: string[],
-    modalIsOpen: boolean,
-    action: (entity: any) => void
+    closeModal: any;
+    fields: string[];
+    modalIsOpen: boolean;
+    action: (entity: any) => void;
 }
 
 export default class Modal extends React.Component<IModalProps, IModalState> {
@@ -37,7 +37,7 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
     apply = () => {
         this.props.action(this.state.entity);
         this.props.closeModal();
-    };
+    }
 
     renderEditField(fieldName: string) {
         const handleOnChange = (e: any) => {

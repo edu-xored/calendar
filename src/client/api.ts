@@ -81,7 +81,7 @@ function makeAPI<T, E>(api, ext?: E) {
         method: 'DELETE',
         headers: makeHeaders(),
       }).then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           return true;
         }
         throw new Error(`http error: ${res.statusText}`);

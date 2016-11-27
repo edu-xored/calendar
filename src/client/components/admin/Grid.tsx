@@ -8,7 +8,7 @@ interface IGridProps {
     onDelete: (id: string) => void;
     openEditModal: (id: string) => void;
     data: any[];
-    headers: string[];    
+    headers: string[];
 }
 
 export default class Grid extends React.Component<IGridProps, any> {

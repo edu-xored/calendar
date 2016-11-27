@@ -7,17 +7,17 @@ const headers = ['id', 'createAt', 'createBy', 'updateAt', 'updateBy', 'name', '
 const modalFields = ['name', 'avatar', 'description'];
 
 const defaultModalData: any = {
-    id: '',
-    name: '',
-    avatar: '',
-    description: ''
-}
+  id: '',
+  name: '',
+  avatar: '',
+  description: ''
+};
 
 export default class TeamsPage extends React.Component<{}, {}> {
   render() {
     return (
       <div>
-        <TeamsView headers={headers} modalFields={modalFields} api={api.teams} defaultModalData={defaultModalData}/>
+        <TeamsView headers={headers} modalFields={modalFields} api={api.teams} defaultModalData={defaultModalData} />
       </div>
     );
   }

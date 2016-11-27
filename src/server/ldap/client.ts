@@ -13,14 +13,15 @@ export default async function resolveUser(login: string, password: string): Prom
         let client: ldap.Client;
         if (!login || !password) {
             reject(ldap.LDAP_INAPPROPRIATE_AUTHENTICATION + ':null:No username or password:null');
-        };
+            return;
+        }
 
         let searchOpts: any = ldapConfig.search;
         searchOpts.filter = '(login=' + login + ')';
 
         try {
             client = await makeClient();
-            await client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
+            client.search('cn=' + login + ', ' + ldapConfig.base, searchOpts,
                 (err: ldap.LDAPError, res: EventEmitter) => {
                     res.on('searchEntry', async (entry: any) => {
                         await compare(client, entry.dn, 'pwdhash', password)
@@ -54,9 +55,12 @@ function makeClient(): Promise<ldap.Client> {
     return new Promise<ldap.Client>((resolve, reject) => {
         let client: ldap.Client = ldap.createClient(ldapConfig.server);
         client.on('error', (err: ldap.LDAPError) => {
-            reject(err.code + ':' + err.dn + ':' + err.message + ':' + err.name);
+          const error = err.code + ':' + err.dn + ':' + err.message + ':' + err.name;
+          reject(error);
         });
-        resolve(client);
+        client.on('connect', () => {
+          resolve(client);
+        });
     });
 }
 
@@ -73,6 +77,7 @@ async function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
                 });
                 if (!matched) {
                     reject(ldap.LDAP_INVALID_CREDENTIALS + ':null:Wrong username or password:null');
+                    return;
                 }
                 resolve();
             });

@@ -17,6 +17,6 @@ export default class Row extends React.Component<IRowProps, any> {
         <button onClick={this.props.onEdit}> Edit </button>
         <button onClick={this.props.onDelete}> Delete </button>
       </div>
-    )
+    );
   }
 }
