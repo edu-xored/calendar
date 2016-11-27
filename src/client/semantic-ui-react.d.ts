@@ -453,7 +453,7 @@ declare module 'semantic-ui-react' {
     label?: any;
     labelPosition?: 'left' | 'right' | 'left corner' | 'right corner';
     loading?: boolean;
-    onChange?: ()=>{}
+    onChange?: () => {};
     size?: Sizes;
     transparent?: boolean;
     type?: string;
