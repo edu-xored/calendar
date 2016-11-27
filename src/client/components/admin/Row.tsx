@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import Cell from './Cell';
-import { Team } from '../../../../lib/model';
 
 interface IRowProps {
   id: string;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import '../../../styles/calendar-grid';
+import '../../styles/calendar-grid';
 
 export default class Cell extends React.Component<any, any> {
   render() {
