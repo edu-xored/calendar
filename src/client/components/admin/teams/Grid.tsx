@@ -7,6 +7,7 @@ import { Team } from '../../../../lib/model';
 
 interface IGridProps {
     deleteTeam: (id: string) => void;
+    openEditModal: (id: string) => void;
     data: any[];
 }
 
@@ -22,6 +23,7 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
         super(props);
 
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     handleDelete(e: MouseEvent) {
@@ -30,11 +32,17 @@ export default class Grid extends React.Component<IGridProps, IGridState> {
         this.props.deleteTeam(entityId);
     }
 
+    handleEdit(e: MouseEvent) {
+        let target: HTMLButtonElement = e.target as HTMLButtonElement;
+        let entityId = target.parentElement.id;
+        this.props.openEditModal(entityId);
+    }
+
     render() {
         const teamsRows = _.map(this.props.data, team => {
             const data = _.map(headers, propertyName => team[propertyName]);
             return (
-                <Row key={team.id} id={team.id} rowData={data} onDelete={this.handleDelete} />
+                <Row key={team.id} id={team.id} rowData={data} onDelete={this.handleDelete} onEdit={this.handleEdit} />
             );
         });
         return (

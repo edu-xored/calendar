@@ -17,11 +17,11 @@ interface IModalState {
 };
 
 interface IModalProps {
-    entity: any,
+    entity: any;
     closeModal: any,
     fields: string[],
     modalIsOpen: boolean,
-    action: (entity) => void
+    action: (entity: any) => void
 }
 
 export default class Modal extends React.Component<IModalProps, IModalState> {
@@ -29,20 +29,24 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
         super(props);
 
         this.state = { entity: this.props.entity };
-
-        this.apply = this.apply.bind(this);
-        this.handleOnChange = this.handleOnChange.bind(this);
     }
 
-    apply() {
+    componentWillReceiveProps(nextProps: IModalProps) {
+        this.setState({ entity: nextProps.entity });
+    }
+
+    apply = () => {
         this.props.action(this.state.entity);
-    }
+        this.props.closeModal();
+    };
 
-    handleOnChange(e: any) {
-        let state = this.state;
-        let input: HTMLInputElement = e.target;
-        this.state.entity[input.placeholder] = input.value; // TODO: No! Do it another way
-        this.setState(state);
+    renderInput(fieldName: string) {
+        const handleOnChange = (e: any) => {
+            let state = this.state;
+            this.state.entity[fieldName] = e.target.value;
+            this.setState(state);
+        };
+        return <input key={fieldName} placeholder={fieldName} value={this.state.entity[fieldName]} onChange={handleOnChange} />;
     }
 
     render() {
@@ -52,7 +56,7 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
                 onRequestClose={this.props.closeModal}
                 style={customStyles}
                 >
-                {this.props.fields.map((fieldName) => <input placeholder={fieldName} value={this.state.entity[fieldName]} onChange={this.handleOnChange} />)}
+                {this.props.fields.map((fieldName) => this.renderInput(fieldName))}
                 <button onClick={this.props.closeModal}>Cancel</button>
                 <button onClick={this.apply}>Save</button>
             </ReactModal>

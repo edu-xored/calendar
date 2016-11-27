@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { User } from '../../../../lib/model';
 import api from '../../../api';
-import AddPanel from './AddPanel';
 import Grid from "./Grid";
 
 interface IUsersViewState {
@@ -52,10 +51,7 @@ export default class CalendarView extends React.Component<any, IUsersViewState> 
     render() {
         return (
             <div className='users-view'>
-                <section className='add-panel'>
-                    <AddPanel add={this.addUser} />
-                </section>
-                <section className='calendar-grid'>
+                <section className='users-grid'>
                     <Grid data={this.state.data} delete={this.deleteUser}/>
                 </section>
             </div>
