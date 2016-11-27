@@ -41,6 +41,11 @@ const menu: MenuItem[] = [
     text: 'Admin',
     link: '/admin',
   },
+  {
+    name: 'profile',
+    text: 'Profile',
+    link: '/profile',
+  },
   /*
   {
     name: 'user',
