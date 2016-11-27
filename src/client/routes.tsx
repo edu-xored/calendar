@@ -5,11 +5,13 @@ import Home from './pages/home';
 import Blank from './pages/blank';
 import CalendarList from './pages/calendar_list';
 import Calendar from './pages/calendar';
+import Login from './pages/login';
 
 const Routes = (
   <Router history={history}>
     <Route path="/" component={Home}/>
     <Route path="/admin/calendars" component={CalendarList}/>
+    <Route path="/login" component={Login}/>
     <Route path="/calendar/*" component={Calendar}/>
     <Route path="*" component={Blank}/>
   </Router>
