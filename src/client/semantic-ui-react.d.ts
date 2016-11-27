@@ -261,6 +261,7 @@ declare module 'semantic-ui-react' {
     secondary?: boolean;
     size?: Sizes;
     toggle?: boolean;
+    type?: string;
     onClick?: Function;
   }
 
@@ -453,10 +454,12 @@ declare module 'semantic-ui-react' {
     label?: any;
     labelPosition?: 'left' | 'right' | 'left corner' | 'right corner';
     loading?: boolean;
+    name?: string;
     size?: Sizes;
     transparent?: boolean;
     type?: string;
     placeholder?: string;
+    value?: string;
   }
 
   export const Input: (props?: IInputProps) => JSX.Element;
@@ -720,8 +723,13 @@ declare module 'semantic-ui-react' {
     width?: Widths;
   }
 
-  interface IFormControlProps extends SuiElement {
-    control: any;
+  interface IFormControlProps extends IInputProps {
+    control?: any;
+    options?: any;
+    color?: Colors;
+    rows?: string;
+    placeholder?: string;
+    onChange?: Function;
   }
 
   interface IFormGroupProps extends SuiBlockElement {

@@ -2,12 +2,13 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
-import { Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react'
+import { Form, Input, Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react'
 
 interface CalendarListState {
   calendars: Calendar[];
   teams: Team[];
   delModalOpened: string;
+  editModalOpened: string;
 }
 
 export default class CalendarList extends React.Component<{}, {}> {
@@ -15,6 +16,7 @@ export default class CalendarList extends React.Component<{}, {}> {
     calendars: [],
     teams: [],
     delModalOpened: "null",
+    editModalOpened: "null",
   }
 
    componentDidMount() {
@@ -38,9 +40,6 @@ export default class CalendarList extends React.Component<{}, {}> {
     let team: Team = this.findTeam(calendar.teamId);
     if (team === null)
       return;
-    const onRemove = () => {
-      API.calendars.remove(calendar.id)
-    };
     const handleModalOpened = (e) => {
       this.setState({
         delModalOpened: calendar.id,
@@ -51,6 +50,25 @@ export default class CalendarList extends React.Component<{}, {}> {
         delModalOpened: "null",
       });
     }
+    const handleEditModalOpened = (e) => {
+      this.setState({
+        editModalOpened: calendar.id,
+      });
+    }
+    const handleEditModalClosed = (e) => {
+      this.setState({
+        editModalOpened: "null",
+      });
+    }
+    const onRemove = () => {
+      API.calendars.remove(calendar.id);
+    };
+    const onEdit = (e, data) => {
+      API.calendars.update(calendar.id, {name: data.name, description: data.description, teamId: data.team});
+    };
+    let teams = [];
+    for (let team of this.state.teams)
+      teams.push({ text: team.name, value: team.id })
     return (
             <Table.Row>
               <Table.Cell>
@@ -68,9 +86,26 @@ export default class CalendarList extends React.Component<{}, {}> {
               <Table.Cell textAlign='right'>
                 <Button.Group>
                   <Button color='blue'>View</Button>
-                  <Button color='green'>Edit</Button>
+                  <Modal trigger={<Button color='green' onClick={handleEditModalOpened}>Edit</Button>} open={this.state.editModalOpened === calendar.id} onClose={handleEditModalClosed}>
+                    <Header icon='edit' content='Edit calendar' />
+                    <Modal.Content>
+                      <Form onSubmit={onEdit}>
+                        <Form.Input label='Name' name='name' placeholder='Name' value={calendar.name} onChange={(e) => {calendar.name = e.target.value}} />
+                        <Form.Input name='description' label='Description' placeholder='Put a description' value={calendar.description} />
+                        <Form.Select name='team' label="Team" options={teams} placeholder='Team' value={calendar.teamId} />
+                        <Button color='green' type='submit'>
+                          <Icon name='checkmark' /> Update
+                        </Button>
+                      </Form>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button basic color='red' onClick={handleEditModalClosed}>
+                        <Icon name='remove' /> Close
+                      </Button>
+                    </Modal.Actions>
+                  </Modal>
                   <Modal trigger={<Button color='red' onClick={handleModalOpened}>Delete</Button>} open={this.state.delModalOpened === calendar.id} onClose={handleModalClosed} basic size='small'>
-                    <Header icon='archive' content='Archive Old Messages' />
+                    <Header icon='remove' content='Delete calendar' />
                     <Modal.Content>
                       <p>Do you really want to delete calendar "{calendar.name}"?</p>
                     </Modal.Content>
