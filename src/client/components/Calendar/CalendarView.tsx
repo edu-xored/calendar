@@ -38,10 +38,10 @@ const defaultState = {
   submitBy: null
 };
 
+
 // constants to sync DOM elements' scroll
 const USER_LIST_CLASS_NAME = 'user-list';
 const GRID_CLASS_NAME = 'grid-body';
-
 
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
 
@@ -229,47 +229,3 @@ async function fetchCalendarData(calendarId: string) : Promise<any> {
     return null;
   }
 }
-
-const headerLength = 31;
-const fakeMembers = [
-  {
-    id: '1',
-    name: "Alex",
-  },
-  {
-    id: '2',
-    name: "Bill"
-  },
-  {
-    id: '3',
-    name: "Jack"
-  },
-  {
-    id: '4',
-    name: "William"
-  },
-  {
-    id: '5',
-    name: "John"
-  },
-  {
-    id: '6',
-    name: "Rob"
-  },
-  {
-    id: '7',
-    name: "Sam"
-  },
-  {
-    id: '8',
-    name: "Bob"
-  },
-  {
-    id: '9',
-    name: "Steve"
-  },
-  {
-    id:'10',
-    name: "Tim"
-  }
-];

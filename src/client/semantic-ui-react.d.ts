@@ -256,13 +256,13 @@ declare module 'semantic-ui-react' {
     labelPosition?: LabelPosition;
     loading?: boolean;
     negative?: boolean;
-    onClick?: (event) => {};
     positive?: boolean;
     primary?: boolean;
     secondary?: boolean;
     size?: Sizes;
     toggle?: boolean;
     type?: string;
+    onClick?: Function;
   }
 
   interface IButtonContent extends SuiBlockElement {
@@ -454,6 +454,7 @@ declare module 'semantic-ui-react' {
     label?: any;
     labelPosition?: 'left' | 'right' | 'left corner' | 'right corner';
     loading?: boolean;
+    name?: string;
     onChange?: any;
     size?: Sizes;
     transparent?: boolean;
@@ -727,8 +728,13 @@ declare module 'semantic-ui-react' {
     width?: Widths;
   }
 
-  interface IFormControlProps extends SuiElement {
+  interface IFormControlProps extends IInputProps {
     control?: any;
+    options?: any;
+    color?: Colors;
+    rows?: string;
+    placeholder?: string;
+    onChange?: Function;
   }
 
   interface IFormGroupProps extends SuiBlockElement {
@@ -1652,6 +1658,9 @@ declare module 'semantic-ui-react' {
   // Modal
 
   interface IModalProps extends SuiBlockElement {
+    trigger?: any;
+    open?: boolean;
+    onClose?: Function;
     /**
     * A modal can reduce its complexity
     */

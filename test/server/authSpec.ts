@@ -13,9 +13,9 @@ describe("auth api", () => {
     supertest(app).post(`/api/users`)
       .set('Authorization', localAuth)
       .send({
-        login: 'aquaman',
-        name: 'aquaman',
-        password: 'aquaman',
+        login: 'tempuser',
+        name: 'tempuser',
+        password: 'tempuser',
       })
       .expect(200)
       .end((err, res) => {
@@ -25,7 +25,7 @@ describe("auth api", () => {
         should(user.pwdhash).be.undefined();
 
         supertest(app).post('/api/login')
-          .send({ username: user.name, password: 'aquaman' })
+          .send({ username: user.name, password: 'tempuser' })
           .expect(200)
           .end((err, res) => {
             if (err) throw err;
@@ -47,7 +47,7 @@ describe("auth api", () => {
                   return _.pick(user, ["name", "login", "id"]);
                 }
                 should(filter(me)).is.deepEqual(filter(user));
-         
+
 
                 supertest(app).delete(`/api/user/${user.id}`)
                   .set('Authorization', 'Bearer ' + token)
