@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactModal from 'react-modal';
 
+import { Icon } from 'semantic-ui-react';
+
 const customStyles = {
     content: {
         top: '50%',
@@ -61,8 +63,12 @@ export default class Modal extends React.Component<IModalProps, IModalState> {
                 style={customStyles}
                 >
                 {this.props.fields.map((fieldName) => this.renderEditField(fieldName))}
-                <button onClick={this.props.closeModal}>Cancel</button>
-                <button onClick={this.apply}>Save</button>
+                <button onClick={this.props.closeModal}>
+                    <Icon name='cancel' />
+                </button>
+                <button onClick={this.apply}>
+                    <Icon name='save' />
+                </button>
             </ReactModal>
         );
     }

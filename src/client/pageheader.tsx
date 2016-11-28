@@ -39,7 +39,18 @@ const menu: MenuItem[] = [
   {
     name: 'admin',
     text: 'Admin',
-    link: '/admin',
+    items: [
+      {
+        name: 'users',
+        text: 'Users',
+        link: '/admin/users'
+      },
+      {
+        name: 'teams',
+        text: 'Teams',
+        link: '/admin/teams'
+      }
+    ]
   },
   /*
   {

@@ -8,19 +8,19 @@ const headers = ['id', 'name', 'email', 'login', 'avatar', 'role', 'position', '
 const modalFields = ['name', 'avatar', 'email'];
 
 const defaultModalData: any = {
-  id: '',
-  name: '',
-  avatar: '',
-  email: ''
+    id: '',
+    name: '',
+    avatar: '',
+    email: ''
 };
 
 export default class TeamsPage extends React.Component<{}, {}> {
-  render() {
-    return (
-      <Container>
-        <Header content='Users'/>
-        <TeamsView headers={headers} modalFields={modalFields} api={api.users} defaultModalData={defaultModalData} />
-      </Container>
-    );
-  }
+    render() {
+        return (
+            <Container>
+                <Header content='Users' />
+                <TeamsView headers={headers} modalFields={modalFields} api={api.users} defaultModalData={defaultModalData} />
+            </Container>
+        );
+    }
 }
