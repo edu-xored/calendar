@@ -1,24 +1,19 @@
+import * as _ from 'lodash';
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-
 
 interface ListItemProps {
   teamId: string;
   teamName: string;
   imageSrc: string;
-};
-
+}
 
 class TeamItem extends React.Component<ListItemProps, {}> {
   constructor(props: any) {
     super(props);
   }
   render() {
-    const teamId = this.props.teamId;
-    // console.log(teamId);
-    // console.log(this.props);
     return (
-      <li id={teamId.toString()} className="content">
+      <li className="content">
         <div >
           <span>
             <img className="ui avatar image" src={this.props.imageSrc} alt="Avatar"/>
@@ -32,28 +27,20 @@ class TeamItem extends React.Component<ListItemProps, {}> {
 
 export interface TeamListProps {
   data: ListItemProps[];
-};
+}
 
 export class TeamList extends React.Component<TeamListProps, {}> {
-  constructor(props: TeamListProps) {
-    super(props);
-  }
-
-  getListItem() {
-    console.log(this.props);
-      const items = this.props.data;
-      const listItem = items.map((item) =>
-        <TeamItem teamId={item.teamId} teamName={item.teamName} imageSrc={item.imageSrc} />
-      );
-      console.log(listItem);
-      return listItem;
+  renderItems() {
+      return _.map(this.props.data, (item, i) => (
+        <TeamItem key={i} teamId={item.teamId} teamName={item.teamName} imageSrc={item.imageSrc} />
+      ));
   }
 
   render() {
     return(
       <div className="ui card">
         <ul type = "none">
-          {this.getListItem()}
+          {this.renderItems()}
         </ul>
       </div>
     );

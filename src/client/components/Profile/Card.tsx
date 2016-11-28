@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import API from '../../api';
 import {User} from '../../../lib/model';
 
@@ -7,7 +6,7 @@ interface FrontCardProps {
   username: string;
   role: string;
   imageSrc: string;
-};
+}
 
 class FrontCard extends React.Component<FrontCardProps, {}> {
   render() {
@@ -46,7 +45,7 @@ interface BackCardProps {
   position: string;
   place: string;
   description: string;
-};
+}
 
 class BackCard extends React.Component<BackCardProps, {}> {
   render() {
@@ -81,25 +80,25 @@ interface CardProps {
   position: string;
   place: string;
   description: string;
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 interface ICardState {
     user?: User;
-};
+}
 
 const otherImg = "http://i1.kym-cdn.com/entries/icons/original/000/004/349/Minecraft_Creeper_Wallpaper_by_LynchMob10_09_1_.jpg";
 
 export class Card extends React.Component<{}, ICardState> {
-  constructor() {
-      super();
+  constructor(props: {}) {
+      super(props);
       this.state = {user: null};
   }
 
   componentDidMount() {
       API.me().then(user => {
           this.setState({user: user });
-        });
+      });
   }
 
   render() {
