@@ -87,7 +87,7 @@ export default class CalendarList extends React.Component<{}, {}> {
       history.push(`/calendar/${calendar.id}`);
     };
     return (
-      <Table.Row>
+      <Table.Row key={calendar.id}>
         <Table.Cell>
           <Header as='h4' image>
             <Image src={team.avatar} shape='rounded' size='mini'/>
