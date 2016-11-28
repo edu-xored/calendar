@@ -52,6 +52,11 @@ const menu: MenuItem[] = [
       }
     ]
   },
+  {
+    name: 'profile',
+    text: 'Profile',
+    link: '/profile',
+  },
   /*
   {
     name: 'user',
