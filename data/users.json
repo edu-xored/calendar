@@ -1,0 +1,57 @@
+[
+  {
+    "name": "deadpool",
+    "description": "Marvel Hero",
+    "avatar": "https://i.annihil.us/u/prod/marvel/i/mg/5/c0/537ba730e05e0/standard_xlarge.jpg"
+  },
+  {
+    "name": "daredevil",
+    "description": "Marvel Hero",
+    "avatar": "https://i.annihil.us/u/prod/marvel/i/mg/6/90/537ba6d49472b/standard_xlarge.jpg"
+  },
+  {
+    "name": "hulk",
+    "description": "Marvel Hero",
+    "avatar": "https://i.annihil.us/u/prod/marvel/i/mg/5/a0/538615ca33ab0/standard_xlarge.jpg"
+  },
+  {
+    "name": "ironman",
+    "description": "Marvel Hero",
+    "avatar": "https://i.annihil.us/u/prod/marvel/i/mg/6/a0/55b6a25e654e6/standard_xlarge.jpg"
+  },
+  {
+    "name": "spiderman",
+    "description": "Marvel Hero",
+    "avatar": "https://i.annihil.us/u/prod/marvel/i/mg/9/30/538cd33e15ab7/standard_xlarge.jpg"
+  },
+  {
+    "name": "atom",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_atom_556657e7681b18.45766169.jpg?itok=ytz9uuc5"
+  },
+  {
+    "name": "aquaman",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_aquaman_52ab62f3b52dd7.18364704.jpg?itok=CriJOjho"
+  },
+  {
+    "name": "batman",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_batman_52ab7a8c79da39.68474144.jpg?itok=iHwyI5Vh"
+  },
+  {
+    "name": "deadshot",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_Deadshot_53191c10453c65.01642280.jpg?itok=OBsAEF5H"
+  },
+  {
+    "name": "joker",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_joker_52ab8f4c5d7f32.93165988.jpg?itok=MHo7VAjm"
+  },
+  {
+    "name": "superman",
+    "description": "DC Comics Hero",
+    "avatar": "http://media.dcentertainment.com/sites/default/files/styles/character_thumb_160x160/public/CharThumb_215x215_superman_52ab9ab32a25e2.57621569.jpg?itok=Y-ED_ba9"
+  }
+]
