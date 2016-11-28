@@ -2,13 +2,16 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import API from './../api';
 import {Calendar, Team} from "./../../lib/model";
-import { Form, Input, Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react'
+import { Form, Input, Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react';
 
 interface CalendarListState {
   calendars: Calendar[];
   teams: Team[];
   delModalOpened: string;
   editModalOpened: string;
+  editCalendarName: string;
+  editCalendarDesc: string;
+  editCalendarTeam: string;
 }
 
 export default class CalendarList extends React.Component<{}, {}> {
@@ -17,18 +20,21 @@ export default class CalendarList extends React.Component<{}, {}> {
     teams: [],
     delModalOpened: "null",
     editModalOpened: "null",
-  }
+    editCalendarName: '',
+    editCalendarDesc: '',
+    editCalendarTeam: '',
+  };
 
    componentDidMount() {
      API.teams.getList().then((teams) => {
        this.setState({
          teams: teams,
-       })
+       });
      });
      API.calendars.getList().then((calendars) => {
        this.setState({
          calendars: calendars,
-       })
+       });
      });
    }
 
@@ -44,31 +50,38 @@ export default class CalendarList extends React.Component<{}, {}> {
       this.setState({
         delModalOpened: calendar.id,
       });
-    }
+    };
     const handleModalClosed = (e) => {
       this.setState({
         delModalOpened: "null",
       });
-    }
+    };
     const handleEditModalOpened = (e) => {
       this.setState({
         editModalOpened: calendar.id,
+        editCalendarName: calendar.name,
+        editCalendarDesc: calendar.description,
+        editCalendarTeam: calendar.teamId,
       });
-    }
+    };
     const handleEditModalClosed = (e) => {
       this.setState({
         editModalOpened: "null",
       });
-    }
+    };
     const onRemove = () => {
       API.calendars.remove(calendar.id);
     };
     const onEdit = (e, data) => {
-      API.calendars.update(calendar.id, {name: data.name, description: data.description, teamId: data.team});
+      API.calendars.update(calendar.id, {
+        name: this.state.editCalendarName,
+        description: this.state.editCalendarDesc,
+        teamId: this.state.editCalendarTeam,
+      });
     };
     let teams = [];
     for (let team of this.state.teams)
-      teams.push({ text: team.name, value: team.id })
+      teams.push({ text: team.name, value: team.id });
     return (
             <Table.Row>
               <Table.Cell>
@@ -86,14 +99,18 @@ export default class CalendarList extends React.Component<{}, {}> {
               <Table.Cell textAlign='right'>
                 <Button.Group>
                   <Button color='blue'>View</Button>
-                  <Modal trigger={<Button color='green' onClick={handleEditModalOpened}>Edit</Button>} open={this.state.editModalOpened === calendar.id} onClose={handleEditModalClosed}>
+                  <Modal trigger={<Button color='green' onClick={handleEditModalOpened}>Edit</Button>}
+                         open={this.state.editModalOpened === calendar.id} onClose={handleEditModalClosed}>
                     <Header icon='edit' content='Edit calendar' />
                     <Modal.Content>
                       <Form onSubmit={onEdit}>
-                        <Form.Input label='Name' name='name' placeholder='Name' value={calendar.name} onChange={(e) => {calendar.name = e.target.value}} />
-                        <Form.Input name='description' label='Description' placeholder='Put a description' value={calendar.description} />
-                        <Form.Select name='team' label="Team" options={teams} placeholder='Team' value={calendar.teamId} />
-                        <Button color='green' type='submit'>
+                        <Form.Input label='Name' name='name' placeholder='Name' value={this.state.editCalendarName}
+                                     onChange={(e) => {this.setState({editCalendarName: e.target.value,});}} />
+                        <Form.Input name='description' label='Description' placeholder='Put a description'
+                                     value={this.state.editCalendarDesc} onChange={(e) => {this.setState({editCalendarDesc: e.target.value,});}} />
+                        <Form.Select name='team' label="Team" options={teams} placeholder='Team'
+                                     value={this.state.editCalendarTeam} onChange={(e) => {this.setState({editCalendarTeam: e.target.value,});}} />
+                        <Button color='green' type='submit' fluid>
                           <Icon name='checkmark' /> Update
                         </Button>
                       </Form>
@@ -124,7 +141,7 @@ export default class CalendarList extends React.Component<{}, {}> {
             );
   }
   render() {
-  	let rows = [];
+    let rows = [];
     for (let calendar of this.state.calendars)
       rows.push(this.showRow(calendar));
     return (
@@ -143,6 +160,6 @@ export default class CalendarList extends React.Component<{}, {}> {
           </Table.Body>
         </Table>
       </Container>
-	);
+  );
   }
 }
