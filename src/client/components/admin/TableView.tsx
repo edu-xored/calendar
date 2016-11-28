@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 
-import Grid from "./Grid";
 import Modal from './Modal';
 
 interface ITableViewState {
@@ -58,10 +57,6 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
         this.handlePromise(this.props.api.remove(id));
     }
 
-    handleOnCreate = () => {
-        this.openModal();
-    }
-
     openModal = (id?: string) => {
         let state = this.state;
         this.state.modalAction = this.add;
@@ -81,12 +76,39 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
     render() {
         return (
             <div className='table-view'>
-                <button onClick={this.handleOnCreate}>
+                <button onClick={() => this.openModal}>
                     Create
                 </button>
-                <Grid data={this.state.data} onDelete={this.delete} openEditModal={this.openModal} headers={this.props.headers} />
-
                 <Modal entity={this.state.modalData} fields={this.props.modalFields} action={this.state.modalAction} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
+                <div className='grid'>
+                    <div className='grid-headers'>
+                        {
+                            this.props.headers.map((header) =>
+                                <div className="grid-header" key={header}>
+                                    {header}
+                                </div>)
+                        }
+                    </div>
+                    <div className='grid-data'>
+                        {
+                            _.map(this.state.data, (entity) => {
+                                const fieldsValues = _.map(this.props.headers, (propertyName) => entity[propertyName]);
+                                const onEdit = () => this.openModal(entity.id);
+                                const onDelete = () => this.delete(entity.id);
+                                return (
+                                    <div className='grid-row' id={entity.id} key={entity.id}>
+                                        {fieldsValues.map((fieldValue, i) =>
+                                            <div className='grid-cell' key={i}>
+                                                {fieldValue}
+                                            </div>)}
+                                        <button onClick={onEdit}> Edit </button>
+                                        <button onClick={onDelete}> Delete </button>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                </div>
             </div >
         );
     }

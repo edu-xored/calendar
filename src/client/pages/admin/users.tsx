@@ -3,7 +3,7 @@ import * as React from 'react';
 import TeamsView from '../../components/admin/TableView';
 import api from '../../api';
 
-const headers = ['id', 'createAt', 'createBy', 'updateAt', 'updateBy', 'name', 'email', 'login', 'pwdhash', 'avatar', 'role', 'position', 'place'];
+const headers = ['id', 'createdAt', 'updatedAt', 'name', 'email', 'login', 'pwdhash', 'avatar', 'role', 'position', 'place'];
 const modalFields = ['name', 'avatar', 'email'];
 
 const defaultModalData: any = {
