@@ -4,7 +4,7 @@ import { Header, Container } from 'semantic-ui-react';
 import TeamsView from '../../components/admin/TableView';
 import api from '../../api';
 
-const headers = ['id', 'name', 'email', 'login', 'avatar', 'role', 'position', 'place'];
+const headers = ['id', 'avatar', 'name', 'email', 'login', 'role', 'position', 'place'];
 const modalFields = ['name', 'avatar', 'email'];
 
 const defaultModalData: any = {
