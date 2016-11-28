@@ -8,10 +8,10 @@ const members = ["Alex", "Bill", "Jack", "William", "John", "Rob", "Sam", "Bob",
 const headerLength = 31;
 const tmCount = members.length;
 
-const fakeEventRows = [...Array(tmCount).keys()].map((i) =>
+const fakeEventRows = [...Array(tmCount).keys()].map((rowIndex) =>
     <Row
-      key={i}
-      id={ `event-row-${i}` }
+      key={rowIndex}
+      id={ `event-row-${rowIndex}` }
       rowData={ [...Array(headerLength).keys()].map(k => '') }
       handleOnCellClick={ () => {} } />
 );
@@ -33,21 +33,19 @@ export default class CalendarGrid extends React.Component<any, any> {
   }
 
   render() {
-    // this.props.data.map((row, index) => {
-    //   eventsRows.push(
-    //     <Row
-    //       key={index}
-    //       id={ `event-row-${index}` }
-    //       rowData={ row.events }
-    //       handleOnCellClick={ this.props.handleOnEventCellClick }
-    //     />
-    //   );
-    // });
-    const eventsRows = [...Array(this.props.data.length).keys()].map((i) =>
+    const eventsRows = [...Array(this.props.data.length).keys()].map( rowIndex =>
         <Row
-          key={i}
-          id={ `event-row-${i}` }
-          rowData={ [...Array(this.props.gridWidth).keys()].map(k => ({type: '', content: {}})) }
+          key={rowIndex}
+          userId={ this.props.data[rowIndex].user.id }
+          id={ `event-row-${rowIndex}` }
+          rowData={[...Array(this.props.gridWidth).keys()].map(cellIndex => (
+            {
+              type: 'event',
+              content: {
+                eventList: this.getEventList(rowIndex, cellIndex + 1)
+              }
+            }
+          ))}
           handleOnCellClick={ this.props.handleOnEventCellClick }
         />
     );
@@ -66,9 +64,20 @@ export default class CalendarGrid extends React.Component<any, any> {
   handleOnGridScroll() {
     let grid: any, gridHeader: any;
     grid = document.getElementsByClassName('grid-body')[0];
-    gridHeader = document.getElementsByClassName('grid-header')[0];
+    gridHeader = document.getElementsByClassName('dates-row')[0];
     gridHeader.style.left = `${-grid.scrollLeft}px`;
 
     this.props.syncScrollPosition('grid-body');
+  }
+
+  getEventList(userIndex: number, date: number) {
+    return this.props.data[userIndex].events.filter( e => {
+      const start = new Date(e.start).getDate() ;
+      const end = new Date(e.end).getDate();
+
+      // console.log(start, end);
+
+      return start <= date && date <= end;
+    });
   }
 }
