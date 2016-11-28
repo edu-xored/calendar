@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import CalendarView from '../components/Calendar/CalendarView';
+import { Container } from 'semantic-ui-react';
 
 const CalendarPage = () => (
-  <div>
+  <Container className="container-content">
     This is a blank calendar page
     <CalendarView />
-  </div>
+  </Container>
 );
 
 export default CalendarPage;

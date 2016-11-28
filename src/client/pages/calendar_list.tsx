@@ -141,20 +141,65 @@ export default class CalendarList extends React.Component<{}, {}> {
             );
   }
   render() {
+    let teams = [];
+    for (let team of this.state.teams)
+      teams.push({ text: team.name, value: team.id });
     let rows = [];
+    const onCreate = (e, data) => {
+      API.calendars.create({
+        name: this.state.editCalendarName,
+        description: this.state.editCalendarDesc,
+        teamId: this.state.editCalendarTeam,
+      });
+    };
+    const handleCreateModalOpened = (e) => {
+      this.setState({
+        editModalOpened: "new",
+        editCalendarName: '',
+        editCalendarDesc: '',
+        editCalendarTeam: '',
+      });
+    };
+    const handleCreateModalClosed = (e) => {
+      this.setState({
+        editModalOpened: "null",
+      });
+    };
     for (let calendar of this.state.calendars)
       rows.push(this.showRow(calendar));
     return (
-      <Container>
+      <Container className="container-content">
         <Table basic='very' celled>
           <Table.Header fullWidth={true}>
             <Table.Row>
               <Table.HeaderCell>Calendar</Table.HeaderCell>
               <Table.HeaderCell>Description</Table.HeaderCell>
-              <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
+              <Table.HeaderCell textAlign='right'>
+                <Modal trigger={<Button color='green' icon="add to calendar" onClick={handleCreateModalOpened} />}
+                       open={this.state.editModalOpened === "new"} onClose={handleCreateModalClosed}>
+                  <Header icon='edit' content='Create calendar' />
+                  <Modal.Content>
+                    <Form onSubmit={onCreate}>
+                      <Form.Input label='Name' name='name' placeholder='Name' value={this.state.editCalendarName}
+                                  onChange={(e) => {this.setState({editCalendarName: e.target.value,});}} />
+                      <Form.Input name='description' label='Description' placeholder='Put a description'
+                                  value={this.state.editCalendarDesc} onChange={(e) => {this.setState({editCalendarDesc: e.target.value,});}} />
+                      <Form.Select name='team' label="Team" options={teams} placeholder='Team'
+                                   value={this.state.editCalendarTeam} onChange={(e) => {this.setState({editCalendarTeam: e.target.value,});}} />
+                      <Button color='green' type='submit' fluid>
+                        <Icon name='checkmark' /> Create
+                      </Button>
+                    </Form>
+                  </Modal.Content>
+                  <Modal.Actions>
+                    <Button basic color='red' onClick={handleCreateModalClosed}>
+                      <Icon name='remove' /> Close
+                    </Button>
+                  </Modal.Actions>
+                </Modal>
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
             {rows}
           </Table.Body>
