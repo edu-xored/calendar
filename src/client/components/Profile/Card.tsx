@@ -107,7 +107,7 @@ export class Card extends React.Component<{}, ICardState> {
     if (!user) return null;
 
     return (
-          <div className="ui card">
+          <div id="Card" className="ui card">
 
             <div className="blurring dimmable image">
               <div className="ui dimmer">

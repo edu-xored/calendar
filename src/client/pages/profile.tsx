@@ -1,44 +1,38 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Card} from '../components/Profile/Card';
+import {Activity} from '../components/Profile/Activity';
+
+let data =[
+  {
+    messageId: 0,
+    date: "20.11.16",
+    description: "PTO"
+  },
+  {
+    messageId: 1,
+    date: "24.11.16",
+    description: "PTO"
+  },
+  {
+    messageId: 2,
+    date: "29.11.16",
+    description: "PTO"
+  }
+];
 
 
 export default class ProfilePage extends React.Component<{}, {}> {
   render() {
     return (
-      <div style={{
-                    display:"inline-block",
-                    margin: "20px 50px"
-                  }}>
-          <div className="" style={{float:"left"}}>
-            <Card />
+      <div className="ui grid container" style={{marginTop:"20px"}}>
+          <div className="four wide column">
+              <Card />
           </div>
-          <div style={{
-                border:"1px solid black",
-                marginLeft:"20px",
-                float:"left"
-                         }}>
-              <h3>Activity</h3>
-              <div style={{
-                    border:"1px solid black",
-                    margin:"10px"
-                  }}>
-                  <h5>3 days ago</h5>
-                  <p>qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq</p>
-              </div>
-              <div style={{
-                    border:"1px solid black",
-                    margin:"10px"}}>
-                  <h5>2 days ago</h5>
-                  <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-              </div>
-              <div style={{
-                    border:"1px solid black",
-                    margin:"10px"
-                  }}>
-                  <h5>Yesterday</h5>
-                  <p>mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</p>
-              </div>
+          <div  className="twelve wide column">
+            <div className="ui segment">
+              <Activity data={data}/>
+            </div>
           </div>
         </div>
     );
