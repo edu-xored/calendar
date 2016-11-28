@@ -31,6 +31,16 @@ router.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
+  if (!username) {
+    res.json(400, {error: 'missing required username field'});
+    return;
+  }
+
+  if (!password) {
+    res.json(400, {error: 'missing required password field'});
+    return;
+  }
+
   // try to find in local database first then in LDAP
   findUserByLogin(username).then(user => {
     if (!user) {
@@ -48,9 +58,7 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  const resultHandler = makeResultHandler(res);
-  const errorHandler = makeErrorHandler(req, res);
-  ldap.logout(req).then(resultHandler, errorHandler);
+  res.sendStatus(200);
 });
 
 const jwtMiddleware = expressJWT({ secret });
