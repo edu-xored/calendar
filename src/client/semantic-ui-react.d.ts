@@ -256,6 +256,7 @@ declare module 'semantic-ui-react' {
     labelPosition?: LabelPosition;
     loading?: boolean;
     negative?: boolean;
+    onClick?: (event) => {};
     positive?: boolean;
     primary?: boolean;
     secondary?: boolean;
@@ -453,12 +454,12 @@ declare module 'semantic-ui-react' {
     label?: any;
     labelPosition?: 'left' | 'right' | 'left corner' | 'right corner';
     loading?: boolean;
+    onChange?: any;
     size?: Sizes;
     transparent?: boolean;
     type?: string;
     placeholder?: string;
     value?: any;
-    onChange?: any;
     required?: boolean;
   }
 
@@ -718,13 +719,16 @@ declare module 'semantic-ui-react' {
     error?: boolean;
     inline?: boolean;
     label?: string;
+    name?: string;
+    options?: any;
+    placeholder?: string;
     required?: any;
     type?: string;
     width?: Widths;
   }
 
   interface IFormControlProps extends SuiElement {
-    control: any;
+    control?: any;
   }
 
   interface IFormGroupProps extends SuiBlockElement {
@@ -742,7 +746,7 @@ declare module 'semantic-ui-react' {
     Group: (props: IFormGroupProps) => JSX.Element;
     Input: (props: IFormControlProps) => JSX.Element;
     Radio: (props: IFormControlProps) => JSX.Element;
-    Select: (props: IFormControlProps) => JSX.Element;
+    Select: (props: IFormControlProps & IFormFieldProps) => JSX.Element;
     Textarea: (props: IFormControlProps) => JSX.Element;
     (props: IFormProps): JSX.Element;
   }

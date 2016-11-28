@@ -53,19 +53,19 @@ function makeAPI<T, E>(api, ext?: E) {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: makeHeaders(),
-      }).then(toJSON);
+      }).then<T>(toJSON);
     },
     getList(): Promise<T[]>  {
       return fetch(collectionPath, {
         credentials: "same-origin",
         headers: makeHeaders(),
-      }).then(toJSON);
+      }).then<T[]>(toJSON);
     },
     get(id: string): Promise<T>  {
       return fetch(resourcePath(id), {
         credentials: "same-origin",
         headers: makeHeaders(),
-      }).then(toJSON);
+      }).then<T>(toJSON);
     },
     update(id: string, payload: T): Promise<T>  {
       return fetch(resourcePath(id), {
@@ -73,7 +73,7 @@ function makeAPI<T, E>(api, ext?: E) {
         method: 'PUT',
         body: JSON.stringify(payload),
         headers: makeHeaders(),
-      }).then(toJSON);
+      }).then<T>(toJSON);
     },
     remove(id): Promise<any>  {
       return fetch(resourcePath(id), {
@@ -95,7 +95,7 @@ const teamAPI = makeAPI<Team, {}>({
   collection: 'teams',
 }, {
   getMembers(teamId: string): Promise<User[]> {
-    const url = `${BASE}/teams/${teamId}/members`;
+    const url = `${BASE}/team/${teamId}/members`;
     return fetch(url, {
       credentials: "same-origin",
       headers: makeHeaders(),
@@ -122,7 +122,7 @@ export default {
     return fetch(`${BASE}/me`, {
       credentials: "same-origin",
       headers: makeHeaders(),
-    }).then(toJSON);
+    }).then<User>(toJSON);
   },
   users: makeAPI<User, {}>({
     resource: 'user',

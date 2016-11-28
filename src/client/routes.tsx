@@ -43,10 +43,10 @@ const Routes = (
   <Router history={history}>
     <Route path="/" component={BasicLayout} onEnter={requireUser}>
       <IndexRoute component={Home} onEnter={requireUser} />
-      <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
       <Route path="admin/teams" component={AdminTeams} onEnter={requireUser} />
       <Route path="admin/users" component={AdminUsers} onEnter={requireUser} />
-      <Route path="calendar/*" component={Calendar} onEnter={requireUser} />
+      <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
+      <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
       <Route path="profile" component={ProfilePage} onEnter={requireUser} />
     </Route>
     <Route path="/login" component={Login}/>
