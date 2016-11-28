@@ -8,6 +8,6 @@ export default makeEntityFn<Event>('event', {
   calendarId: ORM.STRING,
   start: ORM.TIME,
   end: ORM.TIME,
-  allDay: ORM.BOOLEAN,
   userId: ORM.STRING,
+  duration: ORM.STRING,
 });

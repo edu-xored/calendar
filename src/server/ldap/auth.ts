@@ -9,7 +9,3 @@ import {User} from '../../lib/model';
 export function login(login: string, pwd: string): Promise<User> {
     return resolveUser(login, pwd);
 }
-
-export function logout(req: express.Request): Promise<any> {
-    return Promise.resolve('ok');
-}

@@ -1,0 +1,28 @@
+.event-modal-wrapper {
+  display: flex;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 101;
+}
+
+.event-modal {
+  margin: auto;
+  display: block;
+  padding: 25px 40px;
+  width: 500px;
+  height: 500px;
+  vertical-align: middle;
+  border: 1px solid #efefef;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.event-modal-header > * {
+  display: inline-block;
+}

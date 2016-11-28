@@ -220,6 +220,7 @@ declare module 'semantic-ui-react' {
     * Additional classes.
     */
     className?: string;
+    textAlign?: string;
   }
 
   interface SuiBlockElement extends SuiElement {
@@ -252,7 +253,6 @@ declare module 'semantic-ui-react' {
     icon?: Icons;
     inverted?: boolean;
     label?: any;
-    type?: any;
     labelPosition?: LabelPosition;
     loading?: boolean;
     negative?: boolean;
@@ -261,6 +261,8 @@ declare module 'semantic-ui-react' {
     secondary?: boolean;
     size?: Sizes;
     toggle?: boolean;
+    type?: string;
+    onClick?: Function;
   }
 
   interface IButtonContent extends SuiBlockElement {
@@ -452,10 +454,14 @@ declare module 'semantic-ui-react' {
     label?: any;
     labelPosition?: 'left' | 'right' | 'left corner' | 'right corner';
     loading?: boolean;
+    name?: string;
+    onChange?: any;
     size?: Sizes;
     transparent?: boolean;
     type?: string;
     placeholder?: string;
+    value?: any;
+    required?: boolean;
   }
 
   export const Input: (props?: IInputProps) => JSX.Element;
@@ -714,6 +720,9 @@ declare module 'semantic-ui-react' {
     error?: boolean;
     inline?: boolean;
     label?: string;
+    name?: string;
+    options?: any;
+    placeholder?: string;
     required?: any;
     type?: string;
     width?: Widths;
@@ -726,6 +735,9 @@ declare module 'semantic-ui-react' {
     value?: string;
     placeholder?: string;
     rows?: string;
+    options?: any;
+    color?: Colors;
+    onChange?: Function;
   }
 
   interface IFormGroupProps extends SuiBlockElement {
@@ -743,8 +755,8 @@ declare module 'semantic-ui-react' {
     Group: (props: IFormGroupProps) => JSX.Element;
     Input: (props: IFormControlProps) => JSX.Element;
     Radio: (props: IFormControlProps) => JSX.Element;
-    Select: (props: IFormControlProps) => JSX.Element;
-    TextArea: (props: IFormControlProps) => JSX.Element;
+    Select: (props: IFormControlProps & IFormFieldProps) => JSX.Element;
+    Textarea: (props: IFormControlProps) => JSX.Element;
     (props: IFormProps): JSX.Element;
   }
 
@@ -1649,6 +1661,9 @@ declare module 'semantic-ui-react' {
   // Modal
 
   interface IModalProps extends SuiBlockElement {
+    trigger?: any;
+    open?: boolean;
+    onClose?: Function;
     /**
     * A modal can reduce its complexity
     */

@@ -1,62 +1,119 @@
-.calendar-grid {
-  // border: 3px solid #000;
-
-  display: block;
-  position: relative;
-  max-width: 700px;
-  height: 500px;
+.calendar-view-wrapper {
+  padding: 10px;
+}
+.calendar-view {
+  margin: 0 auto;
+  display: flex;
+  flex-flow: row;
+  height: 600px;
+  min-width: 600px;
+  max-width: 1280px;
+  width: 80%;
   background: #fff;
+  border: 2px solid #dfdfdf;
+}
+
+.left-col {
+  display: table-cell;
+  height: 100%;
+  min-width: 150px;
+  max-width: 250px;
+  width: 25%;
+  vertical-align: top;
+  border-right: 2px solid #dfdfdf;
+}
+
+.right-col {
+  display: table-cell;
+  height: 100%;
+  min-width: 450px;
+  max-width: 1030px;
+  width: 100%;
+  vertical-align: top;
+  background: #fff;
+}
+
+/* left column elements */
+
+.user-list-wrapper {
+  height: inherit;
+}
+
+.user-list-filter {
+  height: 120px;
+  border-bottom: 2px solid #dfdfdf;
+}
+
+.user-list {
+  display: block;
+  width: 110%;
+  height: 466px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.user-list .grid-cell {
+  width: 100%;
+}
+
+/* right column elements */
+
+.calendar-controls {
+  height: 120px;
+  position: relative;
+  border-bottom: 2px solid #dfdfdf;
+  overflow: hidden;
+}
+
+/* controls components */
+
+.grid-header {
+  display: flex;
+  position: relative;
+  top: 95px;
+  left: 0;
+}
+
+.grid-header .grid-row {
+  height: 25px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.3em;
+  text-align: center;
+  font-weight: lighter;
+  color: #afafaf;
+  border: none;
+}
+
+.grid-header .grid-cell {
+  border: none;
+}
+
+.date-data-cell {
+  width:100%;
+}
+
+/* calendar-grid components */
+
+.calendar-grid {
+  display: block;
+  width:100%;
+  min-height: 300px; /* cellHeight * minVisibleRowsCount */
+  height: 480px;
+  // background: #fff;
 
   overflow: hidden;
 }
 
-.grid-header {
-  // border: 2px solid blue;
-
-  position: relative;
-  top:0;
-  left:0;
-  display: flex;
-  z-index: 101;
-}
-
-.grid-header .grid-cell {
-  background: #efefef;
-}
-
-.grid-body-wrapper {
-  display: block;
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  overflow: auto;
-}
-
 .grid-body {
-  display: flex;
-
-  justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start;
-  flex-flow: row nowrap;
-
-}
-
-.team-members-column {
-  display: flex;
-  flex-flow: row wrap;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
 .events-list-column {
   display: flex;
   flex-flow: row wrap;
-}
-
-.grid-header .grid-row {
-  height: 50px;
 }
 
 .grid-row {
@@ -68,14 +125,30 @@
 
   width: auto;
   min-width: inherit;
-  height: 100px;
+  min-height: 70px;
+
+  border-bottom: 1px solid #dfdfdf;
+
 }
 
 .grid-cell {
-  border-top: 1px solid #dfdfdf;
-  border-left: 1px solid #dfdfdf;
+  // border-top: 1px solid #dfdfdf;
+  border-right: 1px solid #dfdfdf;
 
-  width: 100px;
+  min-width: 70px;
   height: auto;
   display: flex;
+
+  -webkit-transition: background 0.2s;
+  -ms-transition: background 0.2s;
+  transition: background 0.2s;
+}
+
+.events-list-column .grid-cell {
+  width: 60px;
+}
+
+.events-list-column .grid-cell:hover {
+  background: #f5f5f5;
+  cursor: pointer;
 }

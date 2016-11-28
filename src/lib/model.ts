@@ -36,7 +36,7 @@ export interface Event extends Entity {
   calendarId: string;
   start: Date;
   end: Date;
-  allDay: boolean;
+  duration: string; // 1d, 0.5d
   userId: string;
 }
 
