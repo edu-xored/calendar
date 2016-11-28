@@ -5,6 +5,8 @@ import Home from './pages/home';
 import Blank from './pages/blank';
 import CalendarList from './pages/calendar_list';
 import Calendar from './pages/calendar';
+import AdminTeams from './pages/admin/teams';
+import AdminUsers from './pages/admin/users';
 import Login from './pages/login';
 import PageHeader from './pageheader';
 import API from './api';
@@ -39,8 +41,10 @@ class BasicLayout extends React.Component<any, {}> {
 const Routes = (
   <Router history={history}>
     <Route path="/" component={BasicLayout} onEnter={requireUser}>
-      <IndexRoute component={Home} onEnter={requireUser}/>
-      <Route path="admin/calendars" component={CalendarList} onEnter={requireUser}/>
+      <IndexRoute component={Home} onEnter={requireUser} />
+      <Route path="admin/teams" component={AdminTeams} onEnter={requireUser} />
+      <Route path="admin/users" component={AdminUsers} onEnter={requireUser} />
+      <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
       <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
     </Route>
     <Route path="/login" component={Login}/>

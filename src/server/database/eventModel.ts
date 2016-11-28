@@ -7,4 +7,5 @@ export default makeEntityFn<Event>('event', {
   comment: ORM.STRING,
   start: ORM.TIME,
   end: ORM.TIME,
+  duration: ORM.STRING,
 });
