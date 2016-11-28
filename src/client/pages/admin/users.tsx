@@ -1,9 +1,10 @@
 import * as React from 'react';
 
+import { Header, Container } from 'semantic-ui-react';
 import TeamsView from '../../components/admin/TableView';
 import api from '../../api';
 
-const headers = ['id', 'createdAt', 'updatedAt', 'name', 'email', 'login', 'pwdhash', 'avatar', 'role', 'position', 'place'];
+const headers = ['id', 'name', 'email', 'login', 'avatar', 'role', 'position', 'place'];
 const modalFields = ['name', 'avatar', 'email'];
 
 const defaultModalData: any = {
@@ -16,9 +17,10 @@ const defaultModalData: any = {
 export default class TeamsPage extends React.Component<{}, {}> {
   render() {
     return (
-      <div>
+      <Container>
+        <Header content='Users'/>
         <TeamsView headers={headers} modalFields={modalFields} api={api.users} defaultModalData={defaultModalData} />
-      </div>
+      </Container>
     );
   }
 }

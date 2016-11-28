@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import { Table, Container, Icon } from 'semantic-ui-react';
 
 import Modal from './Modal';
 
@@ -75,41 +76,52 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
 
     render() {
         return (
-            <div className='table-view'>
-                <button onClick={() => this.openModal}>
-                    Create
-                </button>
+            <div>
                 <Modal entity={this.state.modalData} fields={this.props.modalFields} action={this.state.modalAction} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
-                <div className='grid'>
-                    <div className='grid-headers'>
-                        {
-                            this.props.headers.map((header) =>
-                                <div className="grid-header" key={header}>
-                                    {header}
-                                </div>)
-                        }
-                    </div>
-                    <div className='grid-data'>
-                        {
-                            _.map(this.state.data, (entity) => {
-                                const fieldsValues = _.map(this.props.headers, (propertyName) => entity[propertyName]);
-                                const onEdit = () => this.openModal(entity.id);
-                                const onDelete = () => this.delete(entity.id);
-                                return (
-                                    <div className='grid-row' id={entity.id} key={entity.id}>
-                                        {fieldsValues.map((fieldValue, i) =>
-                                            <div className='grid-cell' key={i}>
-                                                {fieldValue}
-                                            </div>)}
-                                        <button onClick={onEdit}> Edit </button>
-                                        <button onClick={onDelete}> Delete </button>
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
-                </div>
-            </div >
+                <Container>
+                    <Table>
+                        <Table.Header fullWidth={false}>
+                            {
+                                this.props.headers.map((header) =>
+                                    <Table.HeaderCell key={header}>
+                                        {header}
+                                    </Table.HeaderCell>)
+
+                            }
+                            <Table.HeaderCell>
+                                <button onClick={() => this.openModal()}>
+                                    <Icon name='add' />
+                                </button>
+                            </Table.HeaderCell>
+                        </Table.Header>
+                        <Table.Body>
+                            {
+                                _.map(this.state.data, (entity) => {
+                                    const fieldsValues = _.map(this.props.headers, (propertyName) => entity[propertyName]);
+                                    const onEdit = () => this.openModal(entity.id);
+                                    const onDelete = () => this.delete(entity.id);
+                                    return (
+                                        <Table.Row key={entity.id}>
+                                            {fieldsValues.map((fieldValue, i) =>
+                                                <Table.Cell key={i}>
+                                                    {fieldValue}
+                                                </Table.Cell>)}
+                                            <Table.Cell key='buttons'>
+                                                <button onClick={onEdit}>
+                                                    <Icon name='edit' />
+                                                </button>
+                                                <button onClick={onDelete}>
+                                                    <Icon name='delete' />
+                                                </button>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    );
+                                })
+                            }
+                        </Table.Body>
+                    </Table>
+                </Container >
+            </div>
         );
     }
 }
