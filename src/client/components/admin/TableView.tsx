@@ -55,11 +55,7 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
     }
 
     delete = (id: string) => {
-        this.props.api.remove(id).then(() => {
-            this.init();
-        }, err => {
-            alert(err);
-        });
+        this.handlePromise(this.props.api.remove(id));
     }
 
     handleOnCreate = () => {
