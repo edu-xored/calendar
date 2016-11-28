@@ -39,12 +39,12 @@ const defaultState = {
 async function fetchCalendarData(calendarId: string) : Promise<any> {
   try {
     const calendar = await API.calendars.get(calendarId);
-    // const team = await API.teams.getMembers(calendar.teamId);
+    const team = await API.teams.getMembers(calendar.teamId);
     const allEvents = await API.events.getList();
 
     const events = allEvents.filter(e => (e.calendarId == calendarId));
 
-    return { calendar, team: [], events};
+    return { calendar, team, events };
   } catch(err) {
     console.log(err);
     return null;
@@ -56,49 +56,6 @@ const USER_LIST_CLASS_NAME = 'user-list';
 const GRID_CLASS_NAME = 'grid-body';
 
 const headerLength = 31;
-const fakeMembers = [
-  {
-    id: '1',
-    name: "Alex",
-  },
-  {
-    id: '2',
-    name: "Bill"
-  },
-  {
-    id: '3',
-    name: "Jack"
-  },
-  {
-    id: '4',
-    name: "William"
-  },
-  {
-    id: '5',
-    name: "John"
-  },
-  {
-    id: '6',
-    name: "Rob"
-  },
-  {
-    id: '7',
-    name: "Sam"
-  },
-  {
-    id: '8',
-    name: "Bob"
-  },
-  {
-    id: '9',
-    name: "Steve"
-  },
-  {
-    id:'10',
-    name: "Tim"
-  }
-];
-
 
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
 
@@ -128,7 +85,7 @@ static contextTypes = {
       this.setState(Object.assign({}, this.state,
         {
           calendar: calendar,
-          data: this.createDataArray(events, fakeMembers)
+          data: this.createDataArray(events, team)
         })
       );
     })
