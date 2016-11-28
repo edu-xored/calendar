@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 
 import Row from './Row';
-import Cell from './Cell';
 
 interface IGridProps {
     onDelete: (id: string) => void;
@@ -37,12 +36,17 @@ export default class Grid extends React.Component<IGridProps, any> {
         });
         return (
             <div id='grid'>
-                <section className='top-row'>
-                    {this.props.headers.map((cellData, i) => <Cell key={i} data={cellData} />)}
-                </section>
-                <section className='data-rows'>
+                <div className='grid-headers'>
+                    {
+                        this.props.headers.map((header, i) =>
+                            <div className="grid-header">
+                                {header}
+                            </div>)
+                    }
+                </div>
+                <div className='grid-data'>
                     {dataRows}
-                </section>
+                </div>
             </div>
         );
     }
