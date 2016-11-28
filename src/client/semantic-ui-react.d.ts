@@ -256,7 +256,7 @@ declare module 'semantic-ui-react' {
     labelPosition?: LabelPosition;
     loading?: boolean;
     negative?: boolean;
-    onClick?: (event) => {};
+    onClick?: (event?: any) => void;
     positive?: boolean;
     primary?: boolean;
     secondary?: boolean;

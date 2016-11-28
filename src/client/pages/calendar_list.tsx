@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import API from './../api';
 import { Calendar, Team } from "./../../lib/model";
 import { Button, Container, Header, Image, Table } from 'semantic-ui-react';
+import history from '../history';
 
 interface CalendarListState {
   calendars: Calendar[];
@@ -30,12 +31,15 @@ export default class CalendarList extends React.Component<{}, {}> {
 
   findTeam = (id: string) => {
     return (_.find(this.state.teams, t => t.id === id));
-  }
+  };
 
   showRow(calendar: Calendar) {
     let team: Team = this.findTeam(calendar.teamId);
     if (team === null)
       return;
+    const view = () => {
+      history.push(`/calendar/${calendar.id}`);
+    };
     return (
       <Table.Row>
         <Table.Cell>
@@ -52,7 +56,7 @@ export default class CalendarList extends React.Component<{}, {}> {
         </Table.Cell>
         <Table.Cell textAlign='right'>
           <Button.Group>
-            <Button color='blue'>View</Button>
+            <Button color='blue' onClick={view}>View</Button>
             <Button color='green'>Edit</Button>
             <Button color='red'>Delete</Button>
           </Button.Group>
