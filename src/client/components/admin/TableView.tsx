@@ -82,11 +82,11 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
                     <Table>
                         <Table.Header fullWidth={false}>
                             {
-                                this.props.headers.map((header) =>
+                                _.map(this.props.headers, header => (
                                     <Table.HeaderCell key={header}>
                                         {header}
-                                    </Table.HeaderCell>)
-
+                                    </Table.HeaderCell>
+                                ))
                             }
                             <Table.HeaderCell>
                                 <button onClick={() => this.openModal()}>
@@ -95,33 +95,44 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
                             </Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
-                            {
-                                _.map(this.state.data, (entity) => {
-                                    const fieldsValues = _.map(this.props.headers, (propertyName) => entity[propertyName]);
-                                    const onEdit = () => this.openModal(entity.id);
-                                    const onDelete = () => this.delete(entity.id);
-                                    return (
-                                        <Table.Row key={entity.id}>
-                                            {fieldsValues.map((fieldValue, i) =>
-                                                <Table.Cell key={i}>
-                                                    {fieldValue}
-                                                </Table.Cell>)}
-                                            <Table.Cell key='buttons'>
-                                                <button onClick={onEdit}>
-                                                    <Icon name='edit' />
-                                                </button>
-                                                <button onClick={onDelete}>
-                                                    <Icon name='delete' />
-                                                </button>
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    );
-                                })
-                            }
+                            { _.map(this.state.data, (entity) => this.renderRow(entity)) }
                         </Table.Body>
                     </Table>
                 </Container >
             </div>
         );
+    }
+
+    renderRow(entity: any) {
+        const onEdit = () => this.openModal(entity.id);
+        const onDelete = () => this.delete(entity.id);
+        return (
+            <Table.Row key={entity.id}>
+                { _.map(this.props.headers, prop => this.renderField(entity, prop)) }
+                <Table.Cell key='buttons'>
+                    <button onClick={onEdit}>
+                        <Icon name='edit' />
+                    </button>
+                    <button onClick={onDelete}>
+                        <Icon name='delete' />
+                    </button>
+                </Table.Cell>
+            </Table.Row>
+        );
+    }
+
+    renderField(entity: any, propertyName: string) {
+      const value = entity[propertyName];
+      let content = value;
+
+      if (propertyName === "avatar") {
+        content = <img src={value} />;
+      }
+
+      return (
+        <Table.Cell key={propertyName}>
+          {content}
+        </Table.Cell>
+      );
     }
 }
