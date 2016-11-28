@@ -40,7 +40,7 @@ export default class PresencePage extends React.Component<{}, {}> {
     if (user === null)
       return;
     return (
-      <Header as='h4' image>
+      <Header as='h4' className="absent-user" image>
         <Image src={user.avatar} shape='rounded' size='mini'/>
         <Header.Content>
           {user.name}
@@ -53,14 +53,14 @@ export default class PresencePage extends React.Component<{}, {}> {
     let absentUsers = [];
     let now = new Date(Date.now());
     for (let event of this.state.events) {
-      if (event.allDay && event.start.getDate() === now.getDate()
+      if (event.duration === '1d' && event.start.getDate() === now.getDate()
         && event.start.getMonth() === now.getMonth()
         && event.start.getFullYear() === now.getFullYear()
-        && event.type === 'PTO' && event.type === 'Absent' && event.type === 'WFH')
-      absentUsers.push(this.ShowAbsent(event));
+        && (event.type === '12354' ||event.type === 'PTO' || event.type === 'Absent' || event.type === 'WFH'))
+        absentUsers.push(this.ShowAbsent(event));
     }
     return (
-      <Container>
+      <Container className="container-content">
         <h3>Today are absent:</h3>
         {absentUsers}
         <h3>Submit your status</h3>
@@ -68,10 +68,10 @@ export default class PresencePage extends React.Component<{}, {}> {
           <Form.Field>
             <label>Status</label>
             <Form.Group inline>
-              <Form.Radio label='Absent' name='plan' value='a' />
-              <Form.Radio label='PTO' name='plan' value='b' />
-              <Form.Radio label='WFH' name='plan' value='c' />
-              <Form.Radio label='Working' name='plan' value='d' />
+              <Form.Radio label='Absent' name='type' value='absent' />
+              <Form.Radio label='PTO' name='type' value='pto' />
+              <Form.Radio label='WFH' name='type' value='wfh' />
+              <Form.Radio label='Working' name='type' value='none' />
             </Form.Group>
           </Form.Field>
           <Form.TextArea name='details' label='Details' placeholder='Wot are you doing?' rows='3' />

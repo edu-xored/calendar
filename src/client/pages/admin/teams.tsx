@@ -17,7 +17,7 @@ const defaultModalData: any = {
 export default class TeamsPage extends React.Component<{}, {}> {
     render() {
         return (
-            <Container>
+            <Container className="container-content">
                 <Header content='Teams' />
                 <TeamsView headers={headers} modalFields={modalFields} api={api.teams} defaultModalData={defaultModalData} />
             </Container>

@@ -4,7 +4,7 @@ import history from './history';
 import Home from './pages/home';
 import PresencePage from './pages/presence';
 import Blank from './pages/blank';
-import CalendarList from './pages/calendar_list';
+import CalendarList from './pages/admin/calendars';
 import Calendar from './pages/calendar';
 import AdminTeams from './pages/admin/teams';
 import AdminUsers from './pages/admin/users';

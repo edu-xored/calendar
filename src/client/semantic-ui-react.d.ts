@@ -756,7 +756,7 @@ declare module 'semantic-ui-react' {
     Input: (props: IFormControlProps) => JSX.Element;
     Radio: (props: IFormControlProps) => JSX.Element;
     Select: (props: IFormControlProps & IFormFieldProps) => JSX.Element;
-    Textarea: (props: IFormControlProps) => JSX.Element;
+    TextArea: (props: IFormControlProps) => JSX.Element;
     (props: IFormProps): JSX.Element;
   }
 
