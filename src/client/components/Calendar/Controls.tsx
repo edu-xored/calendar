@@ -21,8 +21,13 @@ export default class Controls extends React.Component<any, any> {
                         handleOnCellClick={ ()=>{} }
                       />;
     return (
-      <div className='calendar-controls'>
-        <div className='grid-header'>
+      <div className='calendar-controls-wrapper'>
+        <div className='controls-row'>
+          <div className='current-year'>
+            <h3>{ this.props.currentYear }</h3>
+          </div>
+        </div>
+        <div className='dates-row'>
           { headerRow }
         </div>
       </div>

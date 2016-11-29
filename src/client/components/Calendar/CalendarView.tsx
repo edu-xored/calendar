@@ -23,6 +23,7 @@ interface ICalendarViewState {
   eventModalAction: string;
   currentMonth: number;
   currentYear: number;
+  submitBy: number;
 };
 
 const defaultState = {
@@ -33,29 +34,14 @@ const defaultState = {
   showEventModal: false,
   eventModalAction: null,
   currentMonth: new Date().getMonth(),
-  currentYear: new Date().getFullYear()
+  currentYear: new Date().getFullYear(),
+  submitBy: null
 };
 
-async function fetchCalendarData(calendarId: string) : Promise<any> {
-  try {
-    const calendar = await API.calendars.get(calendarId);
-    const team = await API.teams.getMembers(calendar.teamId);
-    const allEvents = await API.events.getList();
-
-    const events = allEvents.filter(e => (e.calendarId == calendarId));
-
-    return { calendar, team, events };
-  } catch(err) {
-    console.log(err);
-    return null;
-  }
-}
 
 // constants to sync DOM elements' scroll
 const USER_LIST_CLASS_NAME = 'user-list';
 const GRID_CLASS_NAME = 'grid-body';
-
-const headerLength = 31;
 
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
 
@@ -66,10 +52,6 @@ static contextTypes = {
 }
 
   componentDidMount() {
-    let calendar: Calendar;
-    let team: User[];
-    let events: Event[];
-
     document
       .getElementsByClassName(GRID_CLASS_NAME)[0]
       .addEventListener('mouseover', () => { CalendarView.mouseOnElement = GRID_CLASS_NAME });
@@ -78,21 +60,7 @@ static contextTypes = {
       .getElementsByClassName(USER_LIST_CLASS_NAME)[0]
       .addEventListener('mouseover', () => { CalendarView.mouseOnElement = USER_LIST_CLASS_NAME });
 
-    const calendarId = (this.context as any).router.params.id;
-    fetchCalendarData(calendarId)
-    .then(res => {
-      ({ calendar, team, events } = res);
-      this.setState(Object.assign({}, this.state,
-        {
-          calendar: calendar,
-          data: this.createDataArray(events, team)
-        })
-      );
-    })
-    .catch(err => {
-      console.log('Coundn\'t fetch calendar from server. Error: ' + err);
-      calendar = team = events = null;
-    });
+    this.updateData();
   }
 
   render() {
@@ -143,7 +111,13 @@ static contextTypes = {
 
     return teamMembers.map((tm) => ({
         user: tm,
-        events: events.filter((event) => (event.userId == tm.id))
+        events: events.filter((event) => {
+          const date = new Date(event.start);
+
+          return event.userId == tm.id &&
+                 date.getMonth() == this.state.currentMonth &&
+                 date.getFullYear() == this.state.currentYear
+        })
       })
     );
   }
@@ -168,17 +142,17 @@ static contextTypes = {
     return this.state.data.filter((item) => item.user[filterKey].match(new RegExp(pattern, 'i')));
   }
 
-  showEventModal(action: string) {
+  showEventModal(action: string, initDate, submitBy: number) {
     if (action == Constants.ADD_NEW_EVENT) {
+      console.log('submitBy:', submitBy);
       this.setState(Object.assign(
-        { showEventModal: true, eventModalAction: action }
+        { showEventModal: true, eventModalAction: action,
+          submitBy: submitBy }
       ));
     }
   }
 
-  hideEventModal() {
-
-  }
+  hideEventModal() {}
 
   closeEventModal() {
     this.setState(Object.assign(
@@ -186,27 +160,42 @@ static contextTypes = {
     ));
   }
 
-  onEventSubmit({eventTitle, eventComment, eventStart, eventEnd}) {
+  onEventSubmit({ comment, start, end, type }) {
     if (this.state.eventModalAction == Constants.ADD_NEW_EVENT) {
       API.events.create({
-        calendarId: (this.context as any).router.params.id,
-        type: eventTitle,
-        comment: eventComment,
-        start: eventStart,
-        end: eventEnd,
-        userId: '1'
+        calendarId: +(this.context as any).router.params.id,
+        type: type,
+        comment: comment,
+        start: start,
+        end: end,
+        userId: this.state.submitBy
       }).then(() => {
         console.log("Form has been submitted successfully");
+        this.updateData();
       }).catch((err) => {
         console.log("Error while creating event. " + err);
       });
-
-      // remove these lines
-      API.events.getList()
-      .then(events => {console.log('events:', events)})
-      .catch(err => {console.log(err)});
     }
 
+  }
+
+
+  updateData() {
+    const calendarId = (this.context as any).router.params.id;
+
+    fetchCalendarData(calendarId)
+    .then(res => {
+      const { calendar, team, events } = res;
+      this.setState(Object.assign({}, this.state,
+        {
+          calendar: calendar,
+          data: this.createDataArray(events, team)
+        })
+      );
+    })
+    .catch(err => {
+      console.log('Coundn\'t fetch calendar from server. Error: ' + err);
+    });
   }
 
   syncScrollPosition(eventTrigger: string) {
@@ -214,10 +203,29 @@ static contextTypes = {
     const grid = document.getElementsByClassName(GRID_CLASS_NAME)[0];
 
       if (CalendarView.mouseOnElement == USER_LIST_CLASS_NAME) {
-        grid.scrollTo(0, userList.scrollTop);
+        grid.scrollTop = userList.scrollTop;
       }
       else if (CalendarView.mouseOnElement == GRID_CLASS_NAME) {
-        userList.scrollTo(0, grid.scrollTop);
+        userList.scrollTop = grid.scrollTop;
       }
+  }
+}
+
+async function fetchCalendarData(calendarId: string) : Promise<any> {
+  try {
+    const calendar = await API.calendars.get(calendarId);
+    const team = await API.teams.getMembers(calendar.teamId);
+    const allEvents = await API.events.getList();
+
+    console.log('Fetched calendar:', calendar);
+    console.log('Fetched team:', team);
+    console.log('Fetched events:', allEvents);
+
+    const events = allEvents.filter(e => (e.calendarId == calendarId));
+
+    return { calendar, team, events};
+  } catch(err) {
+    console.log(err);
+    return null;
   }
 }
