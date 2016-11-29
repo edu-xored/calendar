@@ -5,7 +5,6 @@ import { Container } from 'semantic-ui-react';
 
 const CalendarPage = () => (
   <Container className="container-content">
-    This is a blank calendar page
     <CalendarView />
   </Container>
 );

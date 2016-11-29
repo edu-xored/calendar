@@ -93,29 +93,29 @@ export default class DBWorker extends React.Component<any, any> {
   }
 
   render() {
-    let uProps = ['name', 'email', 'login', 'avatar', 'role', 'position', 'place'];
-    let tProps = ['name', 'avatar', 'description'];
-    let cProps = ['name', 'type', 'description', 'teamId'];
-    let eProps = ['type', 'comment', 'calendarId', 'start', 'end', 'userId'];
+    let usuerProps = ['name', 'email', 'login', 'avatar', 'role', 'position', 'place'];
+    let teamProps = ['name', 'avatar', 'description'];
+    let calendaProps = ['name', 'type', 'description', 'teamId'];
+    let eventProps = ['type', 'comment', 'calendarId', 'start', 'end', 'userId'];
     const entities = [
       {
         type: 'User',
-        props: uProps,
+        props: usuerProps,
         onFormSubmit: onUserFormSubmit
       },
       {
         type: 'Team',
-        props: tProps,
+        props: teamProps,
         onFormSubmit: onTeamFormSubmit
       },
       {
         type: 'Event',
-        props: eProps,
+        props: eventProps,
         onFormSubmit: onEventFormSubmit
       },
       {
         type: 'Calendar',
-        props: cProps,
+        props: calendaProps,
         onFormSubmit: onCalendarFormSubmit
       }
     ];

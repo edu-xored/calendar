@@ -6,16 +6,13 @@ import '../../styles/event-modal-dialog';
 const eventModalWrapperClassName = 'event-modal-wrapper';
 
 export default class EventModal extends React.Component<any, any> {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const eventTypes = [
-      {text: 'PTO', value: 'pto'}
+      {text: 'PTO', value: 'pto'},
+      {text: 'WFH', value: 'wfh'}
     ];
     return (
-      <div className={eventModalWrapperClassName} onClick={this.onModalClick.bind(this)}>
+      <div className={ eventModalWrapperClassName } onClick={ this.onModalClick.bind(this) }>
         <div className='event-modal'>
           <div className='event-modal-header'>
             <Header
@@ -26,22 +23,21 @@ export default class EventModal extends React.Component<any, any> {
               dividing={true}
             />
             <div className='event-modal-controls'>
-              <Button icon='hide' onClick={ this.onHideEventModal.bind(this) } compact circular/>
+              {false && <Button icon='hide' onClick={ this.onHideEventModal.bind(this) } compact circular/>}
             </div>
           </div>
           <div className='event-modal-content'>
             <Form onSubmit={ this.onFormSubmit.bind(this) }>
-              <Form.Field label='Title' name='event-title' control='input' type='text' inline required />
-              <Form.Field label='Comment' name='event-comment' control='textarea' type='text' />
+              <Form.Field label='Comment' name='event-comment' control='input' type='text' />
               <Form.Select
                 inline
                 label='Event Type'
                 name='event-type'
-                options={eventTypes}
+                options={ eventTypes }
                 placeholder='Event Type'
               />
-              <Form.Field label='Start' name='event-start' control='input' type='text' inline required />
-              <Form.Field label='End' name='event-end' control='input' type='text' inline required />
+              <Form.Field label='Start' name='event-start' control='input' type='date' inline required />
+              <Form.Field label='End' name='event-end' control='input' type='date' inline required />
               <Button
                 basic
                 color='grey'
@@ -53,7 +49,6 @@ export default class EventModal extends React.Component<any, any> {
                 content='Submit'
                 className='event-dialog-submit-btn'
               />
-
             </Form>
           </div>
         </div>
@@ -63,25 +58,28 @@ export default class EventModal extends React.Component<any, any> {
 
   onFormSubmit(event) {
     event.preventDefault();
-    let eventTitle = event.target.elements['event-title'].value;
-    let eventComment = event.target.elements['event-comment'].value;
-    let eventStart = event.target.elements['event-start'].value;
-    let eventEnd = event.target.elements['event-end'].value;
-    // validate form data
-    // const data = {};
-    // pass validated data from Form to parent node
-    this.props.onFormSubmit({
-      eventTitle,
-      eventComment,
-      eventStart,
-      eventEnd
-    });
 
-    this.props.onCloseEventModal();
+    const elements = event.target.elements;
+    let formData = {
+      comment: elements['event-comment'].value.trim(),
+      start: elements['event-start'].value.trim(),
+      end: elements['event-end'].value.trim(),
+      type: elements['event-type'].value.trim()
+    };
+
+    const res = parseForm(formData);
+    if (res.success) {
+      this.props.onFormSubmit(res.form);
+      this.props.onCloseEventModal();
+    } else {
+      // display error message for each wrong field
+      console.error('Invalid form fields: ', res.wrongFields);
+    }
   }
 
   onHideEventModal(event) {
     event.preventDefault();
+    // TODO: implement hiding
     this.props.onCloseEventModal();
   }
 
@@ -95,4 +93,43 @@ export default class EventModal extends React.Component<any, any> {
       this.onCloseEventModal(event);
     }
   }
+}
+
+// helper functions
+
+function parseForm({ comment, start, end, type }) {
+  let res = {
+    success: true,
+    form: {} as any,
+    wrongFields: []
+  };
+
+  start = parseDate(start);
+  if (start == null) {
+    res.success = false;
+    res.wrongFields.push('start');
+  } else {
+    res.form.start = start;
+  }
+
+  end = parseDate(end);
+  if (end == null) {
+    res.success = false;
+    res.wrongFields.push('end');
+  } else {
+    res.form.end = end;
+  }
+
+  res.form.comment = comment;
+  res.form.type = type;
+
+  return res;
+}
+
+function parseDate(val) {
+  if (val instanceof Date) {
+    return val;
+  }
+  const d = new Date(Date.parse(val));
+  return isNaN(d.getTime()) ? undefined : d;
 }

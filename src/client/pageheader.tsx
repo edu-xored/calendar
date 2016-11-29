@@ -17,40 +17,29 @@ interface MenuItem {
 
 const menu: MenuItem[] = [
   {
-    name: 'home',
-    text: 'Home',
+    name: 'dashboard',
+    text: 'Dashboard',
     link: '/',
+  },
+  {
+    name: 'users',
+    text: 'Users',
+    link: '/admin/users'
+  },
+  {
+    name: 'teams',
+    text: 'Teams',
+    link: '/admin/teams'
+  },
+  {
+    name: 'calendars',
+    text: 'Calendars',
+    link: '/admin/calendars',
   },
   {
     name: 'reports',
     text: 'Reports',
     link: '/reports',
-  },
-  {
-    name: 'admin',
-    text: 'Admin',
-    items: [
-      {
-        name: 'users',
-        text: 'Users',
-        link: '/admin/users'
-      },
-      {
-        name: 'teams',
-        text: 'Teams',
-        link: '/admin/teams'
-      },
-      {
-        name: 'calendars',
-        text: 'Calendars',
-        link: '/admin/calendars',
-      }
-    ]
-  },
-  {
-    name: 'profile',
-    text: 'Profile',
-    link: '/profile',
   },
   /*
   {

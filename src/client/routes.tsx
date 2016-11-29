@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router';
 import history from './history';
-import Home from './pages/home';
 import PresencePage from './pages/presence';
 import Blank from './pages/blank';
 import CalendarList from './pages/admin/calendars';
@@ -43,12 +42,11 @@ class BasicLayout extends React.Component<any, {}> {
 const Routes = (
   <Router history={history}>
     <Route path="/" component={BasicLayout} onEnter={requireUser}>
-      <IndexRoute component={Home} onEnter={requireUser} />
+      <IndexRoute component={ProfilePage} onEnter={requireUser} />
       <Route path="admin/teams" component={AdminTeams} onEnter={requireUser} />
       <Route path="admin/users" component={AdminUsers} onEnter={requireUser} />
       <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
       <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
-      <Route path="profile" component={ProfilePage} onEnter={requireUser} />
       <Route path="/presence" component={PresencePage} onEnter={requireUser} />
     </Route>
     <Route path="/login" component={Login}/>

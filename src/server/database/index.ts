@@ -168,7 +168,7 @@ function initMember(teamId: number, data: any): Promise<any> {
     return (user as any).getTeams(withLog).then((teams: any[]) => {
       const team = _.find(teams, t => +t.id === +teamId);
       if (team) return team;
-      return (user as any).addTeam(teamId);
+      return (user as any).addTeam(teamId, withLog);
     });
   };
 
@@ -188,7 +188,7 @@ function initMember(teamId: number, data: any): Promise<any> {
     return user.create(data, withLog).then((u: any) => link(u));
   };
 
-  return team.findOne({
+  return user.findOne({
     where: { name: data.name },
     logging: console.log
   }).then((d: any) => {

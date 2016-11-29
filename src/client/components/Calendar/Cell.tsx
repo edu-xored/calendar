@@ -16,7 +16,7 @@ export default class Cell extends React.Component<any, any> {
   handleOnCellClick(e) {
     const parent = e.target.parentNode;
     if (parent.id.includes('event-row')) {
-      this.props.handleOnCellClick(Constants.ADD_NEW_EVENT);
+      this.props.handleOnCellClick(Constants.ADD_NEW_EVENT, this.props.date);
     }
     else {
       console.log(`Cell inside ${parent.id} has been clicked`);
