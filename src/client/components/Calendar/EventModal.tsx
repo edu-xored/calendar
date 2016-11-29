@@ -40,8 +40,8 @@ export default class EventModal extends React.Component<any, any> {
                 options={eventTypes}
                 placeholder='Event Type'
               />
-              <Form.Field label='Start' name='event-start' control='input' type='text' inline required />
-              <Form.Field label='End' name='event-end' control='input' type='text' inline required />
+              <Form.Field label='Start' name='event-start' control='input' type='date' inline required />
+              <Form.Field label='End' name='event-end' control='input' type='date' inline required />
               <Button
                 basic
                 color='grey'
