@@ -17,8 +17,8 @@ interface MenuItem {
 
 const menu: MenuItem[] = [
   {
-    name: 'home',
-    text: 'Home',
+    name: 'dashboard',
+    text: 'Dashboard',
     link: '/',
   },
   {
@@ -40,11 +40,6 @@ const menu: MenuItem[] = [
     name: 'reports',
     text: 'Reports',
     link: '/reports',
-  },
-  {
-    name: 'profile',
-    text: 'Profile',
-    link: '/profile',
   },
   /*
   {
