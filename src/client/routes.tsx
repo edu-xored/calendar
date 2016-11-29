@@ -49,7 +49,7 @@ const Routes = (
       <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
       <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
       <Route path="profile" component={ProfilePage} onEnter={requireUser} />
-      <Route path="/presence" component={PresencePage}/>
+      <Route path="/presence" component={PresencePage} onEnter={requireUser} />
     </Route>
     <Route path="/login" component={Login}/>
     <Route path="*" component={Blank}/>
