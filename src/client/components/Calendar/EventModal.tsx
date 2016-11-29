@@ -97,7 +97,7 @@ export default class EventModal extends React.Component<any, any> {
 
 // helper functions
 
-const parseForm = ({ comment, start, end, type }) => {
+function parseForm({ comment, start, end, type }) {
   let res = {
     success: true,
     form: {} as any,
@@ -126,21 +126,10 @@ const parseForm = ({ comment, start, end, type }) => {
   return res;
 }
 
-const parseDate = (stringDate) => {
-  const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
-  if (stringDate.match(datePattern) == null) return null;
-  const intDate = stringDate.split('/').map(str => parseInt(str));
-  const year = intDate[2]
-  const month = intDate[1];
-  const date = intDate[0]
-  console.log(year, month, date);
-  // check year
-  if (year < 2015 || year > 2030) return null;
-  // check month
-  if (month < 1|| month > 12) return null;
-  // check date
-  let testDate = new Date(year, month + 1, 0); // points to last day in month
-  if (date < 1 || date > testDate.getDate()) return null;
-
-  return new Date(year, month - 1, date).toString();
+function parseDate(val) {
+  if (val instanceof Date) {
+    return val;
+  }
+  const d = new Date(Date.parse(val));
+  return isNaN(d.getTime()) ? undefined : d;
 }
