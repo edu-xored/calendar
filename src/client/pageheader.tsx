@@ -22,30 +22,24 @@ const menu: MenuItem[] = [
     link: '/',
   },
   {
+    name: 'users',
+    text: 'Users',
+    link: '/admin/users'
+  },
+  {
+    name: 'teams',
+    text: 'Teams',
+    link: '/admin/teams'
+  },
+  {
+    name: 'calendars',
+    text: 'Calendars',
+    link: '/admin/calendars',
+  },
+  {
     name: 'reports',
     text: 'Reports',
     link: '/reports',
-  },
-  {
-    name: 'admin',
-    text: 'Admin',
-    items: [
-      {
-        name: 'users',
-        text: 'Users',
-        link: '/admin/users'
-      },
-      {
-        name: 'teams',
-        text: 'Teams',
-        link: '/admin/teams'
-      },
-      {
-        name: 'calendars',
-        text: 'Calendars',
-        link: '/admin/calendars',
-      }
-    ]
   },
   {
     name: 'profile',
