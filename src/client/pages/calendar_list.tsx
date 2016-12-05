@@ -40,13 +40,15 @@ export default class CalendarList extends React.Component<{}, {}> {
   }
 
   findTeam = (id: string) => {
-    return (_.find(this.state.teams, t => t.id === id));
+    return _.find(this.state.teams, t => t.id === id);
   }
 
   showRow(calendar: Calendar) {
-    let team: Team = this.findTeam(calendar.teamId);
-    if (team === null)
+    const team: Team = this.findTeam(calendar.teamId);
+    if (!team) {
+      // TODO render calendar row without team
       return;
+    }
     const handleModalOpened = (e) => {
       this.setState({
         delModalOpened: calendar.id,
