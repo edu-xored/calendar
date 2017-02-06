@@ -1,8 +1,8 @@
-import H = require('history');
+import { History } from 'history';
 
 // https://github.com/reactjs/react-router/issues/2144
 // use HTML5 history if supported
-const history: H.History =  window.history && window.history.pushState
+const history: History =  window.history && window.history.pushState
   ? require('react-router').browserHistory
   : require('react-router').hashHistory;
 

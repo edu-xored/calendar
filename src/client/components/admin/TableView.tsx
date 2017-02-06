@@ -59,10 +59,11 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
     }
 
     openModal = (id?: string) => {
-        let state = this.state;
-        this.state.modalAction = this.add;
-        this.state.modalData = Object.assign({}, this.props.defaultModalData);
-        state.modalIsOpen = true;
+        let state = {
+          modalAction: this.add,
+          modalData: Object.assign({}, this.props.defaultModalData),
+          modalIsOpen: true,
+        };
         if (id) {
             state.modalData = this.state.data.find(t => t.id === id);
             state.modalAction = this.edit;

@@ -2,8 +2,7 @@ const _ = require('lodash');
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
-const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
-const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
+const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // TODO production config
@@ -37,7 +36,7 @@ const plugins = [
   *
   * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
   */
-  new ForkCheckerPlugin(),
+  new CheckerPlugin(),
 
   /*
    * Plugin: CommonsChunkPlugin
