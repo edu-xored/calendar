@@ -11,20 +11,6 @@ const PROD = NODE_ENV === 'production';
 
 const extractCSS = new ExtractTextPlugin('styles.css');
 
-const uglifyOptions = {
-  compress: {
-    screw_ie8: true, // React doesn't support IE8
-    warnings: false
-  },
-  mangle: {
-    screw_ie8: true
-  },
-  output: {
-    comments: false,
-    screw_ie8: true
-  }
-};
-
 const plugins = [
   extractCSS,
 
@@ -52,7 +38,7 @@ const plugins = [
 
   new webpack.HotModuleReplacementPlugin(),
 
-  new webpack.NoErrorsPlugin(),
+  new webpack.NoEmitOnErrorsPlugin(),
 
   new webpack.DefinePlugin({
     'process.env': {
@@ -66,15 +52,13 @@ const plugins = [
     'window.jQuery': 'jquery',
   }),
 
-  // This helps ensure the builds are consistent if source hasn't changed:
-  PROD ? new webpack.optimize.OccurrenceOrderPlugin() : null,
   // Try to dedupe duplicated modules, if any:
   PROD ? new webpack.optimize.DedupePlugin() : null,
   // Uncomment to minify the production bundles.
   // PROD ? new webpack.optimize.UglifyJsPlugin(uglifyOptions) : null,
 ].filter(_.identity);
 
-const loaders = [
+const rules = [
   {
     test: /\.json$/,
     loader: 'json',
@@ -147,7 +131,7 @@ module.exports = {
     }
   },
   module: {
-    loaders: loaders, // eslint-disable-line
+    rules: rules, // eslint-disable-line
   },
   plugins: plugins, // eslint-disable-line
   output: {
