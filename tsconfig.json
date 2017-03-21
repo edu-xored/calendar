@@ -12,8 +12,7 @@
     "watch": false,
     "preserveConstEnums": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["es6", "dom"]
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules"
