@@ -94,13 +94,13 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "should": "^11.2.0",
     "supertest": "^3.0.0",
-    "ts-node": "^3.0.0",
+    "ts-node": "^3.0.2",
     "tslint": "^4.4.2",
-    "typescript": "^2.2.0",
-    "webpack": "2.2.1",
+    "typescript": "^2.2.2",
+    "webpack": "2.3.2",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-dev-server": "^2.3.0",
     "webpack-hot-middleware": "^2.16.1",
-    "webpack-sources": "^0.2.0"
+    "webpack-sources": "^0.2.3"
   }
 }
