@@ -12,6 +12,7 @@ export default function install(app: express.Application) {
     initdb().then(() => {
       authMiddleware(req, res, next);
     }, err => {
+      console.log('failed to init db:', err);
       res.sendStatus(500);
     });
   });
