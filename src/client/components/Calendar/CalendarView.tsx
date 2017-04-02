@@ -145,7 +145,7 @@ static contextTypes = {
   showEventModal(action: string, initDate, submitBy: number) {
     if (action == Constants.ADD_NEW_EVENT) {
       console.log('submitBy:', submitBy);
-      this.setState(Object.assign(
+      this.setState(Object.assign({}, this.state,
         { showEventModal: true, eventModalAction: action,
           submitBy: submitBy }
       ));
