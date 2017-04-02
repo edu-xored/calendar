@@ -27,7 +27,7 @@ function makeStatus200Handler(res: express.Response) {
 export function makeErrorHandler(req: express.Request, res: express.Response) {
   return err => {
     console.log(`${req.method} ${req.path} failed: ${err}`);
-    res.json(500, { error: err });
+    res.status(500).json({ error: err });
   };
 }
 

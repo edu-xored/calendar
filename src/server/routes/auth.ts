@@ -32,12 +32,12 @@ router.post('/login', (req, res) => {
   const password = req.body.password;
 
   if (!username) {
-    res.json(400, {error: 'missing required username field'});
+    res.status(400).json({error: 'missing required username field'});
     return;
   }
 
   if (!password) {
-    res.json(400, {error: 'missing required password field'});
+    res.status(400).json({error: 'missing required password field'});
     return;
   }
 
