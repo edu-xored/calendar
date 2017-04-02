@@ -28,7 +28,6 @@ router.get('/me', (req, res) => {
   db.users.findById(id, console.log).then((value: any) => {
     if (value) {
       const user = omitPassword(value.toJSON());
-      console.log("InsudeActualUser:", value.toJSON());
       resultHandler(user);
     }
     else {
