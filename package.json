@@ -13,7 +13,9 @@
     "ldap_dev": "cross-env NODE_ENV=development ts-node src/server/ldap/server.ts",
     "ldap_start": "cross-env NODE_ENV=production ts-node src/server/ldap/server.ts",
     "lint": "cross-env tslint --config tslint.json src/**/*.ts*",
-    "test": "cross-env DEBUG=sequelize* ts-node node_modules/mocha/bin/_mocha --timeout 30000 -- test/**/*.ts"
+    "test_sqlite": "cross-env DEBUG=sequelize* ts-node node_modules/mocha/bin/_mocha --timeout 30000 -- test/**/*.ts",
+    "test_pg": "cross-env DEBUG=sequelize* DIALECT=postgres ts-node node_modules/mocha/bin/_mocha --timeout 30000 -- test/**/*.ts",
+    "test": "npm run test_sqlite && npm run test_pg"
   },
   "repository": {
     "type": "git",
@@ -61,6 +63,7 @@
     "morgan": "^1.8.1",
     "object-assign": "^4.1.1",
     "password-hash": "^1.2.2",
+    "pg": "6.1.5",
     "promise": "^7.1.1",
     "query-string": "^4.3.1",
     "react": "^15.4.2",
