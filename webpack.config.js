@@ -2,7 +2,7 @@ const _ = require('lodash');
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
-const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const tsloader = require('awesome-typescript-loader');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // TODO production config
@@ -14,20 +14,20 @@ const extractCSS = new ExtractTextPlugin('styles.css');
 const plugins = [
   extractCSS,
 
-  new TsConfigPathsPlugin(),
+  new tsloader.TsConfigPathsPlugin(),
 
   /*
   * Plugin: ForkCheckerPlugin
-  * Description: Do type checking in a separate process, so webpack don't need to wait.
+  * Description: Do type checking in a separate process, so webpack doesn't need to wait.
   *
   * See: https://github.com/s-panferov/awesome-typescript-loader#forkchecker-boolean-defaultfalse
   */
-  new CheckerPlugin(),
+  new tsloader.CheckerPlugin(),
 
   /*
    * Plugin: CommonsChunkPlugin
    * Description: Shares common code between the pages.
-   * It identifies common modules and put them into a commons chunk.
+   * It identifies common modules and puts them into a commons chunk.
    *
    * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
    * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
@@ -51,9 +51,6 @@ const plugins = [
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
   }),
-
-  // Try to dedupe duplicated modules, if any:
-  PROD ? new webpack.optimize.DedupePlugin() : null,
   // Uncomment to minify the production bundles.
   // PROD ? new webpack.optimize.UglifyJsPlugin(uglifyOptions) : null,
 ].filter(_.identity);
