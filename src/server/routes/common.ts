@@ -70,7 +70,6 @@ export function makeRouter<T>(api: API<T>) {
 
   // create operation
   router.post(`/${api.collectionName}`, (req, res) => {
-    const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
 
     const data = api.makeResource(req.body);
@@ -105,7 +104,6 @@ export function makeRouter<T>(api: API<T>) {
 
   // update operation
   const updateHandler = makeModelHandler((req, res, val) => {
-    const resultHandler = makeResultHandler(res);
     const errorHandler = makeErrorHandler(req, res);
     const data = api.makeResource(req.body);
     val.update(data).then((d: any) => {
