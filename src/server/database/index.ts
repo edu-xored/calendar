@@ -10,7 +10,14 @@ import {User, Team, TeamMember} from "../../lib/model";
 const passwordHash = require('password-hash');
 
 const env = process.env.NODE_ENV || 'development';
-const config = require("../../../dbconfig.json")[env];
+const config = require("../../../dbconfig.json");
+
+if (env === 'production') {
+  config.dialect = 'postgres';
+}
+if (process.env.DIALECT) {
+  config.dialect = process.env.DIALECT;
+}
 
 const withLog = {logging: console.log};
 
