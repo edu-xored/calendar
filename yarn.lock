@@ -31,9 +31,9 @@
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-3.2.1.tgz#0039ab0e0be2a0cc22bac171d27a44588103d123"
 
-"@types/lodash@*", "@types/lodash@^4.14.52":
-  version "4.14.55"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.55.tgz#75d7d4eba020ee4103d4cbd0f2a3ef5db8f7534f"
+"@types/lodash@*", "@types/lodash@4.14.61":
+  version "4.14.61"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.61.tgz#0518c10805b1f9d21f98f82b1311ac2a6ec75892"
 
 "@types/mime@*":
   version "0.0.29"
@@ -43,17 +43,17 @@
   version "2.2.40"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.40.tgz#9811dd800ece544cd84b5b859917bf584a150c4c"
 
-"@types/node@*", "@types/node@^7.0.5":
-  version "7.0.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.8.tgz#25e4dd804b630c916ae671233e6d71f6ce18124a"
+"@types/node@*", "@types/node@7.0.12":
+  version "7.0.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.12.tgz#ae5f67a19c15f752148004db07cbbb372e69efc9"
 
 "@types/promise@^7.1.30":
   version "7.1.30"
   resolved "https://registry.yarnpkg.com/@types/promise/-/promise-7.1.30.tgz#1b6714b321fdfc54d1527e7a17116a0e1f2ab810"
 
-"@types/query-string@^3.0.31":
-  version "3.0.32"
-  resolved "https://registry.yarnpkg.com/@types/query-string/-/query-string-3.0.32.tgz#c780ae7ec1322df4db88fc5644f9c8298c6426a9"
+"@types/query-string@4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@types/query-string/-/query-string-4.3.1.tgz#59ea5c75d425817370158789aa4f6197e5abd987"
 
 "@types/react-dom@^0.14.23":
   version "0.14.23"
@@ -61,9 +61,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-modal@^1.6.2":
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-1.6.4.tgz#54961d73d616a729df9f8cb94acafeddb074afe1"
+"@types/react-modal@1.6.6":
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-1.6.6.tgz#9e77be4f0dea4d95ffb9ebec05047ff42e0381d9"
   dependencies:
     "@types/react" "*"
 
