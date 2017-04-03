@@ -1,11 +1,20 @@
 import * as React from 'react';
 import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+
+import reducer from './reducers/index';
 import Routes from './routes';
 
-class Root extends React.Component<{}, {}> {
-  render() {
-    return Routes;
-  }
-}
+let store = createStore(reducer);
 
-render(<Root />, document.getElementById('root'));
+const Root = (store) => (
+      <Provider store={store}>
+        { Routes }
+      </Provider>
+    );
+
+render(
+  <Root />,
+  document.getElementById('root')
+);
