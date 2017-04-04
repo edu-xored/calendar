@@ -70,6 +70,7 @@ export function findUserByLogin(login: string): Promise<User> {
 }
 
 let initialized = false;
+let initError = null;
 
 function createdb(): Promise<any> {
   if (config.dialect === 'postgres') {
@@ -95,22 +96,30 @@ function createdb(): Promise<any> {
 }
 
 export function initdb(): Promise<any> {
-  const init: any = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (initialized) {
-      return resolve(true);
+      return initError ? reject(initError) : resolve(true);
     }
+
+    const onSuccess = () => {
+      initialized = true;
+      resolve(true);
+    };
+
     const onError = (err: any) => {
       initialized = true;
+      initError = err;
       reject(err);
     };
-    return orm.sync({logging: console.log}).then(() => {
-      initData().then(() => {
-        initialized = true;
-        resolve(true);
-      }, onError);
-    }, onError);
+
+    const sync = () => orm.sync({logging: console.log});
+
+    return createdb()
+      .then(sync)
+      .then(initData)
+      .then(onSuccess)
+      .catch(onError);
   });
-  return createdb().then(init);
 }
 
 function initData() {
