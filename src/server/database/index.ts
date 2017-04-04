@@ -8,6 +8,7 @@ import {ID} from './common';
 import {User, Team, TeamMember} from "../../lib/model";
 
 const passwordHash = require('password-hash');
+const pgtools = require('pgtools');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require("../../../dbconfig.json");
@@ -70,8 +71,31 @@ export function findUserByLogin(login: string): Promise<User> {
 
 let initialized = false;
 
+function createdb(): Promise<any> {
+  if (config.dialect === 'postgres') {
+    return new Promise((resolve, reject) => {
+      const pgconfig = {
+        user: config.username,
+        password: config.password,
+        port: config.port,
+        host: config.host,
+      };
+      pgtools.createdb(pgconfig, config.database, (err, res) => {
+        if (err && err.name === 'duplicate_database') {
+          return resolve(true);
+        }
+        if (err) {
+          console.log(err);
+        }
+        return err ? reject(err) : resolve(res);
+      });
+    });
+  }
+  return Promise.resolve(true);
+}
+
 export function initdb(): Promise<any> {
-  return new Promise((resolve, reject) => {
+  const init: any = new Promise((resolve, reject) => {
     if (initialized) {
       return resolve(true);
     }
@@ -86,6 +110,7 @@ export function initdb(): Promise<any> {
       }, onError);
     }, onError);
   });
+  return createdb().then(init);
 }
 
 function initData() {

@@ -64,6 +64,7 @@
     "object-assign": "^4.1.1",
     "password-hash": "^1.2.2",
     "pg": "6.1.5",
+    "pgtools": "^0.2.3",
     "promise": "^7.1.1",
     "query-string": "^4.3.1",
     "react": "^15.4.2",
