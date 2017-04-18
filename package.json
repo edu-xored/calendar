@@ -89,6 +89,7 @@
     "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
     "json-loader": "^0.5.4",
+    "key-mirror": "^1.0.1",
     "mocha": "^3.2.0",
     "postcss-load-config": "^1.1.0",
     "postcss-loader": "^1.2.2",

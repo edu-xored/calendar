@@ -4,6 +4,7 @@ import history from './history';
 import Blank from './pages/blank';
 import CalendarList from './pages/calendar_list';
 import Calendar from './pages/calendar';
+import MobileIndex from './pages/mobile_index';
 import AdminTeams from './pages/admin/teams';
 import AdminUsers from './pages/admin/users';
 import Login from './pages/login';
@@ -48,6 +49,7 @@ const Routes = (
       <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
     </Route>
     <Route path="/login" component={Login}/>
+    <Route path="/mobile" component={MobileIndex}/>
     <Route path="*" component={Blank}/>
   </Router>
 );
