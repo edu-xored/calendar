@@ -8,7 +8,7 @@ import Routes from './routes';
 
 let store = createStore(reducer);
 
-const Root = (store) => (
+const Root = () => (
       <Provider store={store}>
         { Routes }
       </Provider>
