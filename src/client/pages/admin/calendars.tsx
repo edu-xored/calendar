@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import API from './../api';
-import {Calendar, Team} from "./../../lib/model";
+import API from '../../api';
+import {Calendar, Team} from "../../../lib/model";
 import {Form, Input, Icon, Modal, Button, Container, Header, Image, Table} from 'semantic-ui-react';
-import history from '../history';
+import history from '../../history';
 
 interface CalendarListState {
   calendars: Calendar[];

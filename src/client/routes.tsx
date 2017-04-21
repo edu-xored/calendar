@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router';
 import history from './history';
+import PresencePage from './pages/presence';
 import Blank from './pages/blank';
-import CalendarList from './pages/calendar_list';
+import CalendarList from './pages/admin/calendars';
 import Calendar from './pages/calendar';
 import AdminTeams from './pages/admin/teams';
 import AdminUsers from './pages/admin/users';
@@ -46,6 +47,7 @@ const Routes = (
       <Route path="admin/users" component={AdminUsers} onEnter={requireUser} />
       <Route path="admin/calendars" component={CalendarList} onEnter={requireUser} />
       <Route path="calendar/:id" component={Calendar} onEnter={requireUser}/>
+      <Route path="/presence" component={PresencePage} onEnter={requireUser} />
     </Route>
     <Route path="/login" component={Login}/>
     <Route path="*" component={Blank}/>
