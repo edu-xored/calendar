@@ -1,33 +1,10 @@
-export const A_LOGIN_REQUEST = "LOGIN_REQUEST";
-export const A_LOGIN_INPUT_USERNAME = "LOGIN_INPUT_USERNAME";
-export const A_LOGIN_INPUT_PASSWORD = "LOGIN_INPUT_PASSWORD";
-export const A_LOGIN_ERROR = 'LOGIN_ERROR';
+import { createActions } from 'redux-actions'
 
-export const actionLoginRequest = (e:any) => {
-    return {
-        type: A_LOGIN_REQUEST,
-        userName: e.userName,
-        password: e.password,
-    }
-}
 
-export const actionInputUserName = (e: string) => {
-    return {
-        type: A_LOGIN_INPUT_USERNAME,
-        userName: e
-    }
-}
 
-export const actionInputPassword = (e: string) => {
-    return {
-        type: A_LOGIN_INPUT_PASSWORD,
-        password: e
-    }
-}
-
-export const actionLoginError = (massage: string) => {
-    return {
-        type: A_LOGIN_ERROR,
-        error: massage
-    }
-}
+export const {loginRequest, changeUsername, changePassword, loginError} = createActions({
+    LOGIN_REQUEST: (username:string, password:string) => ({username, password}),
+    CHANGE_USERNAME: (username:string) => ({username}),
+    CHANGE_PASSWORD: (password:string) => ({password}),
+    LOGIN_ERROR: (error:string) => ({error})
+});

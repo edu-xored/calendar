@@ -1,28 +1,47 @@
 import * as React from 'react';
+import { PropTypes } from 'react'
 import { Button, Input } from 'semantic-ui-react';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { store } from '../index'
+import {store} from "../index"
 
 import * as Actions from '../actions/login'
 
 interface LoginState {
-    userName?: string;
+    username?: string;
     password?: string;
     error?: string;
 }
 
+interface LoginDispatch {
+    loginRequest(username:string, password:string);
+    changeUsername(e : string);
+    changePassword(e : string);
+}
+
 function mapStateToProps (state) {
+    console.log(state);
     return {
-        userName: state.loginState.userName,
-        password: state.loginState.password,
-        error: state.loginState.error
+        username: state.login.username,
+        password: state.login.password,
+        error: state.login.error
     }
 }
 
-@connect<LoginState>(mapStateToProps)
-export default class LoginPage extends React.Component<LoginState, any> {
+
+function mapDispatchToProps(dispatch) {
+    return {
+        loginRequest: bindActionCreators(Actions.loginRequest, dispatch),
+        changeUsername: bindActionCreators(Actions.changeUsername, dispatch),
+        changePassword: bindActionCreators(Actions.changePassword, dispatch)
+  }
+}
+
+type LoginProps = LoginState & LoginDispatch;
+
+@connect<LoginProps>(mapStateToProps, mapDispatchToProps)
+export default class LoginPage extends React.Component<LoginProps, any> {
     render() {
         const formStyle = {width: '300px', margin: '50px auto'};
         const inputStyle = {width: '300px'};
@@ -39,7 +58,7 @@ export default class LoginPage extends React.Component<LoginState, any> {
                                 <div className="ui left icon input">
                                     <i className="user icon"></i>
                                     <input type="text" placeholder="Login"
-                                        value={this.props.userName}
+                                        value={this.props.username}
                                         onChange={this.handleUserNameChange.bind(this)}
                                     />
                                 </div>
@@ -63,19 +82,17 @@ export default class LoginPage extends React.Component<LoginState, any> {
   }
 
   handleUserNameChange(e: any) {
-    // this.props.actionInputUserName.bind(e.target.value);
-    store.dispatch(Actions.actionInputUserName(e.target.value));
+    this.props.changeUsername(e.target.value);
   }
 
   handlePasswordChange(e: any) {
-    // this.props.actionInputPassword.bind(e.target.value);
-    store.dispatch(Actions.actionInputPassword(e.target.value));
+   this.props.changePassword(e.target.value);
   }
 
   handleSubmit(e: Event) {
       e.preventDefault();
-      const {userName, password, error} = this.props;
-      store.dispatch(Actions.actionLoginRequest({userName, password}));
+      const {username, password, error} = this.props;
+      this.props.loginRequest(username, password);
 
   }
 }

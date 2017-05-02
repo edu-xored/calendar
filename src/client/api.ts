@@ -12,7 +12,7 @@ function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-function setToken(value: string) {
+export function setToken(value: string) {
   localStorage.setItem(TOKEN_KEY, value);
 }
 

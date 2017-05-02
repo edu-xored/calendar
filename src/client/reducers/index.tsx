@@ -8,6 +8,6 @@ const reducer = (store = 0, action) => {
 
 export default combineReducers({
   // our reducers go here
-   loginState: reducerLogin,
+   login: reducerLogin,
    reducer: reducer
 });
