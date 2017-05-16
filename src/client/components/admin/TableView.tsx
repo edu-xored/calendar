@@ -9,7 +9,7 @@ interface ITableViewState {
     modalIsOpen: boolean;
     modalData: any;
     modalAction: (d: any) => void;
-};
+}
 
 interface ITableViewProps {
     defaultModalData: any;

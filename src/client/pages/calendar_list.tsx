@@ -111,13 +111,13 @@ export default class CalendarList extends React.Component<{}, {}> {
               <Modal.Content>
                 <Form onSubmit={onEdit}>
                   <Form.Input label='Name' name='name' placeholder='Name' value={this.state.editCalendarName}
-                              onChange={(e) => {this.setState({editCalendarName: e.target.value,});}}/>
+                              onChange={(e) => { this.setState({editCalendarName: e.target.value}); }}/>
                   <Form.Input name='description' label='Description' placeholder='Put a description'
                               value={this.state.editCalendarDesc}
-                              onChange={(e) => {this.setState({editCalendarDesc: e.target.value,});}}/>
+                              onChange={(e) => { this.setState({editCalendarDesc: e.target.value}); }}/>
                   <Form.Select name='team' label="Team" options={teams} placeholder='Team'
                                value={this.state.editCalendarTeam}
-                               onChange={(e) => {this.setState({editCalendarTeam: e.target.value,});}}/>
+                               onChange={(e) => { this.setState({editCalendarTeam: e.target.value}); }}/>
                   <Button color='green' type='submit' fluid>
                     <Icon name='checkmark'/> Update
                   </Button>
@@ -191,13 +191,13 @@ export default class CalendarList extends React.Component<{}, {}> {
                   <Modal.Content>
                     <Form onSubmit={onCreate}>
                       <Form.Input label='Name' name='name' placeholder='Name' value={this.state.editCalendarName}
-                                  onChange={(e) => {this.setState({editCalendarName: e.target.value,});}}/>
+                                  onChange={(e) => { this.setState({editCalendarName: e.target.value}); }}/>
                       <Form.Input name='description' label='Description' placeholder='Put a description'
                                   value={this.state.editCalendarDesc}
-                                  onChange={(e) => {this.setState({editCalendarDesc: e.target.value,});}}/>
+                                  onChange={(e) => { this.setState({editCalendarDesc: e.target.value}); }}/>
                       <Form.Select name='team' label="Team" options={teams} placeholder='Team'
                                    value={this.state.editCalendarTeam}
-                                   onChange={(e) => {this.setState({editCalendarTeam: e.target.value,});}}/>
+                                   onChange={(e) => { this.setState({editCalendarTeam: e.target.value}); }}/>
                       <Button color='green' type='submit' fluid>
                         <Icon name='checkmark'/> Create
                       </Button>

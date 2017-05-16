@@ -15,11 +15,12 @@ export default class Controls extends React.Component<any, any> {
 
   render() {
     const headerRowData = this.getHeaderRowData(this.props.currentMonth, this.props.currentYear);
-    const headerRow = <Row
-                        id={'header-row'}
-                        rowData={ headerRowData }
-                        handleOnCellClick={ ()=>{} }
-                      />;
+    const headerRow = (
+      <Row id="header-row"
+           rowData={ headerRowData }
+           handleOnCellClick={ () => {} }
+      />
+    );
     return (
       <div className='calendar-controls-wrapper'>
         <div className='controls-row'>
@@ -35,7 +36,7 @@ export default class Controls extends React.Component<any, any> {
   }
 
   getHeaderRowData(month: number, year: number) {
-    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDay = new Date(year, month, 1).getDay();
     return [...Array(daysInMonth).keys()].map(index => {
       return {
@@ -44,7 +45,7 @@ export default class Controls extends React.Component<any, any> {
           date: index + 1,
           day: Controls.weekday[(firstDay + index) % 7]
         }
-      }
+      };
     });
   }
 }

@@ -7,17 +7,12 @@ export default class EventList extends React.Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
-    document
-      .getElementsByClassName('')
-  }
-
   render() {
     const eventList = this.props.eventList;
     const paragraph = (
-      <div className={ eventList.length == 1 ? '' : 'events-count-info' }>
+      <div className={ eventList.length === 1 ? '' : 'events-count-info' }>
         {
-          eventList.length == 1?
+          eventList.length === 1 ?
             eventList[0].comment :
             eventList.length + " events..."
         }
@@ -37,7 +32,7 @@ export default class EventList extends React.Component<any, any> {
     return (
       <div className='incell-event-list' style={ {'background': colors.bgColor, 'color': colors.textColor} }>
         {
-          eventList.length > 1? popup : paragraph
+          eventList.length > 1 ? popup : paragraph
         }
       </div>
     );

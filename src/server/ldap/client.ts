@@ -82,7 +82,7 @@ async function compare(client: ldap.Client, dn: ldap.DN, attribute: string,
                 resolve();
             });
     });
-};
+}
 
 /**
  * Parses users attributes from the SearchEntry.

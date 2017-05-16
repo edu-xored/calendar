@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
 
-const reducer = (store = 0, action) => {
-  return Object.assign({}, store);
-}
+import  reducerLogin  from './login';
 
 export default combineReducers({
   // our reducers go here
-  reducer
+   login: reducerLogin,
 });

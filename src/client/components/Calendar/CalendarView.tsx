@@ -24,7 +24,7 @@ interface ICalendarViewState {
   currentMonth: number;
   currentYear: number;
   submitBy: number;
-};
+}
 
 const defaultState = {
   calendar: null,
@@ -38,27 +38,28 @@ const defaultState = {
   submitBy: null
 };
 
-
 // constants to sync DOM elements' scroll
 const USER_LIST_CLASS_NAME = 'user-list';
 const GRID_CLASS_NAME = 'grid-body';
 
 export default class CalendarView extends React.Component<any, ICalendarViewState> {
+  // FIXME don't mutate global state
+  static mouseOnElement: string = null;
 
-static mouseOnElement: string = null;
-state: ICalendarViewState = defaultState;
-static contextTypes = {
-  router: React.PropTypes.object
-}
+  state: ICalendarViewState = defaultState;
+
+  static contextTypes = {
+    router: React.PropTypes.object
+  };
 
   componentDidMount() {
     document
       .getElementsByClassName(GRID_CLASS_NAME)[0]
-      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = GRID_CLASS_NAME });
+      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = GRID_CLASS_NAME; });
 
     document
       .getElementsByClassName(USER_LIST_CLASS_NAME)[0]
-      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = USER_LIST_CLASS_NAME });
+      .addEventListener('mouseover', () => { CalendarView.mouseOnElement = USER_LIST_CLASS_NAME; });
 
     this.updateData();
   }
@@ -114,9 +115,9 @@ static contextTypes = {
         events: events.filter((event) => {
           const date = new Date(event.start);
 
-          return event.userId == tm.id &&
-                 date.getMonth() == this.state.currentMonth &&
-                 date.getFullYear() == this.state.currentYear
+          return event.userId === tm.id &&
+                 date.getMonth() === this.state.currentMonth &&
+                 date.getFullYear() === this.state.currentYear;
         })
       })
     );
@@ -143,25 +144,26 @@ static contextTypes = {
   }
 
   showEventModal(action: string, initDate, submitBy: number) {
-    if (action == Constants.ADD_NEW_EVENT) {
+    if (action === Constants.ADD_NEW_EVENT) {
       console.log('submitBy:', submitBy);
-      this.setState(Object.assign(
-        { showEventModal: true, eventModalAction: action,
-          submitBy: submitBy }
-      ));
+      this.setState(Object.assign({
+        showEventModal: true, eventModalAction: action,
+        submitBy: submitBy
+      }));
     }
   }
 
   hideEventModal() {}
 
   closeEventModal() {
-    this.setState(Object.assign(
-      { showEventModal: false, eventModalAction:null }
-    ));
+    this.setState(Object.assign({
+      showEventModal: false,
+      eventModalAction: null
+    }));
   }
 
   onEventSubmit({ comment, start, end, type }) {
-    if (this.state.eventModalAction == Constants.ADD_NEW_EVENT) {
+    if (this.state.eventModalAction === Constants.ADD_NEW_EVENT) {
       API.events.create({
         calendarId: +(this.context as any).router.params.id,
         type: type,
@@ -202,16 +204,15 @@ static contextTypes = {
     const userList = document.getElementsByClassName(USER_LIST_CLASS_NAME)[0];
     const grid = document.getElementsByClassName(GRID_CLASS_NAME)[0];
 
-      if (CalendarView.mouseOnElement == USER_LIST_CLASS_NAME) {
-        grid.scrollTop = userList.scrollTop;
-      }
-      else if (CalendarView.mouseOnElement == GRID_CLASS_NAME) {
-        userList.scrollTop = grid.scrollTop;
-      }
+    if (CalendarView.mouseOnElement === USER_LIST_CLASS_NAME) {
+      grid.scrollTop = userList.scrollTop;
+    } else if (CalendarView.mouseOnElement === GRID_CLASS_NAME) {
+      userList.scrollTop = grid.scrollTop;
+    }
   }
 }
 
-async function fetchCalendarData(calendarId: string) : Promise<any> {
+async function fetchCalendarData(calendarId: string): Promise<any> {
   try {
     const calendar = await API.calendars.get(calendarId);
     const team = await API.teams.getMembers(calendar.teamId);
@@ -221,10 +222,10 @@ async function fetchCalendarData(calendarId: string) : Promise<any> {
     console.log('Fetched team:', team);
     console.log('Fetched events:', allEvents);
 
-    const events = allEvents.filter(e => (e.calendarId == calendarId));
+    const events = allEvents.filter(e => (e.calendarId === calendarId));
 
     return { calendar, team, events};
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     return null;
   }
