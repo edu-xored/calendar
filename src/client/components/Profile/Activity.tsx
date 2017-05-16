@@ -10,8 +10,8 @@ interface IActivityItemProps {
 class ActivityItem extends React.Component<IActivityItemProps, {}> {
   render() {
     return(
-      <li className="ui segment" style={{margin:"10px"}}>
-        <div className="contetnt">
+      <li className="ui segment" style={{margin: "10px"}}>
+        <div className="content">
             <div className="header">
                 <h5>{"Date: " + this.props.date}</h5>
             </div>

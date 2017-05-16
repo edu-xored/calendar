@@ -1,6 +1,6 @@
-import {handleActions} from 'redux-actions'
+import {handleActions} from 'redux-actions';
 
-import {changePassword, loginError, loginRequest, changeUsername} from '../actions/login'
+import {changePassword, loginError, loginRequest, changeUsername} from '../actions/login';
 
 const defoultState = {
     username: '',

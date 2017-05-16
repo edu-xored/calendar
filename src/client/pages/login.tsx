@@ -1,12 +1,8 @@
 import * as React from 'react';
-import { PropTypes } from 'react'
-import { Button, Input } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import {store} from "../index"
-
-import * as Actions from '../actions/login'
+import * as Actions from '../actions/login';
 
 interface LoginState {
     username?: string;
@@ -15,27 +11,26 @@ interface LoginState {
 }
 
 interface LoginDispatch {
-    loginRequest(username:string, password:string);
-    changeUsername(e : string);
-    changePassword(e : string);
+    loginRequest(username: string, password: string);
+    changeUsername(e: string);
+    changePassword(e: string);
 }
 
 function mapStateToProps (state) {
-    console.log(state);
-    return {
-        username: state.login.username,
-        password: state.login.password,
-        error: state.login.error
-    }
+  console.log(state);
+  return {
+      username: state.login.username,
+      password: state.login.password,
+      error: state.login.error
+  };
 }
 
-
 function mapDispatchToProps(dispatch) {
-    return {
-        loginRequest: bindActionCreators(Actions.loginRequest, dispatch),
-        changeUsername: bindActionCreators(Actions.changeUsername, dispatch),
-        changePassword: bindActionCreators(Actions.changePassword, dispatch)
-  }
+  return {
+    loginRequest: bindActionCreators(Actions.loginRequest, dispatch),
+    changeUsername: bindActionCreators(Actions.changeUsername, dispatch),
+    changePassword: bindActionCreators(Actions.changePassword, dispatch)
+  };
 }
 
 type LoginProps = LoginState & LoginDispatch;
@@ -45,7 +40,7 @@ export default class LoginPage extends React.Component<LoginProps, any> {
     render() {
         const formStyle = {width: '300px', margin: '50px auto'};
         const inputStyle = {width: '300px'};
-        return (        
+        return (
             <div className="ui middle aligned center aligned grid">
                 <div className="column">
                     <form className="ui large form" style={formStyle} onSubmit={this.handleSubmit.bind(this)}>
@@ -66,13 +61,13 @@ export default class LoginPage extends React.Component<LoginProps, any> {
                             <div className="field">
                                 <div className="ui left icon input">
                                     <i className="lock icon"></i>
-                                    <input type="password" placeholder="Password" 
+                                    <input type="password" placeholder="Password"
                                         value={this.props.password}
                                         onChange={this.handlePasswordChange.bind(this)}
                                     />
                                 </div>
                             </div>
-                            {this.props.error ? <p style={{color :'red'}}>Invalid username or password</p> : null}
+                            {this.props.error ? <p style={{color: 'red'}}>Invalid username or password</p> : null}
                             <button type="submit" className="ui fluid large teal submit button">Login</button>
                         </div>
                     </form>

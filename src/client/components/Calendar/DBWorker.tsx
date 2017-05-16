@@ -2,13 +2,12 @@ import * as React from 'react';
 import {User, Team, Calendar, Event} from '../../../lib/model';
 import API from '../../api';
 
-
 const getFormForEntity = (entity: any, formKey: number) => {
   const fields = entity.props.map((prop, index) => {
     return (
-      <div className='form-field' key={''+index}>
-        <label htmlFor={''+prop}>{ prop }</label>
-        <input type='text' id={''+prop}/>
+      <div className="form-field" key={index}>
+        <label htmlFor={prop}>{prop}</label>
+        <input type="text" id={prop}/>
       </div>
     );
   });
@@ -20,7 +19,7 @@ const getFormForEntity = (entity: any, formKey: number) => {
       <button type='submit'>{`Add ${entity.type}`}</button>
     </form>
   );
-}
+};
 
 const onCalendarFormSubmit = (e) => {
   console.log('Adding a calendar to db');
@@ -32,10 +31,11 @@ const onCalendarFormSubmit = (e) => {
       description: e.target.description.value.trim(),
       teamId: e.target.teamId.value.trim()
     }).then(res => console.log(res));
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 };
+
 const onUserFormSubmit = (e) => {
   e.preventDefault();
   try {
@@ -47,13 +47,14 @@ const onUserFormSubmit = (e) => {
       position: e.target.position.value.trim(),
       place: e.target.place.value.trim(),
     }).then(res => console.log(res));
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 };
+
 const onEventFormSubmit = (e) => {
   e.preventDefault();
-  };
+};
 
 const  onTeamFormSubmit = (e) => {
 
@@ -74,17 +75,16 @@ const  onTeamFormSubmit = (e) => {
       description: e.target.description.value.trim(),
       members: allUsers
     }).then(res => console.log(res));
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 
   try {
     API.teams.getList()
     .then(res => console.log(res));
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
-
 };
 
 export default class DBWorker extends React.Component<any, any> {

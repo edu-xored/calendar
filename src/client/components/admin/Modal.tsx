@@ -16,7 +16,7 @@ const customStyles = {
 
 interface IModalState {
     entity: any;
-};
+}
 
 interface IModalProps {
     entity: any;

@@ -49,7 +49,7 @@ server.compare(BASE, [authorize],
     let val = user[req.attribute];
     if (val === req.value) {
       matches = true;
-    };
+    }
 
     res.end(matches);
     return next();

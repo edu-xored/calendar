@@ -27,7 +27,7 @@ export default class Row extends React.Component<any, any> {
 }
 
 const prepareData = (data) => {
-  switch(data.type) {
+  switch (data.type) {
     case 'user':
       return getUserComponent(data.content);
     case 'date':
@@ -37,7 +37,7 @@ const prepareData = (data) => {
     default:
       return undefined;
   }
-}
+};
 
 const getUserComponent = (user) => {
   return (
@@ -47,7 +47,7 @@ const getUserComponent = (user) => {
       </h5>
     </div>
   );
-}
+};
 
 const getDateComponent = (date) => {
   return (
@@ -57,7 +57,7 @@ const getDateComponent = (date) => {
       </p>
     </div>
   );
-}
+};
 
 const eventColors = [
   {textColor: '#F7C413', bgColor: 'rgba(255,252,124,0.3)'}, // yellow
@@ -69,9 +69,11 @@ const eventColors = [
 ];
 
 const getEventComponent = (content) => {
-  if (content.eventList.length == 0) return undefined;
+  if (content.eventList.length === 0) {
+    return undefined;
+  }
 
   const colorIndex = content.eventList[0].id % eventColors.length;
   const colors = eventColors[colorIndex];
-  return <EventList eventList={ content.eventList } colors={ colors }/>
-}
+  return <EventList eventList={ content.eventList } colors={ colors }/>;
+};
