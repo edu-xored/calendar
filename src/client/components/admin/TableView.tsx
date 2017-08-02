@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Table, Container, Icon } from 'semantic-ui-react';
-
 import Modal from './Modal';
+
 
 interface ITableViewState {
     data: any[];
@@ -18,8 +18,17 @@ interface ITableViewProps {
     api: any;
 }
 
-export default class TableView extends React.Component<ITableViewProps, ITableViewState> {
-    defaultState = {
+interface ITableViewDispatch {
+    changeData(data: any[]);
+    changeModalData(data: any);
+    changeModalVisible(modalIsOpen: boolean);
+    changeModalAction(modalAction: (d: any) => void);
+}
+
+type TableViewProps = ITableViewProps & ITableViewState & ITableViewDispatch;
+
+export default class TableView extends React.Component<TableViewProps, {}> {
+    defaultProps = {
         data: [],
         modalIsOpen: false,
         modalData: this.props.defaultModalData,
@@ -28,13 +37,24 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
 
     constructor(props) {
         super(props);
-        this.state = this.defaultState;
+        console.log("Constructor Table View: ",this.props.data, this.props.modalData, this.props.modalIsOpen);
         this.init();
     }
 
     init = () => {
         this.props.api.getList().then((entities: any[]) => {
-            this.setState(Object.assign({}, this.state, { data: entities }));
+            //this.setState(Object.assign({}, this.state, { data: entities }));
+            let state = {
+                data: this.props.data,
+                modalData: this.props.modalData,
+                modalIsOpen: this.props.modalIsOpen,
+                modalAction: this.props.modalAction
+            }
+            state = Object.assign({}, state, { data: entities });
+            this.props.changeData(state.data);
+            this.props.changeModalData(state.modalData);
+            this.props.changeModalVisible(state.modalIsOpen);
+            this.props.changeModalAction(state.modalAction);
         });
     }
 
@@ -65,20 +85,40 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
           modalIsOpen: true,
         };
         if (id) {
-            state.modalData = this.state.data.find(t => t.id === id);
+            state.modalData = this.props.data.find(t => t.id === id);
             state.modalAction = this.edit;
         }
-        this.setState(state);
+        //this.setState(state);
+        this.props.changeModalData(state.modalData);
+        this.props.changeModalVisible(state.modalIsOpen);
+        this.props.changeModalAction(state.modalAction);
     }
 
     closeModal = () => {
-        this.setState(Object.assign({}, this.state, { modalIsOpen: false }));
+        let state = {
+                data: this.props.data,
+                modalData: this.props.modalData,
+                modalIsOpen: this.props.modalIsOpen,
+                modalAction: this.props.modalAction
+        }
+        state = Object.assign({}, state, { modalIsOpen: false });
+        this.props.changeData(state.data);
+        this.props.changeModalData(state.modalData);
+        this.props.changeModalVisible(state.modalIsOpen);
+        this.props.changeModalAction(state.modalAction);
     }
 
     render() {
         return (
             <div>
-                <Modal entity={this.state.modalData} fields={this.props.modalFields} action={this.state.modalAction} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
+                <Modal 
+                    entity={this.props.modalData} 
+                    fields={this.props.modalFields} 
+                    action={this.props.modalAction} 
+                    closeModal={this.closeModal} 
+                    modalIsOpen={this.props.modalIsOpen} 
+                    changeEntity={this.props.changeModalData} 
+                />
                 <Container>
                     <Table>
                         <Table.Header fullWidth={false}>
@@ -89,14 +129,14 @@ export default class TableView extends React.Component<ITableViewProps, ITableVi
                                     </Table.HeaderCell>
                                 ))
                             }
-                            <Table.HeaderCell>
+                            <Table.HeaderCell key={'add'}>
                                 <button onClick={() => this.openModal()}>
                                     <Icon name='add' />
                                 </button>
                             </Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
-                            { _.map(this.state.data, (entity) => this.renderRow(entity)) }
+                            { _.map(this.props.data, (entity) => this.renderRow(entity)) }
                         </Table.Body>
                     </Table>
                 </Container >
