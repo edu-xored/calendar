@@ -26,31 +26,40 @@ interface IModalProps {
     action: (entity: any) => void;
 }
 
-export default class Modal extends React.Component<IModalProps, IModalState> {
+interface IDispatchProps {
+    changeEntity(e: any);
+}
+
+type ModalProps = IModalProps & IDispatchProps;
+
+export default class Modal extends React.Component<ModalProps, {}> {
     constructor(props) {
         super(props);
-        this.state = { entity: this.props.entity };
+        //this.state = { entity: this.props.entity };
     }
 
     componentWillReceiveProps(nextProps: IModalProps) {
-        this.setState({ entity: nextProps.entity });
+        //this.setState({ entity: nextProps.entity });
+        this.props.changeEntity(nextProps);
     }
 
     apply = () => {
-        this.props.action(this.state.entity);
+        this.props.action(this.props.entity);
         this.props.closeModal();
     }
 
     renderEditField(fieldName: string) {
+
         const handleOnChange = (e: any) => {
-            let state = this.state;
-            this.state.entity[fieldName] = e.target.value;
-            this.setState(state);
+            const entity = Object.assign({}, this.props.entity, {fieldName: e.target.value});
+            this.props.changeEntity(entity);
+            return entity;
         };
-        return (
+
+        return (     
             <div id={`edit-field-${fieldName}`} key={fieldName} >
                 <label>{fieldName}:</label>
-                <input placeholder={fieldName} value={this.state.entity[fieldName]} onChange={handleOnChange} />
+                <input placeholder={fieldName} value={this.props.entity[fieldName]} onChange={handleOnChange} />
             </div>
         );
     }

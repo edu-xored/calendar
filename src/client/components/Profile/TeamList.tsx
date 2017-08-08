@@ -39,7 +39,7 @@ export class TeamList extends React.Component<TeamListProps, {}> {
   render() {
     return(
       <div className="ui card">
-        <ul type = "none">
+        <ul style={{type:'none'}}>
           {this.renderItems()}
         </ul>
       </div>
