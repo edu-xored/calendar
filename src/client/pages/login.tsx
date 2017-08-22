@@ -17,7 +17,6 @@ interface LoginDispatch {
 }
 
 function mapStateToProps (state) {
-  console.log(state);
   return {
       username: state.login.username,
       password: state.login.password,

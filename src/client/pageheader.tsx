@@ -41,6 +41,11 @@ const menu: MenuItem[] = [
     text: 'Reports',
     link: '/reports',
   },
+  {
+    name: 'usercalendar',
+    text: 'UserCalendar',
+    link: '/usercalendar',
+  }
   /*
   {
     name: 'user',

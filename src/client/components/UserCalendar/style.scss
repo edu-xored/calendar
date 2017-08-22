@@ -1,0 +1,60 @@
+
+.calendar-grid {
+    width: 280px;
+    height: 200px;
+    background: #FFFFFF;
+}
+
+.calendar-grid > table > thead > tr {
+    //box-shadow: 0 15px 15px 4px rgba(0,0,0,0.2);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.calendar-grid > table > tbody > tr > td > .cell {
+        width: 40px;
+        height: 40px;
+        border: none;
+        text-align: center;
+}
+
+.calendar-grid > table > thead > tr > td > .cell {
+        width: 40px;
+        height: 40px;
+        border: none;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+}
+
+
+.cell-enable {
+    color: #000000; 
+}
+
+.calendar-grid > table > tbody > tr > td > .cell .cell-disable {
+    color: #C0C0C0; 
+}
+
+.cell-isSelected {
+    background: linear-gradient(to bottom, #fefcea, #ffff73);
+}
+
+.button-panel {
+    background: #000FFF;
+    color: #FFFFFF;
+    text-align: center;
+    width: 280px;
+    height: 50px;
+}
+
+.button-panel > table > tbody > tr > td {
+    height: 50px;
+    border: 1px solid #FFFFFF;
+    text-align: center;
+}
+
+
+
