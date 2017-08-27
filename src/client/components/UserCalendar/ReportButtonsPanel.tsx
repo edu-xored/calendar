@@ -19,6 +19,10 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
         this.state = {panelId: FIRST_PANEL};
     }
 
+    onButtonClick(e: any) {
+        this.props.onReportButtonClick.bind(e.target.id);
+    }
+
     renderPanels() {
         let obj;
         switch (this.state.panelId) {
@@ -36,17 +40,17 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
                 obj = 
                     <tr>
                         <td>
-                            <div id='PTO' onClick={this.props.onReportButtonClick.bind(this)}>
+                            <div id='PTO' onClick={this.onButtonClick.bind(this)}>
                                 PTO
                             </div>
                         </td>
                         <td>
-                            <div id='PTO/2' onClick={this.props.onReportButtonClick.bind(this)}>
+                            <div id='PTO/2' onClick={this.onButtonClick.bind(this)}>
                                 PTO/2
                             </div>
                         </td>
                         <td>
-                            <div id='WFH' onClick={this.props.onReportButtonClick.bind(this)}>
+                            <div id='WFH' onClick={this.onButtonClick.bind(this)}>
                                 WFH
                             </div>
                         </td>
@@ -61,12 +65,12 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
                 obj = 
                     <tr>
                         <td>
-                            <div id='BRB' onClick={this.props.onReportButtonClick.bind(this)}>
+                            <div id='BRB' onClick={this.onButtonClick.bind(this)}>
                                 BRB
                             </div>
                         </td>
                         <td>
-                            <div id='WHERE AM I' onClick={this.props.onReportButtonClick.bind(this)}>
+                            <div id='WHERE AM I' onClick={this.onButtonClick.bind(this)}>
                                 WHERE AM I
                             </div>
                         </td>

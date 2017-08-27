@@ -25,14 +25,14 @@ const reducerUserCalendar = handleActions({
         console.log(action.payload);
         console.log(state);
         return ({
-        enterDate: action.payload.enterDate,
+        enterDate: state.enterDate,
         enterMonth: action.payload.enterMonth,
         enterYear: state.enterYear,
         calendarId: state.calendarId,
         typeOfEvent: state.typeOfEvent
     });},
     [setEnterYear]: (state, action) => ({
-        enterDate: action.payload.enterDate,
+        enterDate: state.enterDate,
         enterMonth: state.enterMonth,
         enterYear: action.payload.enterYear,
         calendarId: state.calendarId,

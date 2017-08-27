@@ -24,19 +24,20 @@ export default class UserCalendarView extends React.Component<IUserCalendarViewP
 
     constructor(props) {
         super(props);
-
+        this.props.setCalendarId("usercalendar");
     }
 
-    onReportButtonClick(e) {
-        console.log(e.target.id);
+    onReportButtonClick(e: any) {
+        this.props.setTypeOfEvent(e.target.id);
+        //console.log(e.target.id);
         //this.props.setTypeOfEvent(e.target.id);
         //this.props.setCalendarId('userCalendar');
         history.push('trackstatuspage');
     }
 
     onCellClickHandle(valueOfCell) {
-       console.log(valueOfCell);
-       //this.props.setEnterDate(valueOfCell);
+       //console.log(valueOfCell);
+       this.props.setEnterDate(valueOfCell);
     }
 
     render() {
@@ -83,7 +84,7 @@ export default class UserCalendarView extends React.Component<IUserCalendarViewP
                     <UserCalendarGrid year={now.year()} month={now.month()} onCellClickHandle={this.onCellClickHandle.bind(this)}/>
                 </div>
                 <div className='button-panel'>
-                    <ReportButtonsPanel onReportButtonClick={this.onReportButtonClick} />
+                    <ReportButtonsPanel onReportButtonClick={this.onReportButtonClick.bind(this)} />
                 </div>
             </div>
         );

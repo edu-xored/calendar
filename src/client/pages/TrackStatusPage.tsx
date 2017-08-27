@@ -10,7 +10,7 @@ function mapStateToProps(state) {
         enterDate: state.userCalendar.enterDate,
         enterMonth: state.userCalendar.enterMonth,
         enterYear: state.userCalendar.enterYear,
-        caledarId: state.userCalendar.caledarId,
+        caledarId: state.userCalendar.calendarId,
         typeOfEvent: state.userCalendar.typeOfEvent
     });
 }

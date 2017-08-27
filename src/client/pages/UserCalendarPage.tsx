@@ -28,18 +28,23 @@ function mapDispatchToProps(dispatch) {
     });
 }
 
-interface IUserCalendarPageProps {
+interface IUserCalendarPageState {
     enterDate: number;
     enterMonth: number;
     enterYear: number;
     caledarId: string;
     typeOfEvent: string;
+}
+
+interface IUserCalendarPageDispatch {
     setEnterDate(enterDate: number);
     setEnterMonth(enterMonth: number);
     setEnterYear(enterYear: number);
     setCalendarId(calendarId: string);
     setTypeOfEvent(typeOfEvent: string);
 }
+
+type IUserCalendarPageProps = IUserCalendarPageState & IUserCalendarPageDispatch;
 
 @connect<IUserCalendarPageProps>(mapStateToProps, mapDispatchToProps)
 export default class UserCalendarPage extends React.Component<IUserCalendarPageProps, {}> {
