@@ -20,7 +20,7 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
     }
 
     onButtonClick(e: any) {
-        this.props.onReportButtonClick.bind(e.target.id);
+        this.props.onReportButtonClick(e.target.id);
     }
 
     renderPanels() {
@@ -29,7 +29,7 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
             case FIRST_PANEL:
                 obj = 
                     <tr>
-                        <td>
+                        <td style={{width: '100vw'}}>
                             <div id={FIRST_PANEL} onClick={this.changePanel.bind(this)}>
                                 TODAY
                             </div>
@@ -39,22 +39,22 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
             case SECOND_PANEL:
                 obj = 
                     <tr>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id='PTO' onClick={this.onButtonClick.bind(this)}>
                                 PTO
                             </div>
                         </td>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id='PTO/2' onClick={this.onButtonClick.bind(this)}>
                                 PTO/2
                             </div>
                         </td>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id='WFH' onClick={this.onButtonClick.bind(this)}>
                                 WFH
                             </div>
                         </td>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id={SECOND_PANEL} onClick={this.changePanel.bind(this)}>
                                 •••
                             </div>
@@ -64,17 +64,17 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
             case THIRD_PANEL:
                 obj = 
                     <tr>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id='BRB' onClick={this.onButtonClick.bind(this)}>
                                 BRB
                             </div>
                         </td>
-                        <td>
+                        <td style={{width: '50vw'}}>
                             <div id='WHERE AM I' onClick={this.onButtonClick.bind(this)}>
                                 WHERE AM I
                             </div>
                         </td>
-                        <td>
+                        <td style={{width: '25vw'}}>
                             <div id={THIRD_PANEL} onClick={this.changePanel.bind(this)}>
                                 •••
                             </div>

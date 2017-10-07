@@ -2,14 +2,15 @@ import * as React from 'react';
 import * as Moment from 'moment';
 import API from '../../api';
 import history from './../../history';
-import {Event} from '../../../lib/model';
+import {Event, User} from '../../../lib/model';
 
 
 interface ITSPProps {
     type: string;
-    date: any;
-    calendarId: string;
-    userId: string;
+    startDate: any;
+    endDate: any;
+    calendarId: (user: User) => Promise<string>;
+    user: User;
 }
 
 interface ITSPState {
@@ -21,20 +22,25 @@ export default class TrackStatusPage extends React.Component<ITSPProps, ITSPStat
     constructor(props) {
         super(props);
         this.state = {commentText: ''};
-        console.log(props);
+        console.log("constr view", props);
+        
     }
 
-    onClickConfirm(e) {
+    async onClickConfirm() {
+        let calendarId = await this.props.calendarId(this.props.user); 
+
         let ev: Event;
         ev.type = this.props.type;
-        ev.calendarId = this.props.calendarId;
-        ev.userId = '';
+        ev.calendarId = calendarId;
+        ev.userId = this.props.user.id;
         ev.comment = this.state.commentText;
         ev.duration = this.props.type === 'PTO/2' ? '0.5d' : '1d';
-        ev.start = new Date(this.props.date.year(), this.props.date.month(), this.props.date.date());
-        ev.end = ev.start;
+        ev.start = this.props.startDate;
+        ev.end = this.props.endDate;
 
-        //API.events.create(ev);
+        API.events.create(ev).then( 
+            d => console.log(d)
+        );
         history.push('usercalendar');
     }
 
@@ -45,14 +51,14 @@ export default class TrackStatusPage extends React.Component<ITSPProps, ITSPStat
                     <span>
                         <div>
                             {
-                                this.props.date.format('D MMMM')
+                                //this.props.date.format('D MMMM')
                             }
                         </div>
                     </span>
                     <span>
                         <div>
                             {
-                                this.props.date.format('YYYY')
+                                //this.props.date.format('YYYY')
                             }
                         </div>
                     </span>

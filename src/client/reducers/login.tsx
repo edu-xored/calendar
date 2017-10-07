@@ -1,34 +1,46 @@
 import {handleActions} from 'redux-actions';
 
-import {changePassword, loginError, loginRequest, changeUsername} from '../actions/login';
+import {changePassword, loginError, loginRequest, changeUsername, loginSuccess} from '../actions/login';
 
 const defoultState = {
     username: '',
     password: '',
-    error: NaN
+    error: NaN,
+    user: NaN
 };
 
 const reducerLogin = handleActions({
     [loginRequest]: (state, action) => ({
         username: action.payload.username,
         password: action.payload.password,
-        error: state.error
+        error: state.error,
+        user: state.user
     }),
     [changePassword]: (state, action) => ({
         username: state.username,
         password: action.payload.password,
-        error: state.error
+        error: state.error,
+        user: state.user
     }),
     [changeUsername]: (state, action) => ({
         username: action.payload.username,
         password: state.password,
-        error: state.error
+        error: state.error,
+        user: state.user
     }),
     [loginError]: (state, action) => ({
         username: state.username,
         password: state.password,
-        error: action.payload.error
-    })
+        error: action.payload.error,
+        user: state.user
+    }),
+    [loginSuccess]: (state, action) => {
+    return ({
+        username: state.username,
+        password: state.password,
+        error: state.error,
+        user: action.payload.user
+    });}
 }, {
     state: defoultState
 });

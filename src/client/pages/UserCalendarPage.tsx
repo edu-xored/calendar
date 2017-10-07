@@ -2,79 +2,128 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as moment from 'moment';
-
-
-import UserCalendarView from './../components/UserCalendar/UserCalendarView';
+import history from './../history';
 import * as Actions from './../actions/UserCalendar';
 
+import UserCalendarGrid from './../components/UserCalendar/UserCalendarGrid';
+import ReportButtonsPanel from './../components/UserCalendar/ReportButtonsPanel';
 
 function mapStateToProps(state) {
     return ({
-        enterDate: state.userCalendar.enterDate,
-        enterMonth: state.userCalendar.enterMonth,
-        enterYear: state.userCalendar.enterYear,
-        caledarId: state.userCalendar.caledarId,
+        enterStartDate: state.userCalendar.enterStartDate,
+        enterEndDate: state.userCalendar.enterEndDate,
+        enterCalendarGrid: state.userCalendar.enterCalendarGrid,
         typeOfEvent: state.userCalendar.typeOfEvent
     });
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-        setEnterDate: bindActionCreators(Actions.setEnterDate, dispatch),
-        setEnterMonth: bindActionCreators(Actions.setEnterMonth, dispatch),
-        setEnterYear: bindActionCreators(Actions.setEnterYear, dispatch),
-        setCalendarId: bindActionCreators(Actions.setCalendarId, dispatch),
+        enterStartDate: bindActionCreators(Actions.setEnterStartDate, dispatch),
+        enterEndDate: bindActionCreators(Actions.setEnterEndDate, dispatch),
+        enterCalendarGrid: bindActionCreators(Actions.setEnterCalendarGrid, dispatch),
         setTypeOfEvent: bindActionCreators(Actions.setTypeOfEvent, dispatch)
     });
 }
 
 interface IUserCalendarPageState {
-    enterDate: number;
-    enterMonth: number;
-    enterYear: number;
-    caledarId: string;
+    enterStartDate: any;
+    enterEndDate: any;
+    enterCalendarGrid: Actions.calendarGrid;
     typeOfEvent: string;
 }
 
 interface IUserCalendarPageDispatch {
-    setEnterDate(enterDate: number);
-    setEnterMonth(enterMonth: number);
-    setEnterYear(enterYear: number);
-    setCalendarId(calendarId: string);
+    setEnterStartDate(enterStartDate: any);
+    setEnterEndDate(enterEndDate: any);
     setTypeOfEvent(typeOfEvent: string);
+    setEnterCalendarGrid(enterCalendarGrid: Actions.calendarGrid);
 }
+
+interface IUserCalendarPageLocalState {
+    enterDate: string;
+}
+
+const END_DATE = "END_DATE";
+const START_DATE = "START_DATE";
 
 type IUserCalendarPageProps = IUserCalendarPageState & IUserCalendarPageDispatch;
 
 @connect<IUserCalendarPageProps>(mapStateToProps, mapDispatchToProps)
-export default class UserCalendarPage extends React.Component<IUserCalendarPageProps, {}> {
+export default class UserCalendarPage extends React.Component<IUserCalendarPageProps, IUserCalendarPageLocalState> {
     static defaultProps = {
         typeOfEvent: '',
-        caledarId: '',
-        enterDate: moment().date(),
-        enterMonth: moment().month(),
-        enterYear: moment().year()
+        enterStartDate: moment(),
+        enterEndDate: moment(),
+        enterCalendarGrid: {month: moment().month(), year: moment().year()}
     }
 
     constructor(props) {
         super(props);
+        this.state = {enterDate: START_DATE};
+    }
+
+    onClickChangeMonthButton(e: any) {
+        let enterTime = moment([this.props.enterCalendarGrid.year, this.props.enterCalendarGrid.month]);
+
+        switch(e.target.id) {
+            case 'increase_month':
+                enterTime.add(1, 'months');
+                break;
+            case 'decrease_month':
+                enterTime.subtract(1, 'months');
+                break;
+        }
+
+        this.props.setEnterCalendarGrid({month: enterTime.month(), year: enterTime.year()});
+    }
+
+    onReportButtonClick(buttonId: any) {
+        this.props.setTypeOfEvent(buttonId);
+        history.push('trackstatuspage');
+    }
+
+    onCellClickHandle(date) {
+       if (this.state.enterDate === START_DATE) {
+            this.props.setEnterStartDate(date);
+            this.setState({enterDate: END_DATE});
+       }
+       else if (this.state.enterDate === END_DATE) {
+            this.props.setEnterEndDate(date);
+            this.setState({enterDate: START_DATE});
+       }
     }
 
     render() {
+        let cd = moment([this.props.enterCalendarGrid.year, this.props.enterCalendarGrid.month]);
+
         return(
             <div>
-                <UserCalendarView 
-                    enterDate={this.props.enterDate}
-                    enterMonth={this.props.enterMonth}
-                    enterYear={this.props.enterYear}
-                    caledarId={this.props.caledarId}
-                    typeOfEvent={this.props.typeOfEvent}
-                    setEnterDate={this.props.setEnterDate}
-                    setEnterMonth={this.props.setEnterMonth}
-                    setEnterYear={this.props.setEnterYear}
-                    setCalendarId={this.props.setCalendarId}
-                    setTypeOfEvent={this.props.setTypeOfEvent}
-                />
+                <div id='head-of-calendar'>
+                    <span className='status'>Status</span>
+                    <span className='statistic'>Statistic</span>
+                </div>
+                <div>
+                    <div id="displayer">
+                        <span id="month">
+                            {cd.format('MMMM')}
+                        </span>
+                        <span id="year">
+                            {cd.format('YYYY')}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <UserCalendarGrid 
+                        month={this.props.enterCalendarGrid.month} 
+                        year={this.props.enterCalendarGrid.year} 
+                        onCellClickHandle={this.onCellClickHandle} 
+                        onClickChangeMonthButton={this.onClickChangeMonthButton}
+                    />
+                </div>
+                <div className='button-panel'>
+                    <ReportButtonsPanel onReportButtonClick={this.onReportButtonClick} />
+                </div>
             </div>
         );
     }

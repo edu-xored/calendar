@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as Moment from 'moment';
 
 interface ICellCalendarProps {
-    value: number;
+    date: any;
     isEnable?: boolean;
     onCellClickHandle(value: number);
 }
@@ -28,7 +29,7 @@ export default class CellCalendar extends React.Component<ICellCalendarProps, {}
             //<div className={ this.state.isSelected ? 'cell cell-isSelected' : 'cell'} onClick={ this.props.isEnable ? this.handleOnCellClick.bind(this) : undefined } >
             <div className='cell'>
                 <div className={this.props.isEnable ? 'cell-enable' : 'cell-disable'} onClick={ this.props.isEnable ? this.handleOnCellClick.bind(this) : undefined }>
-                    {this.props.value}
+                    {this.props.date.date()}
                 </div>
             </div>
         );
@@ -36,6 +37,6 @@ export default class CellCalendar extends React.Component<ICellCalendarProps, {}
 
     handleOnCellClick(e) {
         //this.state.isSelected === false ?  this.setState({isSelected: true}) : this.setState({isSelected: false});
-        this.props.onCellClickHandle(this.props.value);
+        this.props.onCellClickHandle(this.props.date);
     }
 }

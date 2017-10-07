@@ -1,26 +1,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
-
 import TrackStatusView from '../components/UserCalendar/TrackStatusView';
-
+import getCalendarId from './../components/UserCalendar/getCalendarId';
+import {User} from '../../lib/model';
 
 function mapStateToProps(state) {
     return ({
-        enterDate: state.userCalendar.enterDate,
-        enterMonth: state.userCalendar.enterMonth,
-        enterYear: state.userCalendar.enterYear,
-        caledarId: state.userCalendar.calendarId,
-        typeOfEvent: state.userCalendar.typeOfEvent
+        enterStartDate: state.userCalendar.enterStartDate,
+        enterEndDate: state.userCalendar.enterEndDate,
+        typeOfEvent: state.userCalendar.typeOfEvent,
+        user: state.login.user
     });
 }
 
 interface ITrackStatusPageProps {
-    enterDate: number;
-    enterMonth: number;
-    enterYear: number;
-    caledarId: string;
+    enterStartDate: any;
+    enterEndDate: any;
     typeOfEvent: string;
+    user: User;
 }
 
 @connect<ITrackStatusPageProps>(mapStateToProps)
@@ -31,12 +29,17 @@ export default class TrackStatusPage extends React.Component<ITrackStatusPagePro
     }
 
     render() {
-        let time = moment([this.props.enterYear, this.props.enterMonth, this.props.enterDate]);
-        console.log(time);
+
         return (
             <div>
-                <TrackStatusView type={this.props.typeOfEvent} date={time} calendarId={this.props.caledarId} userId='' />
-            </div>    
+            <TrackStatusView 
+                type={this.props.typeOfEvent} 
+                startDate={this.props.enterStartDate}
+                endDate={this.props.enterEndDate}
+                calendarId={getCalendarId} 
+                user={this.props.user} 
+            />
+        </div>    
         );
     }
 }

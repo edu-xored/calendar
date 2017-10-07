@@ -2,57 +2,43 @@ import {handleActions} from 'redux-actions';
 import * as moment from 'moment';
 
 
-import {setEnterDate, setEnterMonth, setEnterYear,setCalendarId, setTypeOfEvent} from '../actions/UserCalendar';
+import {setEnterStartDate, setEnterEndDate, setEnterCalendarGrid, setTypeOfEvent, calendarGrid} from '../actions/UserCalendar';
 
 
 const defoultState = {
-    enterDate: moment().date(),
-    enterMonth: moment().month(),
-    enterYear: moment().year(),
-    calendarId: '',
+    enterStartDate: moment(),
+    enterEndDate: moment(),
+    enterCalendarGrid: {month: moment().month(), year: moment().year()},
     typeOfEvent: ''
 };
 
 const reducerUserCalendar = handleActions({
-    [setEnterDate]: (state, action) => ({
-        enterDate: action.payload.enterDate,
-        enterMonth: state.enterMonth,
-        enterYear: state.enterYear,
-        calendarId: state.calendarId,
+    [setEnterStartDate]: (state, action) => {
+        console.log(action.payload);
+        return ({
+            enterStartDate: action.payload.enterStartDate,
+            enterEndDate: state.enterEndDate,
+            enterCalendarGrid: state.enterCalendarGrid,
+            typeOfEvent: state.typeOfEvent
+    });},
+    [setEnterEndDate]: (state, action) => {
+        console.log(action.payload);
+        return ({
+            enterStartDate: state.enterStartDate,
+            enterEndDate: action.payload.enterEndDate,
+            enterCalendarGrid: state.enterCalendarGrid,
+            typeOfEvent: state.typeOfEvent
+    });},
+    [setEnterCalendarGrid]: (state, action) => ({
+        enterStartDate: state.enterStartDate,
+        enterEndDate: state.enterEndDate,
+        enterCalendarGrid: action.payload.enterCalendarGrid,
         typeOfEvent: state.typeOfEvent
     }),
-    [setEnterMonth]: (state, action) => {
-        console.log(action.payload);
-        console.log(state);
-        return ({
-        enterDate: state.enterDate,
-        enterMonth: action.payload.enterMonth,
-        enterYear: state.enterYear,
-        calendarId: state.calendarId,
-        typeOfEvent: state.typeOfEvent
-    });},
-    [setEnterYear]: (state, action) => ({
-        enterDate: state.enterDate,
-        enterMonth: state.enterMonth,
-        enterYear: action.payload.enterYear,
-        calendarId: state.calendarId,
-        typeOfEvent: state.typeOfEvent
-    }),
-    [setCalendarId]: (state, action) => {
-        console.log(action.payload);
-        console.log(state);
-        return ({
-        enterDate: state.enterDate,
-        enterMonth: state.enterMonth,
-        enterYear: state.enterYear,
-        calendarId: action.payload.calendarId,
-        typeOfEvent: state.typeOfEvent
-    });},
     [setTypeOfEvent]: (state, action) => ({
-        enterDate: state.enterDate,
-        enterMonth: state.enterMonth,
-        enterYear: state.enterYear,
-        calendarId: state.calendarId,
+        enterStartDate: state.enterStartDate,
+        enterEndDate: state.enterEndDate,
+        enterCalendarGrid: state.enterCalendarGrid,
         typeOfEvent: action.payload.typeOfEvent
     })
 }, {

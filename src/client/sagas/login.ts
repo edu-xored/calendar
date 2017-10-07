@@ -10,8 +10,10 @@ export function* loginFlow() {
         try {
             const {payload} = yield take(Actions.loginRequest.toString());
             const token = yield call(API.login, payload.username, payload.password);
-            yield put({type: "LOGIN_SUCCESS", token});
             setToken(token);
+            const user = yield call(API.me);
+            console.log("Login", user);
+            yield put(Actions.loginSuccess(user));
             history.push('/');
         } catch (error) {
             yield put(Actions.loginError("invalid credentials"));
