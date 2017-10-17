@@ -2,7 +2,7 @@ import {handleActions} from 'redux-actions';
 
 import {changePassword, loginError, loginRequest, changeUsername, loginSuccess} from '../actions/login';
 
-const defoultState = {
+const defaultState = {
     username: '',
     password: '',
     error: NaN,
@@ -42,7 +42,7 @@ const reducerLogin = handleActions({
         user: action.payload.user
     });}
 }, {
-    state: defoultState
+    state: defaultState
 });
 
 export default reducerLogin;

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import * as Moment from 'moment';
+import * as moment from 'moment';
 
 import Cell from './Cell';
+
+import './style.scss';
 
 const COUNT_ROWS = 6;
 const COUNT_COLUMNS = 7;
@@ -10,7 +12,7 @@ const COUNT_COLUMNS = 7;
 interface IUserCalandarGridProps {
     month: number;
     year: number;
-    onCellClickHandle(date: any);
+    onCellClickHandle(date: Date);
     onClickChangeMonthButton(id: string);
 }
 
@@ -119,7 +121,7 @@ export default class UserCaledarGrid extends React.Component<IUserCalandarGridPr
             index => {
                 return(
                     <td key={index}>
-                        <div  className='cell days-of-week'>
+                        <div  className='cell cell-enable'>
                             {weekday[index]}
                         </div>
                     </td>
@@ -128,7 +130,7 @@ export default class UserCaledarGrid extends React.Component<IUserCalandarGridPr
         );
 
         return(
-            <table id='header-of-user-calendar-grid'>
+            <table>
                 <tbody>
                     <tr>
                         {header}
@@ -140,27 +142,26 @@ export default class UserCaledarGrid extends React.Component<IUserCalandarGridPr
 
     renderGrid() {
 
-        let actual_calendar = Moment([this.props.year, this.props.month, 1]);
-        while (actual_calendar.day() != 1) {
-            actual_calendar.subtract(1, 'days');
+        let actual_calendar = moment([this.props.year, this.props.month, 1]);
+        if (actual_calendar.isValid()) {
+            while (actual_calendar.day() != 1)
+                actual_calendar = actual_calendar.subtract(1, 'days');
+            actual_calendar = actual_calendar.subtract(1, 'days');
         }
-
         let table: any[];
 
         table = [...Array(COUNT_ROWS).keys()].map(
             (i) => {
                     let row = [...Array(COUNT_COLUMNS).keys()].map(
                         (j) => {
-                            actual_calendar.add(1, 'days');
-                            
+                            actual_calendar = actual_calendar.add(1, 'days');
                             return (
                                 <td key={actual_calendar.format('D M Y')}>
                                     {
-                                        actual_calendar.month() === this.props.month 
-                                        ? 
-                                        <Cell date={actual_calendar} onCellClickHandle={this.props.onCellClickHandle.bind(this)} />
-                                        :
-                                        <Cell date={actual_calendar} isEnable={false} onCellClickHandle={this.props.onCellClickHandle.bind(this)} />
+                                        <Cell 
+                                            date={actual_calendar.toDate()}
+                                            isEnable={actual_calendar.month() === this.props.month} 
+                                            onCellClickHandle={this.props.onCellClickHandle.bind(this)} />
                                     }
                                </td>
                             );
@@ -175,7 +176,7 @@ export default class UserCaledarGrid extends React.Component<IUserCalandarGridPr
             }
         );
         return (
-            <table id='user-calendar-grid'>
+            <table>
                 <tbody>
                     {table}
                 </tbody>
@@ -183,23 +184,30 @@ export default class UserCaledarGrid extends React.Component<IUserCalandarGridPr
         );
     }
 
+    onClickChangeMonth(e: any) {
+        console.log(e.target.id);
+        this.props.onClickChangeMonthButton(e);
+    }
+
     render() {
         return(
-            <div>
-                <div className="center bottom-header">
-                    {this.renderHeader()}
-                </div>
-                <div className="center content-inline">
-                    <div>
-                        <div id="decrease-month" onClick={this.props.onClickChangeMonthButton.bind(this)}/>
+            <div className='user-calendar-grid-view'>
+                    <div id='user-calendar-grid-header'>
+                        {this.renderHeader()}
                     </div>
-                    <div>
-                        {this.renderGrid()}
+                    <div className="body-of-user-calendar">
+                        <div className="content-inline">
+                            <div className='decrease-month-zone'>
+                                    <div id='decrease-month' onClick={this.onClickChangeMonth.bind(this)}/>
+                            </div>
+                            <div id='user-calendar-grid'>
+                                {this.renderGrid()}
+                            </div>
+                            <div className='increase-month-zone'>
+                                    <div id='increase-month' onClick={this.onClickChangeMonth.bind(this)}/>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <div id="increase-month" onClick={this.props.onClickChangeMonthButton.bind(this)}/>
-                    </div>
-                </div>
             </div>
         )
     }

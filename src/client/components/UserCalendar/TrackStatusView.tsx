@@ -3,21 +3,35 @@ import * as Moment from 'moment';
 import API from '../../api';
 import history from './../../history';
 import {Event, User} from '../../../lib/model';
+import SeasonView from './SeasonView';
 
+import './style.scss';
 
 interface ITSPProps {
     type: string;
-    startDate: any;
-    endDate: any;
+    startDate: Date;
+    endDate: Date;
     calendarId: (user: User) => Promise<string>;
     user: User;
 }
+
+/*
+ <div>
+                            <div className='content-inline'>
+                                <div className='cell'>MORNING</div>
+                                <div className='cell'>EVENING</div>
+                            </div>
+                            <div className='cell'>WFH</div>
+                            <div className='cell'>MESSAGE</div>
+                            <div className='cell'>•••</div>
+                        </div>
+*/
 
 interface ITSPState {
     commentText: string;
 }
 
-export default class TrackStatusPage extends React.Component<ITSPProps, ITSPState> {
+export default class TrackStatusView extends React.Component<ITSPProps, ITSPState> {
 
     constructor(props) {
         super(props);
@@ -45,67 +59,43 @@ export default class TrackStatusPage extends React.Component<ITSPProps, ITSPStat
     }
 
     render() {
+        let stime = Moment(this.props.startDate);
+        let etime = Moment(this.props.endDate);
         return (
-            <div>
-                <div>
-                    <span>
-                        <div>
-                            {
-                                //this.props.date.format('D MMMM')
-                            }
-                        </div>
-                    </span>
-                    <span>
-                        <div>
-                            {
-                                //this.props.date.format('YYYY')
-                            }
-                        </div>
-                    </span>
+            <div id='track-status-view'>
+                <div className='head-track-status-view'>
+                    <SeasonView className='sv-b-white' bold_part={stime.format('D MMMM')} nobold_part={stime.format('YYYY')}/>
                 </div>
-                <div>
+                <div className='content'>
                     <div>
-                        <h2> {this.props.type} </h2>
+                        <div className='header'> {this.props.type} </div>
                     </div>
                     <div>
-                        {
-                        this.props.type === 'PTO/2' ? 
-                        () => (
-                            <div>
-                                <span>
-                                    <div>
-                                        MORNING
-                                    </div>
-                                </span>
-                                <span>
-                                    <div>
-                                        EVENING
-                                    </div>
-                                </span>
+                        <table className='button-table'>
+                            <thead>
+                                <tr>
+                                    <td>MORNING</td>
+                                    <td>EVENING</td>
+                                </tr>
+                                <tr>
+                                    <td colSpan={2}>WFH</td>
+                                </tr>
+                                <tr>
+                                    <td className='triangle' colSpan={2}>MESSAGE</td>
+                                </tr>
+                                <tr>
+                                    <td colSpan={2}>• • •</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div>
+                            <div className='confirm-button' onClick={this.onClickConfirm.bind(this)}>
+                                CONFIRM
                             </div>
-                        )
-                        :
-                        <div>
-                        </div>
-                        }
-                        <div>
-                             WFH
-                        </div>
-                        <div>
-                            MESSAGE
-                        </div>
-                        <div>
-                            •••
-                        </div>
-
-                    </div>
-                    <div>
-                        <div id='CONFIRM' onClick={this.onClickConfirm.bind(this)}>
-                            CONFIRM
                         </div>
                     </div>
-                </div>
             </div>
+        </div> 
         );
     }
 }

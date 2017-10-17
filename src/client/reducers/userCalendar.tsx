@@ -5,9 +5,9 @@ import * as moment from 'moment';
 import {setEnterStartDate, setEnterEndDate, setEnterCalendarGrid, setTypeOfEvent, calendarGrid} from '../actions/UserCalendar';
 
 
-const defoultState = {
-    enterStartDate: moment(),
-    enterEndDate: moment(),
+const defaultState = {
+    enterStartDate: moment().toDate(),
+    enterEndDate: moment().toDate(),
     enterCalendarGrid: {month: moment().month(), year: moment().year()},
     typeOfEvent: ''
 };
@@ -29,20 +29,24 @@ const reducerUserCalendar = handleActions({
             enterCalendarGrid: state.enterCalendarGrid,
             typeOfEvent: state.typeOfEvent
     });},
-    [setEnterCalendarGrid]: (state, action) => ({
-        enterStartDate: state.enterStartDate,
-        enterEndDate: state.enterEndDate,
-        enterCalendarGrid: action.payload.enterCalendarGrid,
-        typeOfEvent: state.typeOfEvent
-    }),
-    [setTypeOfEvent]: (state, action) => ({
-        enterStartDate: state.enterStartDate,
-        enterEndDate: state.enterEndDate,
-        enterCalendarGrid: state.enterCalendarGrid,
-        typeOfEvent: action.payload.typeOfEvent
-    })
+    [setEnterCalendarGrid]: (state, action) =>{
+        console.log(action.payload);
+        return ({
+            enterStartDate: state.enterStartDate,
+            enterEndDate: state.enterEndDate,
+            enterCalendarGrid: action.payload.enterCalendarGrid,
+            typeOfEvent: state.typeOfEvent
+    });},
+    [setTypeOfEvent]: (state, action) => {
+        console.log(action.payload);
+        return ({
+            enterStartDate: state.enterStartDate,
+            enterEndDate: state.enterEndDate,
+            enterCalendarGrid: state.enterCalendarGrid,
+            typeOfEvent: action.payload.typeOfEvent
+    });}
 }, {
-    state: defoultState
+    state: defaultState
 });
 
 export default reducerUserCalendar;

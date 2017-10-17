@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './style.scss';
 
 interface IReportButtonsPanelProps {
     onReportButtonClick: (data: any) => void
@@ -28,8 +29,8 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
         switch (this.state.panelId) {
             case FIRST_PANEL:
                 obj = 
-                    <tr>
-                        <td style={{width: '100vw'}}>
+                    <tr >
+                        <td style={{width: '70vw'}}>
                             <div id={FIRST_PANEL} onClick={this.changePanel.bind(this)}>
                                 TODAY
                             </div>
@@ -101,11 +102,13 @@ export default class ReportButtonsPanel extends React.Component<IReportButtonsPa
 
     render() {
         return(
-            <table>
-                <tbody>
-                    {this.renderPanels()}
-                </tbody>
-            </table>
+            <div id='button-panel'>
+                <table className={this.state.panelId === FIRST_PANEL ? 'today-panel' : 'other-button-panel'}>
+                    <tbody>
+                        {this.renderPanels()}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

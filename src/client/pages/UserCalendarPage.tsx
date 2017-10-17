@@ -7,6 +7,7 @@ import * as Actions from './../actions/UserCalendar';
 
 import UserCalendarGrid from './../components/UserCalendar/UserCalendarGrid';
 import ReportButtonsPanel from './../components/UserCalendar/ReportButtonsPanel';
+import SeasonView from './../components/UserCalendar/SeasonView';
 
 function mapStateToProps(state) {
     return ({
@@ -19,23 +20,23 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-        enterStartDate: bindActionCreators(Actions.setEnterStartDate, dispatch),
-        enterEndDate: bindActionCreators(Actions.setEnterEndDate, dispatch),
-        enterCalendarGrid: bindActionCreators(Actions.setEnterCalendarGrid, dispatch),
+        setEnterStartDate: bindActionCreators(Actions.setEnterStartDate, dispatch),
+        setEnterEndDate: bindActionCreators(Actions.setEnterEndDate, dispatch),
+        setEnterCalendarGrid: bindActionCreators(Actions.setEnterCalendarGrid, dispatch),
         setTypeOfEvent: bindActionCreators(Actions.setTypeOfEvent, dispatch)
     });
 }
 
 interface IUserCalendarPageState {
-    enterStartDate: any;
-    enterEndDate: any;
+    enterStartDate: Date;
+    enterEndDate: Date;
     enterCalendarGrid: Actions.calendarGrid;
     typeOfEvent: string;
 }
 
 interface IUserCalendarPageDispatch {
-    setEnterStartDate(enterStartDate: any);
-    setEnterEndDate(enterEndDate: any);
+    setEnterStartDate(enterStartDate: Date);
+    setEnterEndDate(enterEndDate: Date);
     setTypeOfEvent(typeOfEvent: string);
     setEnterCalendarGrid(enterCalendarGrid: Actions.calendarGrid);
 }
@@ -53,28 +54,36 @@ type IUserCalendarPageProps = IUserCalendarPageState & IUserCalendarPageDispatch
 export default class UserCalendarPage extends React.Component<IUserCalendarPageProps, IUserCalendarPageLocalState> {
     static defaultProps = {
         typeOfEvent: '',
-        enterStartDate: moment(),
-        enterEndDate: moment(),
+        enterStartDate: moment().toDate(),
+        enterEndDate: moment().toDate(),
         enterCalendarGrid: {month: moment().month(), year: moment().year()}
     }
 
+    static defaultState = {
+
+    }
     constructor(props) {
         super(props);
         this.state = {enterDate: START_DATE};
+        console.log(this.state);
+        this.props.setTypeOfEvent('');
+        this.props.setEnterCalendarGrid({month: moment().month(), year: moment().year()});
+        this.props.setEnterStartDate(moment().toDate());
+        this.props.setEnterEndDate(moment().toDate());
     }
 
     onClickChangeMonthButton(e: any) {
         let enterTime = moment([this.props.enterCalendarGrid.year, this.props.enterCalendarGrid.month]);
-
+        console.log(e.target.id);
         switch(e.target.id) {
-            case 'increase_month':
-                enterTime.add(1, 'months');
+            case 'increase-month':   
+                enterTime = enterTime.add(1, 'months');
                 break;
-            case 'decrease_month':
-                enterTime.subtract(1, 'months');
+            case 'decrease-month':
+                enterTime = enterTime.subtract(1, 'months');
                 break;
         }
-
+        console.log(enterTime.month(), enterTime.year());
         this.props.setEnterCalendarGrid({month: enterTime.month(), year: enterTime.year()});
     }
 
@@ -84,6 +93,7 @@ export default class UserCalendarPage extends React.Component<IUserCalendarPageP
     }
 
     onCellClickHandle(date) {
+        console.log(this.state);
        if (this.state.enterDate === START_DATE) {
             this.props.setEnterStartDate(date);
             this.setState({enterDate: END_DATE});
@@ -98,31 +108,24 @@ export default class UserCalendarPage extends React.Component<IUserCalendarPageP
         let cd = moment([this.props.enterCalendarGrid.year, this.props.enterCalendarGrid.month]);
 
         return(
-            <div>
-                <div id='head-of-calendar'>
-                    <span className='status'>Status</span>
-                    <span className='statistic'>Statistic</span>
+            <div id='user-calendar-page'>
+                <div id='head-of-user-calendar'>
+                    <div className='status'>Status</div>
+                    <div className='statistic'>Statistic</div>
                 </div>
                 <div>
-                    <div id="displayer">
-                        <span id="month">
-                            {cd.format('MMMM')}
-                        </span>
-                        <span id="year">
-                            {cd.format('YYYY')}
-                        </span>
-                    </div>
+                    <SeasonView className='sv-b-blue' bold_part={cd.format('MMMM')} nobold_part={cd.format('YYYY')} />
                 </div>
                 <div>
                     <UserCalendarGrid 
-                        month={this.props.enterCalendarGrid.month} 
-                        year={this.props.enterCalendarGrid.year} 
-                        onCellClickHandle={this.onCellClickHandle} 
-                        onClickChangeMonthButton={this.onClickChangeMonthButton}
+                        month={cd.month()} 
+                        year={cd.year()} 
+                        onCellClickHandle={this.onCellClickHandle.bind(this)} 
+                        onClickChangeMonthButton={this.onClickChangeMonthButton.bind(this)}
                     />
                 </div>
-                <div className='button-panel'>
-                    <ReportButtonsPanel onReportButtonClick={this.onReportButtonClick} />
+                <div>
+                    <ReportButtonsPanel onReportButtonClick={this.onReportButtonClick.bind(this)} />
                 </div>
             </div>
         );
