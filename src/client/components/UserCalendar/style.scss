@@ -1,0 +1,213 @@
+#user-calendar-page {
+    background-color: #FFFFFF;
+    height: 100vh;
+}
+
+.user-calendar-grid-view table {
+    margin: auto;
+}
+
+.user-calendar-grid-view .cell {
+    font-size: 3vh;
+    text-align: center;
+    width: 8vw;
+    height: 4vh;
+    margin: 2vh 2vw;
+    vertical-align: middle;
+}
+
+.cell-enable {
+    color: rgb(48, 48, 48);
+}
+
+.cell-disable {
+    color: rgb(184, 179, 179);
+}
+
+.weekend {
+    color: black;
+}
+
+.user-calendar-grid-view > #user-calendar-grid-header .cell {
+    height: 5vh;
+}
+
+.user-calendar-grid-view > #user-calendar-grid-header  {
+    font-stretch: extra-expanded;
+    margin-bottom: 5vh;
+    margin-top: 2vh;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 0.1vh solid silver;
+    box-shadow: 0 2vh 4vh  rgba(145, 141, 141, 0.1);
+}
+
+.body-of-user-calendar {
+    width: 93vw;
+    margin: auto;
+}
+
+.decrease-month-zone + .increase-month-zone {
+    width: 4vw;
+    height: inherit;
+}
+
+.decrease-month-zone {
+    padding-top: 3vh;
+    vertical-align: top;
+}
+
+.increase-month-zone {
+    padding-bottom: 3vh;
+    vertical-align: bottom;
+}
+
+#decrease-month{
+    width: 0;
+	height: 0;
+	border-top: 1vh solid transparent;
+	border-right: 2vh solid blue;
+    border-bottom: 1vh solid transparent;
+    
+}
+
+#increase-month {
+    width: 0;
+	height: 0;
+	border-top: 1vh solid transparent;
+	border-left: 2vh solid blue;
+    border-bottom: 1vh solid transparent;
+}
+
+.content-inline > div {
+    display: inline-block;
+}
+
+#season-view {
+    text-align: center;
+    //width: 55vw;
+    max-width: 60vw;
+    margin-left: 5vw;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(145, 141, 141, 0.5);
+    padding:0 1vw;
+    height: 8vh;
+    line-height: 8vh;
+}
+
+#season-view > #month {
+    font-weight: bold;
+    font-size: 4.3vh;
+}
+
+#season-view > #year {
+    font-size: 2.7vh;
+    margin-left: 2vw;
+}
+
+.sv-b-white {
+    background-color: white;
+    color: black;
+}
+
+.sv-b-blue {
+    background-color: blue;
+    color: white;
+}
+
+#button-panel {
+    color: white;
+    font-weight: bold;
+    font-size: 3vh;
+    width: inherit;
+    text-align: center;
+    height: 16vh;
+    display: flex;
+}
+
+#button-panel .today-panel {
+    background-color: blue;
+    height: 8vh;
+    margin: auto;
+}
+
+#button-panel .other-button-panel {
+    background-color: blue;
+    height: 10vh;
+    height: inherit;   
+}
+
+#button-panel table td {
+    border: 1px solid white;
+}
+
+
+#head-of-user-calendar > div {
+    width: 50vw;
+    margin: 2vh 0;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status {
+    color: rgb(48, 48, 48);
+    font-size: 4vh;
+    text-align: center;
+}
+
+.statistic {
+    color: rgba(48, 48, 48, 0.5);
+    font-size: 3vh;
+    text-align: center;
+}
+
+#track-status-view {
+    background-color: blue;
+    color: white;
+    text-align: center;
+    height: 100vh;
+}
+
+#track-status-view > .head-track-status-view {
+    padding: 10vh 0;
+}
+
+
+#track-status-view > .content {
+    width: 70vw;
+    margin: auto;
+}
+
+#track-status-view > .content  table {
+    margin: auto;
+}
+
+#track-status-view .content  .header {
+    font-size: 6vh;
+}
+
+
+.button-table {
+    border-collapse: separate;
+    border-spacing: 0 3vh;
+}
+
+.button-table > thead td {
+    border: 1px solid white;
+    padding: 2vh 2vw;
+    font-size: 3vh;
+    background-color: inherit;
+    font-stretch: extra-condensed;
+}
+
+.confirm-button {
+    width: 70vw;
+    height: 8vh;
+    font-size: 3vh;
+    background-color: white;
+    color: blue;
+    font-stretch: extra-condensed;
+    box-shadow: 0.5vh 0.5vh 1vh rgba(145, 141, 141, 0.5);
+    margin: 4vh 0;
+    line-height: 8vh;
+}
+

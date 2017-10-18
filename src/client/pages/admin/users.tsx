@@ -14,12 +14,14 @@ const defaultModalData: any = {
     email: ''
 };
 
+//<TeamsView headers={headers} modalFields={modalFields} api={api.users} defaultModalData={defaultModalData} />
+
 export default class TeamsPage extends React.Component<{}, {}> {
     render() {
         return (
             <Container>
                 <Header content='Users' />
-                <TeamsView headers={headers} modalFields={modalFields} api={api.users} defaultModalData={defaultModalData} />
+                
             </Container>
         );
     }

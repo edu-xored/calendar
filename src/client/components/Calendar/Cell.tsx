@@ -22,4 +22,5 @@ export default class Cell extends React.Component<any, any> {
       console.log(`Cell inside ${parent.id} has been clicked`);
     }
   }
+  
 }

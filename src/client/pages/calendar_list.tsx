@@ -182,8 +182,8 @@ export default class CalendarList extends React.Component<{}, {}> {
         <Table basic='very' celled>
           <Table.Header fullWidth={true}>
             <Table.Row>
-              <Table.HeaderCell>Calendar</Table.HeaderCell>
-              <Table.HeaderCell>Description</Table.HeaderCell>
+              <Table.HeaderCell key={'celendar-celendar'}> Calendar </Table.HeaderCell>
+              <Table.HeaderCell key={'celendar-description'}> Description </Table.HeaderCell>
               <Table.HeaderCell textAlign='right'>
                 <Modal trigger={<Button color='green' icon="add to calendar" onClick={handleCreateModalOpened} />}
                        open={this.state.editModalOpened === "new"} onClose={handleCreateModalClosed}>

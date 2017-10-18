@@ -42,7 +42,7 @@ export class Activity extends React.Component<IActivity, {}> {
     return(
       <div id="Activity" className="ui vertical stripe quote segment">
         <h3>Activity</h3>
-        <ul  type = "none" className="ui container">
+        <ul style={{type: 'none'}} className="ui container">
           {this.renderItems()}
         </ul>
       </div>
